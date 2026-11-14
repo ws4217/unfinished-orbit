@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNFINISHED ORBIT／未竟之轨</title>
+  </head>
+  <body>
+    <main id="app" aria-label="未竟之轨">
+      <div id="game-content">
+      <div id="game"></div>
+      <section class="panel">
+        <p class="eyebrow" id="stage"></p>
+        <h1 id="title"></h1>
+        <p id="subtitle"></p>
+        <p id="status" role="status"></p>
+        <div id="actions"></div>
+      </section>
+      <p id="save-warning" role="alert" hidden></p>
+      <div id="hud" hidden>
+        <p id="hud-controls"></p>
+        <button id="hud-log" type="button"></button>
+        <button id="hud-menu" type="button"></button>
+        <p id="target"></p>
+      </div>
+      <div id="screen"></div>
+      <p id="toast" role="status" hidden></p>
+      </div>
+      <div id="desktop-shell" hidden></div>
+      <p id="small-window" role="status" hidden></p>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

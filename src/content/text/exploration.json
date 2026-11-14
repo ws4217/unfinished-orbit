@@ -1,0 +1,93 @@
+{
+  "ui": {
+    "controls": "[W/A/S/D] - 移动  [Enter / Z] - 交互",
+    "logShortcut": "[J] - 日志",
+    "menuShortcut": "[C] - 菜单",
+    "interact": "Enter / Z　",
+    "back": "按 Shift/X 返回",
+    "next": "[Enter / Z] - 继续  [Shift / X] - 补全",
+    "log": "日志",
+    "menu": "交流与沉思",
+    "settings": "设置",
+    "emptyLog": "还没有记录。靠近设备或留言，按 Enter / Z 调查。",
+    "updated": "日志已更新",
+    "greet": "电话 - 打招呼",
+    "patterns": "电话 - 奇怪的图案",
+    "flirt": "电话 - 调情",
+    "think": ["沉思", "再次沉思", "再三沉思"],
+    "noContact": "这里还没有可以联系的人。先独自看看吧。",
+    "bgm": "BGM 音量",
+    "sfx": "音效音量",
+    "mute": "静音",
+    "muted": "已静音",
+    "small": "请将浏览器可用区域放大到至少 960 × 540。",
+    "loading": "正在接入空间站……",
+    "slow": "仍在加载。网络较慢时，可选择本地备用版。",
+    "retry": "重新加载",
+    "locked": "单人维护模式尚未分配。请在岔路口与 Karo 确认分工。",
+    "roomHint": "毫无头绪的时候，试试沉思吧。",
+    "modulePending": "该模块正在接入。当前工程尚非完整候选版。",
+    "branchQuestion": "两侧各限一名操作员。你想负责哪一侧？",
+    "chooseSymbols": "符号侧",
+    "chooseObjects": "物件侧",
+    "cancel": "暂不分工"
+  },
+  "dialogue": {
+    "arrival": [
+      { "speaker": "pruto", "text": "对接完成。小A说会在这里等我……先看看附近的留言吧。" },
+      { "speaker": "pruto", "text": "刚才的启动提示里，好像闪过一行“资源仍在使用，维护未完成”。不过，现在看起来一切正常。" }
+    ],
+    "a-note": [
+      { "speaker": "a", "text": "Pruto，我去对接区处理一点事务。你先随便逛逛，不用等我。——小A" },
+      { "speaker": "pruto", "text": "那就先看看这座站吧。" }
+    ],
+    "p01": [
+      { "speaker": "pruto", "text": "P-01 星图投影器。底座上的编号磨得很清楚。" },
+      { "speaker": "merin", "text": "本机尚未完成过一次完整投影。当前图样……尚、尚未完成。" }
+    ],
+    "old-note": [
+      { "speaker": "pruto", "text": "有人在公共区留下一张字条。" },
+      { "speaker": "pruto", "text": "“P-01终于把那张星图完整映出来了，我还留了一张小图。”——曾在这里驻足的居民" },
+      { "speaker": "pruto", "text": "编号没有错。可那台投影器说，它还从未完成过。" }
+    ],
+    "merin": [
+      { "speaker": "merin", "text": "欢迎。我是接待单元 Merin。想为每位抵达这里的人留下一句……一句……" },
+      { "speaker": "pruto", "text": "不着急，等你想好。" },
+      { "speaker": "merin", "text": "清理请求……未完成。仍有内容……正在使用。" }
+    ],
+    "meet-karo": [
+      { "speaker": "karo", "text": "你也是第一次来这里？我叫 Karo。" },
+      { "speaker": "pruto", "text": "Pruto。这里的设备和留言，似乎在说两件不同的事。" },
+      { "speaker": "karo", "text": "我也想看看。前面的两间维护室只允许单人操作，也许我们可以各负责一边。" },
+      { "speaker": "pruto", "text": "那先在这里留个四芒星吧。" },
+      { "speaker": "karo", "text": "我再加一段弧线。这样以后看到，就知道是我们一起留下的。" }
+    ],
+    "need-p01": [{ "speaker": "karo", "text": "先看看公共区的 P-01 现在是什么状态。只听别人说，容易弄错。" }],
+    "need-note": [{ "speaker": "karo", "text": "公共区还有一份居民留言。把那份记录也看过，我们再决定从哪里查起。" }],
+    "gate": [{ "speaker": "karo", "text": "两个人同时进去会被拦住。我们先分工，一人一间，通过电话交换发现。" }],
+    "greet": [
+      { "speaker": "pruto", "text": "只是确认一下，你还在吗？" },
+      { "speaker": "karo", "text": "在。没有新线索也可以打来，不一定每句话都要有用。" }
+    ],
+    "patterns": [
+      { "speaker": "pruto", "text": "这里的标记看起来都很认真。" },
+      { "speaker": "karo", "text": "也可能只是维护员不想在值班时看见一堵空墙。" }
+    ],
+    "flirt": [
+      { "speaker": "pruto", "text": "如果信号忽然断了，你会来找我吗？" },
+      { "speaker": "karo", "text": "会。不过你可以先别故意把电话挂掉。" }
+    ],
+    "range": [
+      { "speaker": "pruto", "text": "例行更新会回收临时工作区，恢复下一次运行所需的可用空间。旁边用线框标出了本区清理范围。" }
+    ],
+    "diagnosis": [
+      { "speaker": "pruto", "text": "P-01：当前关联资源为旧版，仍在使用。最近维护结果：未完成。完成记录与当前状态：不一致。" }
+    ]
+  },
+  "logs": {
+    "p01": "P-01 现状：公共区同编号的星图投影器声称从未完成完整投影。",
+    "old-note": "旧居民留言：P-01曾经完整投影，居民还留下了一张小图。",
+    "range": "例行更新会回收临时工作区。本区范围图与维护记录分开管理。",
+    "diagnosis": "P-01诊断：旧版资源仍在使用，最近维护未完成，完成记录与当前状态不一致。"
+  }
+}

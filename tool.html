@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>校准工具／未竟之轨</title>
+  </head>
+  <body class="tool-page">
+    <main class="tool-panel">
+      <p class="eyebrow" id="stage"></p>
+      <h1 id="title"></h1>
+      <div class="calibration-mark" aria-hidden="true">◇</div>
+      <p id="status" role="status"></p>
+      <form id="token-form">
+        <label id="token-label" for="token"></label>
+        <input id="token" name="token" type="text" autocomplete="off" spellcheck="false" />
+        <button id="submit" type="submit"></button>
+      </form>
+      <article id="letter" hidden>
+        <h2 id="letter-title"></h2>
+        <p id="greeting"></p>
+        <p id="letter-body"></p>
+        <p id="signature"></p>
+      </article>
+    </main>
+    <script type="module" src="/src/tool.ts"></script>
+  </body>
+</html>
