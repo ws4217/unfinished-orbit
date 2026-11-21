@@ -1,7 +1,8 @@
 {
   "name": "unfinished-orbit",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
+  "author": "ws4217",
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -16,7 +17,6 @@
     "phaser": "^3.90.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.65.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.2"
   }

@@ -1,0 +1,93 @@
+{
+  "bgmDefault": 40,
+  "sfxDefault": 60,
+  "fadeMs": 300,
+  "dialogueRatio": 0.7,
+  "maxSfxVoices": 4,
+  "textIntervalMs": 100,
+  "batchLimitBytes": 10485760,
+  "tracks": {
+    "intro": {
+      "asset": "bgm.intro",
+      "author": "Scarfaith",
+      "title": "Intro (Fly into the Sky)"
+    },
+    "exploration": {
+      "asset": "bgm.sienna-ii",
+      "author": "Spacey",
+      "title": "Sienna II"
+    },
+    "techno": {
+      "asset": "bgm.good-old-fashioned-techno",
+      "author": "Spacey",
+      "title": "Good Old-Fashioned Techno"
+    },
+    "alternate": {
+      "asset": "bgm.good-old-fashioned-techno-alternate",
+      "author": "Spacey",
+      "title": "Good Old-Fashioned Techno (Alternate Version)"
+    },
+    "valley": {
+      "asset": "bgm.the-valley",
+      "author": "Spacey",
+      "title": "The Valley"
+    },
+    "fleeting": {
+      "asset": "bgm.fleeting-colors-1-5x",
+      "author": "Spacey",
+      "title": "Fleeting Colors"
+    },
+    "ending": {
+      "asset": "bgm.end-of-journey",
+      "author": "Scarfaith",
+      "title": "End of a Journey"
+    }
+  },
+  "events": {
+    "sfx.ui.focus": {
+      "priority": 1
+    },
+    "sfx.ui.confirm": {
+      "priority": 10
+    },
+    "sfx.ui.back": {
+      "priority": 10
+    },
+    "sfx.result.basic": {
+      "priority": 50
+    },
+    "sfx.result.elevated": {
+      "priority": 90
+    },
+    "sfx.result.complete": {
+      "priority": 100
+    },
+    "sfx.error.input": {
+      "priority": 95
+    },
+    "sfx.phone.connect": {
+      "priority": 75
+    },
+    "sfx.phone.disconnect": {
+      "priority": 75
+    },
+    "sfx.switch.activate": {
+      "priority": 65
+    },
+    "sfx.switch.deactivate": {
+      "priority": 65
+    },
+    "sfx.button.mechanical": {
+      "priority": 40
+    },
+    "sfx.machine.clean": {
+      "priority": 85
+    },
+    "sfx.gate.activate": {
+      "priority": 80
+    },
+    "sfx.gate.deactivate": {
+      "priority": 80
+    }
+  }
+}

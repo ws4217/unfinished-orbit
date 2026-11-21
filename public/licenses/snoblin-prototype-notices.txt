@@ -1,0 +1,14 @@
+Top-Down Prototype Character (Free) - Pixel RPG
+Author: Snoblin
+Source: https://snoblin.itch.io/pixel-rpg-free-npc
+
+The author's "Commercial License" section, accessed 2026-11-15:
+"You can use these assets in commercial and non-commercial projects.
+You can edit these assets.
+You can't redistribute or resell theses assets, even if they have been modified."
+
+This is a project transcription of the author's webpage statement,
+not an original LICENSE file supplied inside the downloaded folder.
+Used as embedded game characters/portraits: Blue (Pruto), Red (Karo), Default (Merin).
+No standalone asset distribution is permitted. Do not publish the raw-source
+develop repository without resolving the redistribution restrictions.

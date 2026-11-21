@@ -1,0 +1,41 @@
+{
+  "title": "UNFINISHED ORBIT / WORLD BOOT",
+  "label": "系统自检记录",
+  "timing": {
+    "lineIntervalMs": 180,
+    "recordMs": 7500,
+    "closeMs": 400,
+    "closedMs": 100,
+    "openMs": 500
+  },
+  "lines": [
+    { "id": "session", "text": "> [OK] 初始化临时会话", "warning": false },
+    { "id": "session-cmd", "text": "  $ init --session=temp", "warning": false },
+    { "id": "world", "text": "> [OK] 挂载世界目录", "warning": false },
+    { "id": "world-cmd", "text": "  $ mount /dev/vda /WORLD", "warning": false },
+    { "id": "station", "text": "> [OK] 连接空间站节点", "warning": false },
+    { "id": "station-cmd", "text": "  $ systemctl start station-node.target", "warning": false },
+    { "id": "comms", "text": "> [OK] 启动站内通信线路", "warning": false },
+    { "id": "comms-cmd", "text": "  $ systemctl start comms-relay.service", "warning": false },
+    { "id": "arrival", "text": "> [OK] 载入区域：对接入口", "warning": false },
+    { "id": "public", "text": "> [OK] 载入区域：公共区", "warning": false },
+    { "id": "corridors", "text": "> [OK] 载入区域：通行廊道与门禁", "warning": false },
+    { "id": "corridors-cmd", "text": "  $ systemctl start access-gate.service", "warning": false },
+    { "id": "projection", "text": "> [OK] 挂载设备：星图投影器 (P-01)", "warning": false },
+    { "id": "projection-cmd", "text": "  $ systemctl start projector-p01.service", "warning": false },
+    { "id": "terminals", "text": "> [OK] 启动分区终端与陈列台", "warning": false },
+    { "id": "terminals-cmd", "text": "  $ systemctl start term-sym.service console-obj.service", "warning": false },
+    { "id": "bench", "text": "> [OK] 启动维护间清理台", "warning": false },
+    { "id": "bench-cmd", "text": "  $ systemctl start cleanup-bench.service", "warning": false },
+    { "id": "workspace", "text": "> [OK] 分配临时工作区", "warning": false },
+    { "id": "workspace-cmd", "text": "  $ mount -t tmpfs workspace /mnt/work", "warning": false },
+    { "id": "maintenance", "text": "> [..] 校验最近维护记录", "warning": false },
+    { "id": "maintenance-cmd", "text": "  $ maintctl verify --snapshot=base", "warning": false },
+    { "id": "pending", "text": "> [..] 等待启动维护层响应……", "warning": false },
+    { "id": "in-use", "text": "! [WARN] 资源仍在使用，维护未完成", "warning": true },
+    { "id": "in-use-err", "text": "! EBUSY: target busy, partial rollback", "warning": true },
+    { "id": "resume", "text": "> [OK] 跳过异常项，继续载入", "warning": false },
+    { "id": "resume-cmd", "text": "  $ systemctl isolate world.target --no-block", "warning": false },
+    { "id": "enter", "text": "> 自检完成，进入对接入口_", "warning": false }
+  ]
+}

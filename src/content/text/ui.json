@@ -1,0 +1,133 @@
+{
+  "app": {
+    "title": "UNFINISHED ORBIT",
+    "subtitle": "未完成的轨道",
+    "stage": "RC1 · 游戏开发者：ws4217",
+    "status": "正在初始化……",
+    "ready": "本游戏自动存档（线上与本地存档不互通）",
+    "error": "初始化失败，请刷新页面重试。",
+    "enter": "按 Enter 开始",
+    "start": "开始冒险",
+    "continue": "继续冒险",
+    "restart": "重新启程",
+    "restartQuestion": "重新启程将清空当前进度，确定继续吗？",
+    "confirm": "确认重新启程",
+    "cancel": "取消",
+    "invalid": "存档异常或版本不兼容。原存档尚未覆盖，确认后将重新启程。",
+    "saveFailure": "自动保存失败，关闭页面可能丢失进度",
+    "saved": "进度已自动保存",
+    "back": "返回启动界面"
+  },
+  "tool": {
+    "title": "校准工具",
+    "stage": "CALIBRATION / 校准",
+    "status": "校准工具待命。",
+    "tokenLabel": "访问标记",
+    "submit": "确认",
+    "wrong": "标记不匹配，请保留连字符后重试。",
+    "letterTitle": "UNFINISHED ORBIT／未完成的轨道",
+    "greeting": "致 ax暗星233",
+    "letter": "暗星，20岁生日快乐！虽然我们未曾谋面，但一直以来你帮了我很多，曾教我拆解data、理解它们，在我做汉化的起步阶段帮了我很多；所以这次，轮到我为你做一个可以探索的小世界。很遗憾时间有限，没能在11月15日如期送出，晚了一周，在11月22日才终于做好，作为迟到的礼物送给你。对了，游戏文本里偷偷埋了些彩蛋，看看你能不能发现。新的一岁，祝你玩到更多好玩的独游，音游推分顺利，早日w4！",
+    "signature": "——你的朋友"
+  },
+  "desktop": {
+    "exit": "退出全屏",
+    "game": "未完成的轨道",
+    "card": "校准卡",
+    "minimize": "最小化",
+    "maximize": "切换窗口大小",
+    "close": "关闭窗口",
+    "reset": "复位校准卡",
+    "closeExplanation": "仅隐藏窗口，不会清档。可随时从任务栏重新打开。",
+    "okay": "知道了",
+    "cardHelp": "拖动标题栏，将卡片与启动界面上的菱形标记重合。",
+    "path": "进入维护路径",
+    "shortcut": "快捷进入安定区",
+    "tool": "校准工具 / 记录台",
+    "independent": "在新标签打开",
+    "return": "返回游戏",
+    "hint": [
+      "（先回启动界面看看吧，说不定多出了什么新按钮。校准卡好像得在站外才能对上？）",
+      "（点“退出全屏”就能看到外面的桌面啦。从任务栏打开校准卡，拖着标题栏，把两个空心菱形叠到一块儿试试！）"
+    ]
+  },
+  "exploration": {
+    "controls": "[W/A/S/D] - 移动  [Enter / Z] - 交互",
+    "logShortcut": "[J] - 日志",
+    "menuShortcut": "[C] - 菜单",
+    "interact": "Enter / Z ",
+    "back": "按 Shift/X 返回",
+    "next": "[Enter / Z] - 继续  [Shift / X] - 补全",
+    "log": "日志",
+    "logControls": "↑/↓ 逐行 ←/→ 或 PageUp/PageDown 翻页 Shift/X 返回",
+    "menu": "交流与沉思",
+    "settings": "设置",
+    "emptyLog": "还没有记录。靠近设备或留言，按 Enter / Z 调查。",
+    "updated": "日志已更新",
+    "greet": "电话 - 打招呼",
+    "patterns": "电话 - 奇怪的图案",
+    "flirt": "电话 - 调情",
+    "think": [
+      "沉思",
+      "再次沉思",
+      "再三沉思"
+    ],
+    "bgm": "BGM 音量",
+    "sfx": "音效音量",
+    "mute": "静音",
+    "muted": "已静音",
+    "small": "请将浏览器可用区域放大到至少 960 × 540。",
+    "slow": "加载较慢，可继续等待或切换本地备用版。",
+    "retry": "重新加载",
+    "branchQuestion": "两侧各限一名操作员，你想负责哪一侧？",
+    "chooseSymbols": "符号侧",
+    "chooseObjects": "物件侧",
+    "cancel": "暂不分工",
+    "newCall": "【新】"
+  },
+  "station": {
+    "lockedBranch": "先与 Karo 确认分工",
+    "otherBranch": "另一侧由 Karo 负责",
+    "sealed": "同步完成后门禁解除",
+    "maintenanceLocked": "先核对两端报告",
+    "mark": "✦  )",
+    "repaired": "本区成果已接入"
+  },
+  "speakers": {
+    "pruto": {
+      "name": "Pruto",
+      "color": "#ddeaf5",
+      "portrait": "/assets/characters/snoblin-prototype/pruto-portrait.png"
+    },
+    "karo": {
+      "name": "Karo",
+      "color": "#77d6dc",
+      "portrait": "/assets/characters/snoblin-prototype/karo-portrait.png"
+    },
+    "merin": {
+      "name": "Merin",
+      "color": "#eacb84",
+      "portrait": "/assets/characters/snoblin-prototype/merin-portrait.png"
+    }
+  },
+  "audio": {
+    "bgmToast": "BGM：{author} - {title}",
+    "ready": "音频已就绪",
+    "loading": "音频加载中，可正常游玩",
+    "failed": "部分音频加载失败，不影响游玩",
+    "retry": "重试音频",
+    "locked": "按 Enter 开始并启用音频",
+    "loadingSlow": "音频加载较慢，可先游玩或切换本地版"
+  },
+  "maintenanceRoute": {
+    "title": "启动维护路径",
+    "aligned": "定位已完成。进入后依次通过五组方向。",
+    "help": "按方向键或 WASD。每行从第一键开始计时，按错或超时会重抽这一行。",
+    "progress": "已完成 {done} / 5",
+    "wrong": "方向不符，本行已重抽。",
+    "timeout": "时间用完，本行已重抽。",
+    "paused": "已暂停",
+    "leave": "退出路径（需重新校准）",
+    "hint": "（把两个空心菱形的中心大致对齐。点“进入维护路径”后，按当行显示的方向走；每行从第一键开始计时。）"
+  }
+}

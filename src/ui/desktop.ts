@@ -1,8 +1,13 @@
-import type { App, Line } from '../game/app.ts';
-import data from '../content/text/desktop.json';
+import type { App } from '../game/app.ts';
+import ui from '../content/text/ui.json' with { type: 'json' };
 import { aligned, toLogical } from '../core/geometry.ts';
 import ending from '../content/text/ending.json';
 import { tokenReady } from '../core/ending.ts';
+import { portalOpen } from '../core/cycle.ts';
+import cycleText from '../content/text/cycle.json';
+import { playMaintenanceRoute } from './maintenance-route.ts';
+
+const { desktop: data, maintenanceRoute: routeText } = ui;
 
 const make = (tag: string, text?: string, className?: string) => {
   const element = document.createElement(tag);
@@ -19,35 +24,23 @@ export function installDesktop(app: App): void {
   let desktop = false;
   const oldHints = app.hintProvider;
   app.hintProvider = (hintStage, level) => ['calibration', 'route'].includes(hintStage)
-    ? [{ speaker: 'pruto', text: data.hint[level - 1] }] : oldHints!(hintStage, level);
-  const finish = () => {
+    ? [{ speaker: 'pruto', text: level === 3 ? routeText.hint : data.hint[level - 1] }] : oldHints!(hintStage, level);
+  const leave = () => {
+    if (!desktop) return;
     desktop = false;
     stage.append(content);
     content.style.cssText = '';
     shell.hidden = true; shell.replaceChildren();
-    document.getElementById('entry-target')?.remove();
+  };
+  app.leaveDesktop = leave;
+  const finish = () => {
+    leave();
+    delete app.state.cycle;
     app.state.entranceFound = true;
     app.state.phase = 'stable';
     app.session.save();
     app.scene.drawWorld(true);
     app.world();
-  };
-  const route = () => {
-    let progress = 0;
-    let restore = () => {};
-    const expected = ['right', 'up', 'right', 'up'];
-    restore = app.puzzle(data.routeTitle, container => {
-      container.append(make('p', data.route), make('p', data.routeHelp), make('p', `${progress} / 4`));
-    }, key => {
-      const direction = ['ArrowRight', 'd'].includes(key) ? 'right' : ['ArrowUp', 'w'].includes(key) ? 'up' : '';
-      if (direction && direction === expected[progress]) {
-        progress++;
-        app.audio.tone(500 + progress * 100);
-        if (progress === 4) finish(); else restore();
-      }
-    });
-    const canvas = document.querySelector('canvas')!;
-    canvas.tabIndex = 0; canvas.focus();
   };
   const show = () => {
     desktop = true;
@@ -76,8 +69,7 @@ export function installDesktop(app: App): void {
       app.choice(data.closeExplanation, [{ label: data.okay, action: () => { app.showTitle(); gameWindow.hidden = true; } }], () => app.showTitle());
     }, controls).setAttribute('aria-label', data.close);
     gameBar.append(controls); gameWindow.append(gameBar, content); shell.append(gameWindow); size();
-    const target = make('div', '◇', 'entry-target'); target.id = 'entry-target';
-    document.querySelector('.panel')!.append(target);
+    const target = document.getElementById('entry-target')!;
     const cardWindow = make('section', undefined, 'desktop-card'); cardWindow.id = 'card-window';
     cardWindow.hidden = true;
     const cardBar = make('header', undefined, 'titlebar card-drag-handle');
@@ -85,7 +77,7 @@ export function installDesktop(app: App): void {
     app.actionButton('×', () => { cardWindow.hidden = true; }, cardBar).setAttribute('aria-label', data.close);
     const frame = document.createElement('iframe');
     frame.src = './tool.html?embedded=1'; frame.title = data.card; frame.className = 'card-frame';
-    const help = make('p', data.cardHelp, 'card-help');
+    const help = make('p', `${cycleText.cardMind} ${data.cardHelp}`, 'card-help');
     const cardActions = make('div', undefined, 'card-actions');
     const reset = () => { cardWindow.style.left = '30px'; cardWindow.style.top = '100px'; };
     app.actionButton(data.reset, reset, cardActions);
@@ -93,7 +85,7 @@ export function installDesktop(app: App): void {
       if (!located) return;
       gameWindow.hidden = false;
       cardWindow.hidden = true;
-      route();
+      playMaintenanceRoute(app, stage, shell, finish, () => { leave(); app.showTitle(); });
     }, cardActions);
     enter.hidden = true;
     const check = () => {
@@ -111,8 +103,9 @@ export function installDesktop(app: App): void {
       }, bounds);
       const targetPoint = toLogical({ x: targetRect.left + targetRect.width / 2, y: targetRect.top + targetRect.height / 2 }, bounds);
       if (aligned(cardPoint, targetPoint)) {
+        if (!located) app.audio.event('sfx.result.elevated');
         located = true;
-        help.textContent = data.aligned + '　' + data.route;
+        help.textContent = routeText.aligned;
         enter.hidden = false;
         cardWindow.dataset.aligned = 'true';
       }
@@ -146,7 +139,7 @@ export function installDesktop(app: App): void {
   };
   app.titleProvider = () => {
     if (app.state.entranceFound) return [{ label: data.shortcut, action: () => { app.scene.drawWorld(true); app.world(); } }];
-    if (app.state.phase === 'entrance') return [{ label: data.exit, action: show }];
+    if (portalOpen(app.state) && !desktop) return [{ label: data.exit, action: () => { if (!desktop) show(); } }];
     return [];
   };
 }

@@ -49,12 +49,13 @@ const server = http.createServer(async (request, response) => {
     response.writeHead(404).end();
   }
 });
+const port = Number(process.env.ORBIT_PORT ?? 4217);
 server.on('error', (error) => {
   console.error(error.code === 'EADDRINUSE'
-    ? '端口4217已被占用，请关闭原服务后重试；不会自动切换端口。'
+    ? `端口${port}已被占用，请关闭原服务后重试；不会自动切换端口。`
     : `本地服务启动失败：${error.message}`);
   process.exitCode = 1;
 });
-server.listen(4217, '127.0.0.1', () => {
-  console.log('未竟之轨：http://127.0.0.1:4217/（关闭此进程即可停止）');
+server.listen(port, '127.0.0.1', () => {
+  console.log(`未完成的轨道：http://127.0.0.1:${server.address().port}/（关闭此进程即可停止）`);
 });

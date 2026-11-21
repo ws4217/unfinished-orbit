@@ -1,0 +1,71 @@
+{
+  "frames": {
+    "floor-panel": {
+      "texture": "steel-walls",
+      "x": 64,
+      "y": 96,
+      "w": 16,
+      "h": 16
+    },
+    "wall-face": {
+      "texture": "steel-walls",
+      "x": 384,
+      "y": 96,
+      "w": 16,
+      "h": 16
+    },
+    "wall-foot": {
+      "texture": "steel-walls",
+      "x": 384,
+      "y": 112,
+      "w": 16,
+      "h": 16
+    },
+    "projection": {
+      "texture": "steel-objects",
+      "x": 240,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "terminal": {
+      "texture": "steel-objects",
+      "x": 272,
+      "y": 0,
+      "w": 16,
+      "h": 32
+    },
+    "plant": {
+      "texture": "steel-objects",
+      "x": 288,
+      "y": 48,
+      "w": 32,
+      "h": 32,
+      "anchor": {
+        "x": 22,
+        "y": 32
+      }
+    },
+    "console": {
+      "texture": "steel-objects",
+      "x": 256,
+      "y": 336,
+      "w": 48,
+      "h": 32
+    },
+    "bench": {
+      "texture": "steel-objects",
+      "x": 400,
+      "y": 176,
+      "w": 32,
+      "h": 16
+    },
+    "table": {
+      "texture": "steel-objects",
+      "x": 384,
+      "y": 176,
+      "w": 16,
+      "h": 16
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { installBranch } from './game/branch.ts';
 import { installExperiment } from './game/experiment.ts';
 import { installDesktop } from './ui/desktop.ts';
 import { installEnding } from './game/ending.ts';
-import ui from './content/text/ui.ts';
+import ui from './content/text/ui.json' with { type: 'json' };
 
 document.getElementById('status')!.textContent = ui.app.status;
 // Canvas labels must be drawn after the local font is available, not rasterized in a fallback face.

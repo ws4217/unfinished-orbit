@@ -1,4 +1,4 @@
-import ui from './content/text/ui.ts';
+import ui from './content/text/ui.json' with { type: 'json' };
 import './ui/styles/base.css';
 import './ui/styles/pixel.css';
 import { validToken } from './core/rules.ts';

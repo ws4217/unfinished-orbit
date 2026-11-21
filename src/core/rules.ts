@@ -1,4 +1,4 @@
-import { ELEMENTS, type Element, type GameState, type Experiment, type HintStage } from './state.ts';
+import { ELEMENTS, EXPERIMENT_COMPARISONS, type Element, type GameState, type Experiment, type ExperimentConclusion, type HintStage } from './state.ts';
 
 export function validToken(input: string): boolean {
   return input.trim().toUpperCase() === 'AX-20-233';
@@ -33,20 +33,17 @@ export function swap(items: Element[], a: number, b: number): Element[] {
 }
 export function experimentResult(outside: boolean, held: boolean) {
   const id: Experiment = outside ? (held ? 'outside-held' : 'outside-free') : (held ? 'inside-held' : 'inside-free');
-  return { id, success: outside || !held, retained: outside || held };
+  const outcome = outside ? 'excluded' : held ? 'occupied' : 'restored';
+  // retained描述纸上的图案，不是纸本身。恢复成功时留下空白快照。
+  return { id, outcome, success: outcome !== 'occupied', retained: outcome !== 'restored' };
 }
-export function discoverExperiment(state: GameState): { fresh: boolean; conclusions: string[] } {
+export function discoverExperiment(state: GameState): { fresh: boolean; conclusions: ExperimentConclusion[] } {
   const result = experimentResult(state.experiment.outside, state.experiment.held);
   const fresh = !state.experiment.discovered.includes(result.id);
   if (fresh) state.experiment.discovered.push(result.id);
-  const dependencies: [string, Experiment[]][] = [
-    ['occupancy', ['inside-free', 'inside-held']],
-    ['boundary', ['inside-held', 'outside-held']],
-    ['independence', ['outside-held', 'outside-free']],
-  ];
-  const conclusions = dependencies.filter(([id, required]) =>
-    !state.experiment.conclusions.includes(id) && required.every(item => state.experiment.discovered.includes(item)))
-    .map(([id]) => id);
+  const conclusions = (Object.keys(EXPERIMENT_COMPARISONS) as ExperimentConclusion[]).filter(id =>
+    !state.experiment.conclusions.includes(id)
+    && EXPERIMENT_COMPARISONS[id].every(item => state.experiment.discovered.includes(item)));
   state.experiment.conclusions.push(...conclusions);
   return { fresh, conclusions };
 }

@@ -1,0 +1,34 @@
+{
+  "source": "https://snoblin.itch.io/pixel-rpg-free-npc",
+  "author": "Snoblin",
+  "frame": { "width": 32, "height": 32, "anchorX": 16, "anchorY": 23, "scale": 2 },
+  "directions": {
+    "down": { "row": 0, "flipX": false },
+    "left": { "row": 1, "flipX": true },
+    "right": { "row": 1, "flipX": false },
+    "up": { "row": 2, "flipX": false }
+  },
+  "animations": {
+    "idle": { "columns": 2, "frameRate": 4 },
+    "walk": { "columns": 4, "frameRate": 10 }
+  },
+  "characters": {
+    "pruto": {
+      "sourceColor": "Blue",
+      "idle": "/assets/characters/snoblin-prototype/pruto-idle.png",
+      "walk": "/assets/characters/snoblin-prototype/pruto-walk.png",
+      "portrait": "/assets/characters/snoblin-prototype/pruto-portrait.png"
+    },
+    "karo": {
+      "sourceColor": "Red",
+      "idle": "/assets/characters/snoblin-prototype/karo-idle.png",
+      "walk": "/assets/characters/snoblin-prototype/karo-walk.png",
+      "portrait": "/assets/characters/snoblin-prototype/karo-portrait.png"
+    },
+    "merin": {
+      "sourceColor": "Default",
+      "idle": "/assets/characters/snoblin-prototype/merin-idle.png",
+      "portrait": "/assets/characters/snoblin-prototype/merin-portrait.png"
+    }
+  }
+}

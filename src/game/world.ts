@@ -1,15 +1,15 @@
 import Phaser from 'phaser';
-import atlas from '../../assets/source/tilesets/reodesuxz/pixel-sci-fi/spritesheet.json';
-import map from '../content/maps/legacy-world.json';
-import frames from '../content/assets/interior-frames.json';
-import layout from '../content/maps/legacy-interior.json';
-import assets from '../content/assets/runtime-assets.json';
-import { inside, moveVector, nearest, type Rect } from '../core/world-geometry.ts';
+import { FRAMES } from './frame-catalog.ts';
+import ui from '../content/text/ui.json' with { type: 'json' };
+import { moveVector, nearest } from '../core/world-geometry.ts';
 import type { GameState } from '../core/state.ts';
+import { getRoom, safeRoom, blocked, doorLock, exitAt, objectVisible, interactionTargets, type StationRoom, type WorldObject } from './station-map.ts';
+import { drawRoom, drawProp, objectLabel } from './station-renderer.ts';
+import { loadCharacters, registerCharacters, createCharacter, animateCharacter, type Facing } from './characters.ts';
+import { KaroJourney, karoBlocksPlayer, type KaroPresence } from '../core/karo-journey.ts';
+import type { Branch } from '../core/state.ts';
 
-const interior = { frames, decorations: layout.decorations };
-
-export type WorldObject = typeof map.objects[number];
+export type { WorldObject } from './station-map.ts';
 export interface WorldHost {
   state: () => GameState;
   active: () => boolean;
@@ -17,184 +17,237 @@ export interface WorldHost {
   target: (object?: WorldObject) => void;
   meetKaro: () => void;
   failed: () => void;
+  roomChanged?: (id: string) => void;
+  exitPublic?: () => boolean;
 }
 export class StationScene extends Phaser.Scene {
   keys = new Set<string>();
   private host: WorldHost;
-  private player?: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  private player?: Phaser.GameObjects.Sprite;
+  private shadow?: Phaser.GameObjects.Ellipse;
   private highlight?: Phaser.GameObjects.Rectangle;
-  private objects: WorldObject[] = [];
-  private objectImages = new Map<string, Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle>();
-  private floors: Rect[] = [];
+  private room: StationRoom = getRoom('arrival');
+  private objectImages = new Map<string, Phaser.GameObjects.Container>();
+  private labels = new Map<string, Phaser.GameObjects.Text>();
+  private gates: { image: Phaser.GameObjects.Rectangle; label: Phaser.GameObjects.Text }[] = [];
   private started = false;
-  private stable = false;
+  private facing: Facing = 'down';
   private lastTarget = '';
-  private gates: Phaser.GameObjects.Rectangle[] = [];
+  private failure = false;
+  private lateOutline?: Phaser.GameObjects.Rectangle;
+  private lateProp?: Phaser.GameObjects.Container;
+  private repaired?: Phaser.GameObjects.Text;
+  private changing = false;
+  private journey = new KaroJourney();
+  private karo?: Phaser.GameObjects.Sprite;
+  private karoShadow?: Phaser.GameObjects.Ellipse;
+  private karoLabel?: Phaser.GameObjects.Text;
+  private karoPresence?: KaroPresence;
+  get changingRoom(): boolean { return this.changing; }
+  karoIsHere(): boolean { return this.karoPresence?.room === this.room.id && !this.karoPresence.moving; }
+  startKaroDeparture(branch: Branch): void { this.journey.depart(branch); }
   constructor(host: WorldHost) { super('station'); this.host = host; }
   preload(): void {
-    this.load.image('station', assets.images.station);
-    this.load.image('interior-tiles', assets.images['interior-tiles']);
-    this.load.image('interior-props', assets.images['interior-props']);
-    this.load.on('loaderror', () => this.host.failed());
+    this.failure = false;
+    this.load.image('steel-objects', '/assets/tilesets/steel-soldier/floor-objects.png');
+    this.load.image('steel-walls', '/assets/tilesets/steel-soldier/walls-roofs.png');
+    this.load.image('garden-furniture', '/assets/tilesets/sierrassets/garden-furniture.png');
+    loadCharacters(this);
+    this.load.on('loaderror', () => { this.failure = true; this.host.failed(); });
   }
   create(): void {
-    if (this.textures.exists('station')) {
-      const texture = this.textures.get('station');
-      for (const [name, frame] of Object.entries(atlas.frames)) {
-        texture.add(name, 0, frame.x, frame.y, frame.w, frame.h);
-      }
+    if (this.failure) return;
+    for (const [name, frame] of Object.entries(FRAMES)) {
+      this.textures.get(frame.texture).add(name, 0, frame.x, frame.y, frame.w, frame.h);
     }
-    for (const [name, frame] of Object.entries(interior.frames)) {
-      if (this.textures.exists(frame.texture)) {
-        this.textures.get(frame.texture).add(name, 0, frame.x, frame.y, frame.w, frame.h);
-      }
-    }
+    registerCharacters(this);
     this.started = true;
     this.drawWorld(false);
     this.host.ready();
   }
-  private sprite(x: number, y: number, name: string): Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle {
-    if (this.textures.exists('station') && this.textures.get('station').has(name)) {
-      return this.add.image(x, y, 'station', name).setScale(2);
-    }
-    const frame = (interior.frames as Record<string, { texture: string }>)[name];
-    if (frame && this.textures.exists(frame.texture)) return this.add.image(x, y, frame.texture, name);
-    return this.add.rectangle(x, y, 28, 28, 0x55788c).setStrokeStyle(1, 0xa6b7cc);
-  }
-  private floor(rect: Rect, tile: string): void {
-    for (let x = rect.x; x < rect.x + rect.w; x += 32) {
-      for (let y = rect.y; y < rect.y + rect.h; y += 32) {
-        const variant = tile.endsWith('_1') && (x / 32 + y / 32) % 5 === 0 ? tile.replace('_1', '_2') : tile;
-        this.sprite(x + 16, y + 16, variant).setDepth(-2);
-      }
-    }
-    this.add.rectangle(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.w, rect.h)
-      .setStrokeStyle(2, 0x55788c).setFillStyle(0, 0).setDepth(-1);
-  }
-  private walls(): void {
-    const placed = new Set<string>();
-    const wall = (x: number, y: number, side: boolean) => {
-      const key = `${x}:${y}`;
-      if (placed.has(key) || this.floors.some(rect => inside(x, y, rect))) return;
-      placed.add(key);
-      const tile = side ? (Math.floor(y / 32) % 4 === 0 ? 'cyan-wall' : 'white-wall') : 'wall_steel_face';
-      this.sprite(x, y, tile).setDepth(-1);
-    };
-    for (const rect of this.floors) {
-      for (let x = rect.x; x < rect.x + rect.w; x += 32) {
-        wall(x + 16, rect.y - 16, false);
-        wall(x + 16, rect.y + rect.h + 16, false);
-      }
-      for (let y = rect.y; y < rect.y + rect.h; y += 32) {
-        wall(rect.x - 16, y + 16, true);
-        wall(rect.x + rect.w + 16, y + 16, true);
-      }
-    }
-  }
   drawWorld(stable: boolean): void {
     if (!this.started) return;
-    this.stable = stable;
+    this.journey.reset(this.host.state());
+    const app = document.getElementById('app');
+    if (app) app.dataset.roomTransition = 'idle';
+    this.enterRoom(safeRoom(this.host.state(), stable));
+  }
+  protected enterRoom(id: string, entry?: string, from?: string, preserveMovement = false): void {
+    if (id === 'junction' && from === this.host.state().branch) this.journey.returnFromPartner(this.host.state());
+    this.room = getRoom(id);
     this.children.removeAll(true);
-    this.objectImages.clear();
-    this.gates = [];
-    this.lastTarget = '';
-    this.host.target();
-    if (stable) {
-      this.floors = [map.stable.room];
-      this.floor(map.stable.room, 'floor_holo_grid');
-      this.objects = map.stable.objects;
-    } else {
-      this.floors = [...map.rooms, ...map.corridors];
-      for (const room of map.rooms) {
-        this.floor(room, room.floor);
-        this.add.text(room.x + 12, room.y - 26, room.label, {
-          fontFamily: 'OrbitPixel', fontSize: '20px', color: '#b5e6dc', backgroundColor: '#071d30',
-          padding: { left: 8, right: 8, top: 2, bottom: 2 },
-        }).setDepth(2);
-      }
-      for (const corridor of map.corridors) this.floor(corridor, 'floor_steel_1');
-      this.objects = map.objects;
-      // Decoration occupies no walkable path; gameplay collision is explicit below.
-      for (const [x, y] of [[576, 896], [736, 896], [960, 896], [1056, 896]]) this.sprite(x, y, 'crate_blue');
-      this.gates = [
-        this.add.rectangle(576, 384, 6, 64, 0xf18989).setDepth(3),
-        this.add.rectangle(1152, 384, 6, 64, 0xf18989).setDepth(3),
-        this.add.rectangle(1248, 800, 6, 64, 0xf1c773).setDepth(3),
-      ];
-    }
-    this.walls();
-    for (const decoration of interior.decorations) {
-      if ((decoration.room === 'stable') === stable) {
-        this.sprite(decoration.x, decoration.y, decoration.sprite).setDepth(1);
+    this.objectImages.clear(); this.labels.clear(); this.gates = [];
+    this.lastTarget = ''; this.host.target();
+    if (!preserveMovement) this.keys.clear();
+    this.lateOutline = undefined; this.lateProp = undefined;
+    drawRoom(this, this.room);
+    for (const prop of this.room.decorations) {
+      const image = drawProp(this, prop);
+      if (prop.lateAnomaly) {
+        this.lateProp = image;
+        const frame = FRAMES[prop.frame];
+        this.lateOutline = this.add.rectangle(prop.x, prop.y - frame.h, frame.w * 2, frame.h * 2)
+          .setStrokeStyle(2, 0x8ac9d2).setFillStyle(0, 0).setDepth(prop.y).setVisible(false);
       }
     }
-    for (const object of this.objects) this.objectImages.set(object.id, this.sprite(object.x, object.y, object.sprite));
-    this.player = this.sprite(256, 800, 'astronaut').setDepth(5);
-    this.highlight = this.add.rectangle(0, 0, 38, 38).setStrokeStyle(2, 0xffffff).setFillStyle(0, 0).setDepth(6).setVisible(false);
-    this.cameras.main.setBounds(0, 0, stable ? 960 : 1792, stable ? 540 : 1056);
-    this.cameras.main.startFollow(this.player, true, 1, 1);
-    this.resumeAtSafePoint();
-  }
-  resumeAtSafePoint(): void {
-    if (!this.player) return;
-    const state = this.host.state();
-    let x = 256, y = 800;
-    if (this.stable) { x = 480; y = 320; }
-    else if (['branch', 'report', 'phone3'].includes(state.phase)) {
-      x = state.branch === 'symbols' ? 352 : 1376; y = state.branch === 'symbols' ? 320 : 416;
-    } else if (state.phase === 'maintenance' || state.phase === 'entrance') { x = 1408; y = 832; }
-    else if (state.phase === 'revisit') { x = 832; y = 832; }
-    this.player.setPosition(x, y);
-    this.keys.clear();
-    this.cameras.main.centerOn(x, y);
-  }
-  teleport(x: number, y: number): void {
-    this.player?.setPosition(x, y);
-    this.keys.clear();
-    this.cameras.main.centerOn(x, y);
-  }
-  private visible(object: WorldObject): boolean {
-    const state = this.host.state();
-    if (object.id === 'karo-stable') return state.registered;
-    return object.id !== 'karo' || (state.evidence.includes('met-karo') && !['branch', 'report', 'phone3'].includes(state.phase));
-  }
-  private blocked(x: number, y: number): boolean {
-    const state = this.host.state();
-    const radius = 9;
-    if (![[x - radius, y - radius], [x + radius, y - radius], [x - radius, y + radius], [x + radius, y + radius]]
-      .every(([cx, cy]) => this.floors.some(rect => inside(cx, cy, rect)))) return true;
-    if (!this.stable) {
-      if (!state.branch && (inside(x, y, map.rooms[3]) || inside(x, y, map.rooms[4]))) return true;
-      if (state.branch === 'symbols' && inside(x, y, map.rooms[4])) return true;
-      if (state.branch === 'objects' && inside(x, y, map.rooms[3])) return true;
-      if (state.phase === 'branch' && state.branch) {
-        const room = map.rooms[state.branch === 'symbols' ? 3 : 4];
-        if (!inside(x - radius, y - radius, room) || !inside(x + radius, y + radius, room)) return true;
-      }
-      if (!state.phones.third && inside(x, y, map.rooms[5])) return true;
+    for (const object of this.room.objects) {
+      if (['karo', 'karo-stable'].includes(object.id)) continue;
+      this.objectImages.set(object.id, drawProp(this, object));
+      this.labels.set(object.id, objectLabel(this, object));
     }
-    return this.objects.some(item => this.visible(item) && Math.abs(x - item.x) < 24 && Math.abs(y - item.y) < 24);
+    for (const object of this.room.inspections) this.labels.set(object.id, objectLabel(this, object));
+    for (const door of this.room.doors) {
+      const x = door.side === 'west' ? this.room.room.x - 16 : this.room.room.x + this.room.room.w + 16;
+      this.gates.push({
+        image: this.add.rectangle(x, door.y + 32, 6, 64, 0xf1ad8e).setDepth(900),
+        label: this.add.text(x, door.y + 66, '', {
+          fontFamily: 'OrbitPixel', fontSize: '10px', color: '#f1cfaa', backgroundColor: '#162432',
+        }).setOrigin(0.5, 0).setDepth(1001),
+      });
+    }
+    this.repaired = this.add.text(480, 474, ui.station.repaired, {
+      fontFamily: 'OrbitPixel', fontSize: '10px', color: '#b1e4cf',
+    }).setOrigin(0.5).setDepth(1000);
+    let { x, y } = this.room.spawn;
+    if (entry) {
+      const door = this.room.doors.find(item => item.side === entry && (!from || item.to === from));
+      if (door) {
+        x = entry === 'west' ? this.room.room.x + 40 : this.room.room.x + this.room.room.w - 40;
+        y = door.y + 32;
+      }
+    }
+    this.shadow = this.add.ellipse(x, y + 2, 24, 8, 0x080d17, 0.5).setDepth(y - 1);
+    this.player = createCharacter(this, 'pruto', x, y);
+    this.karo = createCharacter(this, 'karo', 0, 0).setVisible(false);
+    this.karoShadow = this.add.ellipse(0, 0, 20, 6, 0x080d17, 0.45).setVisible(false);
+    this.karoLabel = this.add.text(0, 0, '', {
+      fontFamily: 'OrbitPixel', fontSize: '10px', color: '#d9e7e1', backgroundColor: '#0d2534',
+    }).setOrigin(0.5, 0).setDepth(1000).setVisible(false);
+    this.highlight = this.add.rectangle(0, 0, 72, 28).setStrokeStyle(2, 0xffffff)
+      .setFillStyle(0, 0).setDepth(1100).setVisible(false);
+    this.cameras.main.stopFollow();
+    this.cameras.main.setBounds(0, 0, 960, 540).centerOn(480, 270);
+    this.host.roomChanged?.(id);
+  }
+  returnToPublic(): void { if (this.started) this.changeRoom('public'); }
+  private changeRoom(id: string, entry?: string): void {
+    if (this.changing) return;
+    this.changing = true;
+    const from = this.room.id;
+    const app = document.getElementById('app');
+    if (app) app.dataset.roomTransition = 'out';
+    this.cameras.main.once('camerafadeoutcomplete', () => {
+      this.enterRoom(id, entry, from, true);
+      if (app) app.dataset.roomTransition = 'in';
+      this.cameras.main.once('camerafadeincomplete', () => {
+        this.changing = false;
+        if (app) app.dataset.roomTransition = 'idle';
+      });
+      this.cameras.main.fadeIn(500, 0, 0, 0);
+    });
+    this.cameras.main.fadeOut(500, 0, 0, 0);
+  }
+  private karoTarget(): WorldObject | undefined {
+    if (!this.karoIsHere() || !this.karoPresence) return;
+    const { x, y } = this.karoPresence;
+    const id = this.room.id === 'stable' ? 'karo-stable' : 'karo';
+    const original = getRoom(id === 'karo-stable' ? 'stable' : 'junction').objects.find(object => object.id === id)!;
+    return {
+      ...original, room: this.room.id, x, y,
+      footprint: { x: x - 12, y: y - 12, w: 24, h: 12 },
+    };
+  }
+  private blockedAt(x: number, y: number): boolean {
+    const karo = this.karoTarget();
+    // 玩家可穿过行动中的Karo；若恰好在停点相遇，先允许走离，不能在停下那帧困住玩家。
+    const solid = this.karoPresence && karoBlocksPlayer(this.karoPresence, this.player);
+    return blocked(this.room, x, y, this.host.state(), ['karo', 'karo-stable'], karo && solid ? [karo] : []);
   }
   update(_time: number, delta: number): void {
     if (!this.player) return;
     const state = this.host.state();
-    this.gates[0]?.setVisible(state.branch !== 'symbols' || state.phase === 'branch');
-    this.gates[1]?.setVisible(state.branch !== 'objects' || state.phase === 'branch');
-    this.gates[2]?.setVisible(!state.phones.third);
-    for (const object of this.objects) this.objectImages.get(object.id)?.setVisible(this.visible(object));
-    if (!this.host.active()) { this.keys.clear(); this.highlight?.setVisible(false); return; }
-    const movement = moveVector(this.keys, Math.min(delta, 50) / 1000);
-    const nextX = this.player.x + movement.x, nextY = this.player.y + movement.y;
-    if (!this.blocked(nextX, this.player.y)) this.player.x = nextX;
-    if (!this.blocked(this.player.x, nextY)) this.player.y = nextY;
-    const target = nearest(this.player.x, this.player.y, this.objects.filter(item => this.visible(item)));
-    if (target) this.highlight?.setPosition(target.x, target.y).setVisible(true);
-    else this.highlight?.setVisible(false);
+    if (this.host.active() && !this.changing) this.journey.advance(Math.min(delta, 50) / 1000);
+    this.karoPresence = this.journey.presence(state);
+    const here = this.karoPresence?.room === this.room.id;
+    this.karo?.setVisible(here); this.karoShadow?.setVisible(here);
+    if (here && this.karoPresence && this.karo) {
+      const { x, y, facing, moving } = this.karoPresence;
+      this.karo.setPosition(x, y).setDepth(y);
+      this.karoShadow?.setPosition(x, y + 2).setDepth(y - 1);
+      animateCharacter(this.karo, 'karo', facing, moving);
+    }
+    for (const [index, door] of this.room.doors.entries()) {
+      const lock = doorLock(this.room, door, state);
+      this.gates[index].image.setVisible(Boolean(lock));
+      this.gates[index].label.setText(lock ?? '').setVisible(Boolean(lock));
+    }
+    for (const object of this.room.objects) this.objectImages.get(object.id)?.setVisible(objectVisible(object, state));
+    const late = state.experiment.discovered.length === 4 && state.evidence.includes('storage') && state.phase !== 'revisit';
+    this.lateProp?.setVisible(!late);
+    this.lateOutline?.setVisible(late);
+    this.repaired?.setVisible(state.phase === 'revisit');
+    const active = this.host.active() && !this.changing;
+    if (!this.host.active()) this.keys.clear();
+    const movement = active ? moveVector(this.keys, Math.min(delta, 50) / 1000) : { x: 0, y: 0 };
+    if (!this.blockedAt(this.player.x + movement.x, this.player.y)) this.player.x += movement.x;
+    if (!this.blockedAt(this.player.x, this.player.y + movement.y)) this.player.y += movement.y;
+    if (movement.x || movement.y) {
+      this.facing = Math.abs(movement.x) > Math.abs(movement.y)
+        ? (movement.x < 0 ? 'left' : 'right') : (movement.y < 0 ? 'up' : 'down');
+    }
+    animateCharacter(this.player, 'pruto', this.facing, Boolean(movement.x || movement.y));
+    this.player.setDepth(this.player.y);
+    this.shadow?.setPosition(this.player.x, this.player.y + 2).setDepth(this.player.y - 1);
+    const karo = this.karoTarget();
+    const targets = interactionTargets(this.room, state).filter(item => !['karo', 'karo-stable'].includes(item.id));
+    if (karo) targets.push(karo);
+    const target = active ? nearest(this.player.x, this.player.y, targets) : undefined;
+    this.karoLabel?.setVisible(target?.id === karo?.id && Boolean(karo));
+    if (karo) this.karoLabel?.setText(karo.label).setPosition(karo.x, karo.y + 6);
+    this.highlight?.setVisible(Boolean(target));
+    if (target) {
+      const frame = FRAMES[target.frame];
+      if (target.id.startsWith('inspect-gate-')) this.highlight?.setSize(16, 64).setPosition(target.x, target.y);
+      else if (frame && target.render !== false) {
+        const anchor = frame.anchor ?? { x: frame.w / 2, y: frame.h };
+        this.highlight?.setSize(frame.w * 2 + 8, frame.h * 2 + 8).setPosition(
+          target.x + (frame.w / 2 - anchor.x) * 2,
+          target.y + (target.offsetY ?? 0) + (frame.h / 2 - anchor.y) * 2);
+      } else this.highlight?.setSize(32, 32).setPosition(target.x, target.y - 8);
+    }
+    for (const [id, label] of this.labels) label.setVisible(id === target?.id);
     if ((target?.id ?? '') !== this.lastTarget) {
       this.lastTarget = target?.id ?? '';
       this.host.target(target);
     }
-    if (!this.stable && !this.host.state().evidence.includes('met-karo')
-      && inside(this.player.x, this.player.y, map.rooms[2])) this.host.meetKaro();
+    const app = document.getElementById('app');
+    if (app) {
+      app.dataset.room = this.room.id;
+      app.dataset.playerX = this.player.x.toFixed(2);
+      app.dataset.playerY = this.player.y.toFixed(2);
+      app.dataset.target = target?.id ?? '';
+      app.dataset.facing = this.facing;
+      app.dataset.characterTexture = this.player.texture.key;
+      app.dataset.characterFrame = String(this.player.frame.name);
+      app.dataset.characterFlipX = String(this.player.flipX);
+      app.dataset.karoRoom = this.karoPresence?.room ?? '';
+      app.dataset.karoX = String(this.karoPresence?.x ?? '');
+      app.dataset.karoY = String(this.karoPresence?.y ?? '');
+      app.dataset.karoMoving = String(this.karoPresence?.moving ?? false);
+      app.dataset.karoTexture = here ? this.karo?.texture.key ?? '' : '';
+    }
+    if (!active) return;
+    if (this.room.id === 'junction' && !state.evidence.includes('met-karo')) {
+      this.host.meetKaro(); return;
+    }
+    const exit = exitAt(this.room, this.player.x, this.player.y);
+    if (exit && !doorLock(this.room, exit, state)) {
+      if (this.room.id === 'public' && this.host.exitPublic?.()) {
+        // 退回走廊内侧；未看完证据时，不让同一次触门每帧重复弹出。
+        this.player.x += exit.side === 'west' ? 32 : -32;
+        this.keys.clear(); return;
+      }
+      this.changeRoom(exit.to, exit.entry);
+    }
   }
 }

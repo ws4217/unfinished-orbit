@@ -1,0 +1,1153 @@
+{
+  "rooms": [
+    {
+      "id": "arrival",
+      "label": "对接入口 / DOCK 01",
+      "room": {
+        "x": 224,
+        "y": 160,
+        "w": 448,
+        "h": 256
+      },
+      "spawn": {
+        "x": 320,
+        "y": 336
+      },
+      "doors": [
+        {
+          "side": "east",
+          "y": 288,
+          "to": "public",
+          "entry": "west",
+          "label": "公共区"
+        }
+      ],
+      "objects": [],
+      "decorations": [
+        {
+          "id": "decor-arrival-window",
+          "label": "舷窗",
+          "textId": "arrival-window",
+          "frame": "glass-blue",
+          "x": 512,
+          "y": 176,
+          "offsetY": -32,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 512,
+            "y": 208
+          }
+        },
+        {
+          "id": "decor-arrival-cabinet",
+          "label": "服务机柜",
+          "textId": "arrival-cabinet",
+          "frame": "cabinet",
+          "x": 592,
+          "y": 224,
+          "footprint": {
+            "x": 544,
+            "y": 208,
+            "w": 96,
+            "h": 16
+          },
+          "stand": {
+            "x": 592,
+            "y": 260
+          }
+        },
+        {
+          "id": "decor-arrival-terminal",
+          "label": "服务终端",
+          "textId": "arrival-terminal",
+          "frame": "terminal",
+          "x": 448,
+          "y": 208,
+          "stand": {
+            "x": 448,
+            "y": 244
+          }
+        },
+        {
+          "id": "decor-arrival-bench",
+          "label": "等候椅",
+          "textId": "arrival-bench",
+          "frame": "arrival-chair",
+          "x": 544,
+          "y": 384,
+          "footprint": {
+            "x": 532,
+            "y": 372,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 512,
+            "y": 384
+          }
+        },
+        {
+          "id": "decor-arrival-plant",
+          "label": "入口小树",
+          "textId": "arrival-plant",
+          "frame": "plant",
+          "x": 272,
+          "y": 392,
+          "footprint": {
+            "x": 260,
+            "y": 380,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 304,
+            "y": 392
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 448,
+          "y": 160,
+          "w": 160,
+          "h": 96
+        }
+      ]
+    },
+    {
+      "id": "public",
+      "label": "公共区 / P-01",
+      "doors": [
+        {
+          "side": "west",
+          "y": 320,
+          "to": "arrival",
+          "entry": "east",
+          "label": "对接入口"
+        },
+        {
+          "side": "east",
+          "y": 256,
+          "to": "junction",
+          "entry": "west",
+          "label": "岔路口"
+        }
+      ],
+      "objects": [
+        {
+          "id": "old-note",
+          "frame": "terminal-red-short",
+          "x": 240,
+          "y": 176,
+          "footprint": {
+            "x": 228,
+            "y": 164,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 240,
+            "y": 208
+          },
+          "label": "居民留言"
+        },
+        {
+          "id": "p01",
+          "frame": "projection",
+          "x": 416,
+          "y": 208,
+          "footprint": {
+            "x": 384,
+            "y": 184,
+            "w": 64,
+            "h": 24
+          },
+          "stand": {
+            "x": 416,
+            "y": 240
+          },
+          "label": "P-01 星图投影器"
+        },
+        {
+          "id": "merin",
+          "frame": "character-merin",
+          "x": 656,
+          "y": 272,
+          "footprint": {
+            "x": 644,
+            "y": 260,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 656,
+            "y": 308
+          },
+          "label": "Merin"
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-public-tree",
+          "label": "大树",
+          "textId": "public-tree",
+          "frame": "tree-large",
+          "x": 288,
+          "y": 400,
+          "footprint": {
+            "x": 276,
+            "y": 388,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 288,
+            "y": 432
+          }
+        },
+        {
+          "id": "decor-public-shrub-a",
+          "label": "灌木",
+          "textId": "public-shrub-a",
+          "frame": "shrub-a",
+          "x": 224,
+          "y": 392,
+          "footprint": {
+            "x": 214,
+            "y": 382,
+            "w": 20,
+            "h": 10
+          },
+          "stand": {
+            "x": 224,
+            "y": 424
+          }
+        },
+        {
+          "id": "decor-public-shrub-b",
+          "label": "另一丛灌木",
+          "textId": "public-shrub-b",
+          "frame": "shrub-b",
+          "x": 352,
+          "y": 400,
+          "footprint": {
+            "x": 342,
+            "y": 390,
+            "w": 20,
+            "h": 10
+          },
+          "stand": {
+            "x": 352,
+            "y": 432
+          }
+        },
+        {
+          "id": "decor-public-green-bed",
+          "label": "种植区",
+          "textId": "public-green-bed",
+          "frame": "grass-base",
+          "x": 224,
+          "y": 336,
+          "render": false,
+          "solid": false,
+          "stand": {
+            "x": 224,
+            "y": 336
+          }
+        },
+        {
+          "id": "decor-public-table",
+          "label": "金属桌",
+          "textId": "public-table",
+          "frame": "metal-table",
+          "x": 560,
+          "y": 416,
+          "footprint": {
+            "x": 512,
+            "y": 400,
+            "w": 96,
+            "h": 16
+          },
+          "lateAnomaly": true,
+          "stand": {
+            "x": 560,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-public-bench-a",
+          "label": "绿岛旁长椅",
+          "textId": "public-bench-a",
+          "frame": "bench",
+          "x": 464,
+          "y": 416,
+          "stand": {
+            "x": 464,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-public-bench-b",
+          "label": "空着的长椅",
+          "textId": "public-bench-b",
+          "frame": "bench",
+          "x": 656,
+          "y": 416,
+          "stand": {
+            "x": 656,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-public-reception",
+          "label": "接待设备",
+          "textId": "public-reception",
+          "frame": "reception-round",
+          "x": 656,
+          "y": 240,
+          "footprint": {
+            "x": 632,
+            "y": 224,
+            "w": 48,
+            "h": 16
+          },
+          "stand": {
+            "x": 656,
+            "y": 204
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 352,
+          "y": 128,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "x": 608,
+          "y": 128,
+          "w": 96,
+          "h": 128
+        }
+      ],
+      "room": {
+        "x": 160,
+        "y": 128,
+        "w": 576,
+        "h": 320
+      },
+      "spawn": {
+        "x": 244,
+        "y": 348
+      },
+      "ground": {
+        "rect": {
+          "x": 192,
+          "y": 320,
+          "w": 192,
+          "h": 96
+        },
+        "columns": 6,
+        "tiles": [
+          "grass-base",
+          "grass-base",
+          "grass-detail",
+          "grass-base",
+          "grass-base",
+          "grass-base",
+          "grass-base",
+          "grass-detail",
+          "grass-base",
+          "grass-base",
+          "grass-detail",
+          "grass-base",
+          "grass-stones",
+          "grass-base",
+          "grass-base",
+          "grass-base",
+          "grass-base",
+          "grass-stones"
+        ]
+      }
+    },
+    {
+      "id": "junction",
+      "label": "分工廊 / JUNCTION",
+      "room": {
+        "x": 192,
+        "y": 128,
+        "w": 576,
+        "h": 320
+      },
+      "spawn": {
+        "x": 416,
+        "y": 304
+      },
+      "doors": [
+        {
+          "side": "west",
+          "y": 352,
+          "to": "public",
+          "entry": "east",
+          "label": "公共区"
+        },
+        {
+          "side": "west",
+          "y": 160,
+          "to": "symbols",
+          "entry": "east",
+          "label": "符号维护室"
+        },
+        {
+          "side": "east",
+          "y": 160,
+          "to": "objects",
+          "entry": "west",
+          "label": "物件维护室"
+        },
+        {
+          "side": "east",
+          "y": 352,
+          "to": "maintenance",
+          "entry": "west",
+          "label": "维护间"
+        }
+      ],
+      "objects": [
+        {
+          "id": "karo",
+          "label": "Karo",
+          "frame": "character-karo",
+          "x": 480,
+          "y": 240
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-junction-cabinet",
+          "label": "墙边机柜",
+          "textId": "junction-cabinet",
+          "frame": "cabinet",
+          "x": 672,
+          "y": 272,
+          "footprint": {
+            "x": 632,
+            "y": 256,
+            "w": 80,
+            "h": 16
+          },
+          "stand": {
+            "x": 672,
+            "y": 308
+          }
+        },
+        {
+          "id": "decor-junction-vent",
+          "label": "通风口",
+          "textId": "junction-vent",
+          "frame": "tech-vent",
+          "x": 352,
+          "y": 144,
+          "offsetY": -16,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 352,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-junction-pipe",
+          "label": "墙边管线",
+          "textId": "junction-pipe",
+          "frame": "tech-pipe",
+          "x": 576,
+          "y": 144,
+          "offsetY": -16,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 576,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-junction-table",
+          "label": "走廊小桌",
+          "textId": "junction-table",
+          "frame": "table",
+          "x": 352,
+          "y": 416,
+          "lateAnomaly": true,
+          "stand": {
+            "x": 352,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-junction-rack",
+          "label": "侧边设备柜",
+          "textId": "junction-cabinet",
+          "frame": "tech-rack",
+          "x": 272,
+          "y": 256,
+          "stand": {
+            "x": 272,
+            "y": 292
+          }
+        },
+        {
+          "id": "decor-junction-screen",
+          "label": "记录屏",
+          "textId": "junction-screen",
+          "frame": "terminal-blue-short",
+          "x": 320,
+          "y": 224,
+          "stand": {
+            "x": 356,
+            "y": 224
+          }
+        },
+        {
+          "id": "decor-junction-bench",
+          "label": "走廊长椅",
+          "textId": "junction-bench",
+          "frame": "bench",
+          "x": 272,
+          "y": 416,
+          "stand": {
+            "x": 272,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-junction-plant",
+          "label": "设备旁植物",
+          "textId": "symbols-plant",
+          "frame": "plant",
+          "x": 688,
+          "y": 448,
+          "stand": {
+            "x": 688,
+            "y": 412
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 608,
+          "y": 128,
+          "w": 128,
+          "h": 320
+        }
+      ]
+    },
+    {
+      "id": "symbols",
+      "label": "符号维护室 / MAPPING",
+      "room": {
+        "x": 192,
+        "y": 128,
+        "w": 544,
+        "h": 320
+      },
+      "spawn": {
+        "x": 352,
+        "y": 320
+      },
+      "doors": [
+        {
+          "side": "east",
+          "y": 288,
+          "to": "junction",
+          "entry": "west",
+          "label": "返回分工廊"
+        }
+      ],
+      "objects": [
+        {
+          "id": "symbol-terminal",
+          "label": "符号终端",
+          "frame": "console",
+          "x": 464,
+          "y": 224
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-symbols-screen",
+          "label": "辅助记录屏",
+          "textId": "symbols-screen",
+          "frame": "terminal-blue-short",
+          "x": 272,
+          "y": 192,
+          "stand": {
+            "x": 272,
+            "y": 228
+          }
+        },
+        {
+          "id": "decor-symbols-cabinet",
+          "label": "窄设备柜",
+          "textId": "symbols-cabinet",
+          "frame": "cabinet",
+          "x": 640,
+          "y": 224,
+          "footprint": {
+            "x": 600,
+            "y": 208,
+            "w": 80,
+            "h": 16
+          },
+          "stand": {
+            "x": 640,
+            "y": 260
+          }
+        },
+        {
+          "id": "decor-symbols-bench",
+          "label": "工作座椅",
+          "textId": "symbols-bench",
+          "frame": "bench",
+          "x": 464,
+          "y": 416,
+          "stand": {
+            "x": 464,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-symbols-plant",
+          "label": "设备旁植物",
+          "textId": "symbols-plant",
+          "frame": "plant",
+          "x": 656,
+          "y": 416,
+          "stand": {
+            "x": 620,
+            "y": 416
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 384,
+          "y": 128,
+          "w": 160,
+          "h": 160
+        }
+      ]
+    },
+    {
+      "id": "objects",
+      "label": "物件维护室 / ORDERING",
+      "room": {
+        "x": 160,
+        "y": 128,
+        "w": 608,
+        "h": 320
+      },
+      "spawn": {
+        "x": 288,
+        "y": 352
+      },
+      "doors": [
+        {
+          "side": "west",
+          "y": 320,
+          "to": "junction",
+          "entry": "east",
+          "label": "返回分工廊"
+        }
+      ],
+      "objects": [
+        {
+          "id": "base-dark",
+          "label": "暗星的底座",
+          "frame": "projection",
+          "x": 272,
+          "y": 192
+        },
+        {
+          "id": "base-moon",
+          "label": "弯月的底座",
+          "frame": "projection",
+          "x": 432,
+          "y": 192
+        },
+        {
+          "id": "base-tomorrow",
+          "label": "明日的底座",
+          "frame": "projection",
+          "x": 592,
+          "y": 192
+        },
+        {
+          "id": "base-comet",
+          "label": "彗星的底座",
+          "frame": "projection",
+          "x": 688,
+          "y": 288
+        },
+        {
+          "id": "object-terminal",
+          "label": "排列操作台",
+          "frame": "console",
+          "x": 480,
+          "y": 352
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-objects-cabinet",
+          "label": "测试机柜",
+          "textId": "objects-cabinet",
+          "frame": "test-cabinet-corrected",
+          "x": 672,
+          "y": 416,
+          "footprint": {
+            "x": 632,
+            "y": 400,
+            "w": 80,
+            "h": 16
+          },
+          "stand": {
+            "x": 672,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-objects-unit",
+          "label": "立式设备",
+          "textId": "objects-unit",
+          "frame": "tech-tank",
+          "x": 352,
+          "y": 416,
+          "stand": {
+            "x": 352,
+            "y": 380
+          }
+        },
+        {
+          "id": "decor-objects-vent",
+          "label": "通风设施",
+          "textId": "objects-vent",
+          "frame": "tech-vent",
+          "x": 480,
+          "y": 144,
+          "offsetY": -16,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 480,
+            "y": 176
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 224,
+          "y": 128,
+          "w": 416,
+          "h": 96
+        },
+        {
+          "x": 640,
+          "y": 224,
+          "w": 96,
+          "h": 96
+        },
+        {
+          "x": 416,
+          "y": 288,
+          "w": 128,
+          "h": 96
+        }
+      ]
+    },
+    {
+      "id": "maintenance",
+      "label": "维护间 / LOCAL SERVICE",
+      "room": {
+        "x": 224,
+        "y": 128,
+        "w": 512,
+        "h": 320
+      },
+      "spawn": {
+        "x": 352,
+        "y": 336
+      },
+      "doors": [
+        {
+          "side": "west",
+          "y": 320,
+          "to": "junction",
+          "entry": "east",
+          "label": "返回分工廊"
+        }
+      ],
+      "objects": [
+        {
+          "id": "range",
+          "label": "维护告示牌",
+          "frame": "maintenance-notice-screen",
+          "x": 352,
+          "y": 192,
+          "footprint": {
+            "x": 328,
+            "y": 176,
+            "w": 48,
+            "h": 16
+          }
+        },
+        {
+          "id": "diagnosis",
+          "label": "P-01 诊断记录",
+          "frame": "terminal-blue-short",
+          "x": 624,
+          "y": 192
+        },
+        {
+          "id": "cleaner",
+          "label": "普通清理台",
+          "frame": "maintenance-cleaner-unit",
+          "x": 592,
+          "y": 352,
+          "footprint": {
+            "x": 544,
+            "y": 336,
+            "w": 96,
+            "h": 16
+          }
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-maintenance-module",
+          "label": "蓝色零件",
+          "textId": "maintenance-module",
+          "frame": "tool-module",
+          "x": 464,
+          "y": 144,
+          "offsetY": -48,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 464,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-maintenance-board",
+          "label": "线路板",
+          "textId": "maintenance-board",
+          "frame": "tool-board",
+          "x": 496,
+          "y": 144,
+          "offsetY": -48,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 496,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-maintenance-chip",
+          "label": "方形模块",
+          "textId": "maintenance-chip",
+          "frame": "tool-chip",
+          "x": 528,
+          "y": 144,
+          "offsetY": -48,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 528,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-maintenance-wrench",
+          "label": "扳手",
+          "textId": "maintenance-wrench",
+          "frame": "tool-wrench",
+          "x": 560,
+          "y": 144,
+          "offsetY": -48,
+          "depth": 36,
+          "shadow": false,
+          "solid": false,
+          "stand": {
+            "x": 560,
+            "y": 180
+          }
+        },
+        {
+          "id": "decor-maintenance-terminal",
+          "label": "另一个终端",
+          "textId": "maintenance-terminal",
+          "frame": "terminal-green-tall",
+          "x": 688,
+          "y": 192,
+          "stand": {
+            "x": 688,
+            "y": 228
+          }
+        },
+        {
+          "id": "decor-maintenance-bench",
+          "label": "维护间长椅",
+          "textId": "maintenance-bench",
+          "frame": "bench",
+          "x": 352,
+          "y": 416,
+          "stand": {
+            "x": 352,
+            "y": 380
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 256,
+          "y": 128,
+          "w": 448,
+          "h": 96
+        },
+        {
+          "x": 512,
+          "y": 288,
+          "w": 160,
+          "h": 96
+        }
+      ]
+    },
+    {
+      "id": "stable",
+      "label": "安定区 / OUR SMALL ORBIT",
+      "room": {
+        "x": 160,
+        "y": 128,
+        "w": 608,
+        "h": 320
+      },
+      "spawn": {
+        "x": 448,
+        "y": 336
+      },
+      "doors": [],
+      "objects": [
+        {
+          "id": "register",
+          "label": "登记与记录台",
+          "frame": "terminal",
+          "x": 608,
+          "y": 208
+        },
+        {
+          "id": "art",
+          "label": "星图与标记",
+          "frame": "projection",
+          "x": 336,
+          "y": 208
+        },
+        {
+          "id": "rest",
+          "label": "休息一会儿",
+          "frame": "bench",
+          "x": 608,
+          "y": 384,
+          "stand": {
+            "x": 608,
+            "y": 348
+          }
+        },
+        {
+          "id": "return",
+          "label": "返回公共区",
+          "frame": "terminal",
+          "x": 240,
+          "y": 368
+        },
+        {
+          "id": "karo-stable",
+          "label": "Karo",
+          "frame": "character-karo",
+          "x": 512,
+          "y": 224
+        }
+      ],
+      "decorations": [
+        {
+          "id": "decor-stable-table",
+          "label": "暖色小桌",
+          "textId": "stable-table",
+          "frame": "garden-table",
+          "x": 608,
+          "y": 432,
+          "footprint": {
+            "x": 596,
+            "y": 420,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 644,
+            "y": 432
+          }
+        },
+        {
+          "id": "decor-stable-chair",
+          "label": "木椅",
+          "textId": "stable-chair",
+          "frame": "garden-chair",
+          "x": 560,
+          "y": 432,
+          "footprint": {
+            "x": 552,
+            "y": 420,
+            "w": 16,
+            "h": 12
+          },
+          "stand": {
+            "x": 524,
+            "y": 432
+          }
+        },
+        {
+          "id": "decor-stable-bookcase",
+          "label": "书架",
+          "textId": "stable-bookcase",
+          "frame": "garden-bookcase",
+          "x": 680,
+          "y": 320,
+          "footprint": {
+            "x": 668,
+            "y": 308,
+            "w": 24,
+            "h": 12
+          },
+          "stand": {
+            "x": 644,
+            "y": 320
+          }
+        },
+        {
+          "id": "decor-stable-lamp",
+          "label": "落地灯",
+          "textId": "stable-lamp",
+          "frame": "garden-lamp",
+          "x": 664,
+          "y": 384,
+          "footprint": {
+            "x": 660,
+            "y": 376,
+            "w": 8,
+            "h": 8
+          },
+          "stand": {
+            "x": 664,
+            "y": 420
+          }
+        },
+        {
+          "id": "decor-stable-cushion",
+          "label": "坐垫",
+          "textId": "stable-cushion",
+          "frame": "garden-cushion",
+          "x": 560,
+          "y": 384,
+          "solid": false,
+          "shadow": false,
+          "stand": {
+            "x": 528,
+            "y": 384
+          }
+        },
+        {
+          "id": "decor-stable-pot",
+          "label": "小盆栽",
+          "textId": "stable-pot",
+          "frame": "garden-pot",
+          "x": 704,
+          "y": 352,
+          "footprint": {
+            "x": 698,
+            "y": 344,
+            "w": 12,
+            "h": 8
+          },
+          "stand": {
+            "x": 740,
+            "y": 352
+          }
+        },
+        {
+          "id": "decor-stable-coffee",
+          "label": "咖啡角",
+          "textId": "stable-coffee",
+          "frame": "garden-coffee-corner",
+          "x": 304,
+          "y": 304,
+          "footprint": {
+            "x": 276,
+            "y": 292,
+            "w": 56,
+            "h": 12
+          },
+          "stand": {
+            "x": 304,
+            "y": 340
+          }
+        },
+        {
+          "id": "decor-stable-woods",
+          "label": "林缘",
+          "textId": "stable-woods",
+          "frame": "grass-base",
+          "x": 176,
+          "y": 256,
+          "render": false,
+          "solid": false,
+          "stand": {
+            "x": 208,
+            "y": 256
+          }
+        },
+        {
+          "id": "decor-stable-stones",
+          "label": "散石",
+          "textId": "stable-stones",
+          "frame": "garden-stone",
+          "x": 176,
+          "y": 400,
+          "solid": false,
+          "shadow": false,
+          "stand": {
+            "x": 208,
+            "y": 400
+          }
+        }
+      ],
+      "panels": [
+        {
+          "x": 256,
+          "y": 128,
+          "w": 160,
+          "h": 128
+        }
+      ]
+    }
+  ]
+}

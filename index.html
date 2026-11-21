@@ -3,13 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UNFINISHED ORBIT／未竟之轨</title>
+    <meta name="author" content="ws4217" />
+    <title>UNFINISHED ORBIT／未完成的轨道</title>
   </head>
   <body>
-    <main id="app" aria-label="未竟之轨">
+    <main id="app" aria-label="未完成的轨道">
       <div id="game-content">
       <div id="game"></div>
       <section class="panel">
+        <div class="entry-target" id="entry-target" aria-hidden="true">◇</div>
         <p class="eyebrow" id="stage"></p>
         <h1 id="title"></h1>
         <p id="subtitle"></p>
@@ -25,6 +27,7 @@
       </div>
       <div id="screen"></div>
       <p id="toast" role="status" hidden></p>
+      <p id="bgm-toast" role="status" hidden></p>
       </div>
       <div id="desktop-shell" hidden></div>
       <p id="small-window" role="status" hidden></p>

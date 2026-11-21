@@ -1,0 +1,144 @@
+{
+  "frames": {
+    "test-cabinet-corrected": {
+      "texture": "steel-objects",
+      "x": 448,
+      "y": 382,
+      "w": 48,
+      "h": 32
+    },
+    "floor-warm-plain": {
+      "texture": "steel-walls",
+      "x": 272,
+      "y": 208,
+      "w": 16,
+      "h": 16
+    },
+    "floor-light": {
+      "texture": "steel-walls",
+      "x": 16,
+      "y": 256,
+      "w": 16,
+      "h": 16
+    },
+    "floor-public": {
+      "texture": "steel-walls",
+      "x": 96,
+      "y": 256,
+      "w": 16,
+      "h": 16
+    },
+    "floor-service": {
+      "texture": "steel-walls",
+      "x": 384,
+      "y": 80,
+      "w": 16,
+      "h": 16
+    },
+    "wall-public": {
+      "texture": "steel-walls",
+      "x": 416,
+      "y": 96,
+      "w": 16,
+      "h": 16
+    },
+    "wall-technical": {
+      "texture": "steel-walls",
+      "x": 192,
+      "y": 96,
+      "w": 16,
+      "h": 16
+    },
+    "wall-copper": {
+      "texture": "steel-walls",
+      "x": 272,
+      "y": 80,
+      "w": 16,
+      "h": 16
+    },
+    "top-technical": {
+      "texture": "steel-walls",
+      "x": 112,
+      "y": 64,
+      "w": 16,
+      "h": 16
+    },
+    "top-analysis": {
+      "texture": "steel-walls",
+      "x": 80,
+      "y": 64,
+      "w": 16,
+      "h": 16
+    },
+    "top-copper": {
+      "texture": "steel-walls",
+      "x": 112,
+      "y": 64,
+      "w": 16,
+      "h": 16
+    },
+    "lip-technical": {
+      "texture": "steel-walls",
+      "x": 112,
+      "y": 64,
+      "w": 16,
+      "h": 8
+    },
+    "lip-analysis": {
+      "texture": "steel-walls",
+      "x": 80,
+      "y": 64,
+      "w": 16,
+      "h": 8
+    },
+    "lip-copper": {
+      "texture": "steel-walls",
+      "x": 112,
+      "y": 64,
+      "w": 16,
+      "h": 8
+    },
+    "tech-vent": {
+      "texture": "steel-walls",
+      "x": 64,
+      "y": 304,
+      "w": 16,
+      "h": 32
+    },
+    "tech-rack": {
+      "texture": "steel-objects",
+      "x": 272,
+      "y": 0,
+      "w": 16,
+      "h": 32
+    },
+    "tech-pipe": {
+      "texture": "steel-objects",
+      "x": 464,
+      "y": 224,
+      "w": 16,
+      "h": 48
+    },
+    "tech-tank": {
+      "texture": "steel-objects",
+      "x": 272,
+      "y": 0,
+      "w": 16,
+      "h": 32
+    },
+    "service-stripe": {
+      "texture": "steel-objects",
+      "x": 192,
+      "y": 192,
+      "w": 32,
+      "h": 16
+    },
+    "garden-stone": {
+      "texture": "steel-objects",
+      "x": 128,
+      "y": 80,
+      "w": 16,
+      "h": 16
+    }
+  }
+}

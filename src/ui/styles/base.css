@@ -6,7 +6,7 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; min-height: 100vh; display: grid; place-items: center; overflow: hidden; }
-#app { position: relative; width: 960px; height: 540px; transform: scale(var(--scale, 1)); overflow: hidden; }
+#app { position: absolute; left: 50%; top: 50%; width: 960px; height: 540px; transform: translate(-50%, -50%) scale(var(--scale, 1)); overflow: hidden; }
 #game { position: absolute; inset: 0; }
 #game-content { position: absolute; width: 960px; height: 540px; left: 0; top: 0; }
 canvas { display: block; }
@@ -52,7 +52,6 @@ button[data-focus="true"] { border-color: #b5f3ed; }
 .avatar { flex: 0 0 36px; height: 36px; display: grid; place-items: center; background: #33506b; border: 1px solid #a6b7cc; color: #f0f7ff; font-size: 18px; }
 .avatar-karo { background: #23494f; }
 .avatar-merin { background: #54452d; }
-.avatar-a { background: #3e3659; }
 .bubble { max-width: 810px; padding: 10px 16px; background: #11233aee; border: 1px solid #486079; overflow-wrap: anywhere; }
 .bubble strong { color: #d1e0ec; font-size: 13px; }
 .bubble p { margin: 4px 0 0; font-size: 16px; line-height: 1.7; white-space: pre-wrap; }
@@ -91,4 +90,16 @@ html:has(.embedded-card) { background: transparent; }
 .token-value { display: inline-block; user-select: text; color: #9fe8e1; margin-right: 16px; font-size: 18px; }
 .gift-open #stage, .gift-open #title, .gift-open #status, .gift-open .calibration-mark { display: none; }
 .gift-open .tool-panel { padding: 20px; }
+.diamond-swap, .cycle-end { position: absolute; inset: 0; background: #030810; z-index: 18; }
+.diamond-swap { background: transparent; }
+.diamond-swap::after { content: ""; position: absolute; inset: 0; background: #030810; animation: diamond-swap .37s linear both; }
+@keyframes diamond-swap {
+  0%, 100% { clip-path: polygon(50% 50%,50% 50%,50% 50%,50% 50%); }
+  45%, 55% { clip-path: polygon(50% -60%,160% 50%,50% 160%,-60% 50%); }
+}
+.cycle-end { display: grid; place-content: center; justify-items: center; gap: 32px; }
+.sample-paper { position:absolute; top:32px; right:30px; margin:0; padding:8px 12px; background:#09283f; border:2px solid #7899a5; }
+.sample-paper figcaption { font-size:16px; margin-bottom:6px; }
+.sample-paper svg { width:75px; height:60px; background:#fffef4; fill:none; stroke:#243e57; stroke-width:2; }
+.sample-paper svg + svg { margin-left:8px; }
 .gift-open #letter-title { margin-top: 0; font-size: 22px; }

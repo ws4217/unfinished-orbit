@@ -1,17 +1,24 @@
 import Phaser from 'phaser';
-import ui from '../content/text/ui.ts';
+import ui from '../content/text/ui.json' with { type: 'json' };
 import story from '../content/text/exploration.json';
+import inspections from '../content/text/decoration.json' with { type: 'json' };
 import { browserStorage, SaveSession, loadSettings, saveSettings, type Settings } from '../core/storage.ts';
-import { requestFullscreen } from '../core/fullscreen.ts';
 import { addLog, canDivide, nextHint } from '../core/rules.ts';
 import { type Evidence, type HintStage } from '../core/state.ts';
 import { StationScene, type WorldObject } from './world.ts';
-import { Audio } from '../audio/synth-audio.ts';
+import { Audio } from '../audio/game-audio.ts';
+import { musicStage, type Track } from '../audio/audio-policy.ts';
+import audioConfig from '../content/assets/audio-playback.json' with { type: 'json' };
+import casualTopics from '../content/text/phone-topics.json';
+import { casualCallIndex, hasNewCasualCall, finishCasualCall } from '../core/casual-calls.ts';
+import { playWorldEntry } from '../ui/world-entry.ts';
+import { CycleVisit } from './cycle-visit.ts';
 
+const { exploration: explorationUi } = ui;
 type Speaker = keyof typeof ui.speakers;
 export interface Line { speaker: Speaker; text: string; color?: string; spans?: { text: string; color?: string }[] }
-type View = 'entry' | 'title' | 'world' | 'dialogue' | 'menu' | 'log' | 'settings' | 'puzzle';
-interface Screen { view: View; render: () => void; key: (key: string) => void }
+type View = 'entry' | 'title' | 'boot' | 'world' | 'dialogue' | 'menu' | 'log' | 'settings' | 'puzzle';
+interface Screen { view: View; render: () => void; key: (key: string) => void; audioScope?: 'cleaner' }
 interface MenuItem { label: string; action: () => void }
 const isBack = (key: string) => ['Shift', 'x'].includes(key);
 const isConfirm = (key: string) => ['Enter', 'z'].includes(key);
@@ -38,9 +45,16 @@ export class App {
   private target?: WorldObject;
   private entered = false;
   private renderReady = false;
+  private resourceFailed = false;
   private toastTimer?: number;
   private typeTimer?: number;
-  // T03+ attach real module entry points; no production skip/complete buttons.
+  private stopWorldEntry?: () => void;
+  private bgmToastTimer?: number;
+  private explorationStarted = false;
+  private pointerButton?: Element;
+  private swapping = false;
+  private cycle = new CycleVisit(this);
+  leaveDesktop?: () => void;
   puzzleHandler?: (id: string) => void;
   collectionHandler?: (id: string) => void;
   menuProvider?: (back: () => void) => MenuItem[];
@@ -51,7 +65,9 @@ export class App {
   constructor() {
     for (const id of ['title', 'subtitle', 'stage', 'status'] as const) document.getElementById(id)!.textContent = ui.app[id];
     this.settings = loadSettings(this.storage);
-    this.audio = new Audio(() => this.settings);
+    this.audio = new Audio(() => this.settings, {
+      music: track => this.showMusic(track), status: () => this.updateAudioStatus(),
+    });
     this.session = new SaveSession(this.storage, () => {
       const warning = document.getElementById('save-warning')!;
       warning.textContent = ui.app.saveFailure;
@@ -67,51 +83,109 @@ export class App {
       },
       target: object => {
         this.target = object;
-        document.getElementById('target')!.textContent = object ? story.ui.interact + object.label : '';
+        document.getElementById('target')!.textContent = object ? explorationUi.interact + object.label : '';
       },
       meetKaro: () => {
         this.observe('met-karo');
         this.dialogue(story.dialogue['meet-karo'] as Line[], () => this.world(), true);
       },
-      failed: () => { this.status.textContent = ui.app.error; },
+      failed: () => {
+        this.resourceFailed = true;
+        this.renderReady = false;
+        this.status.textContent = ui.app.error;
+        this.actionButton(explorationUi.retry, () => location.reload(), this.status);
+      },
+      roomChanged: id => {
+        if (id !== 'arrival') this.explorationStarted = true;
+        this.syncAudio();
+      },
+      exitPublic: () => this.cycle.exitPublic(),
     });
     try {
       new Phaser.Game({
         type: Phaser.AUTO, parent: 'game', width: 960, height: 540, backgroundColor: '#080f1b', pixelArt: true,
-        audio: { noAudio: true }, scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH }, scene: this.scene,
+        // 整个960×540界面由外层CSS统一缩放，Phaser不能再按已变换的父容器二次FIT。
+        audio: { noAudio: true }, scale: { mode: Phaser.Scale.NONE, autoCenter: Phaser.Scale.NO_CENTER }, scene: this.scene,
       });
     } catch (error) { this.status.textContent = ui.app.error; console.error(error); }
-    document.getElementById('hud-controls')!.textContent = story.ui.controls;
-    document.getElementById('hud-log')!.textContent = story.ui.logShortcut;
-    document.getElementById('hud-menu')!.textContent = story.ui.menuShortcut;
+    document.getElementById('hud-controls')!.textContent = explorationUi.controls;
+    document.getElementById('hud-log')!.textContent = explorationUi.logShortcut;
+    document.getElementById('hud-menu')!.textContent = explorationUi.menuShortcut;
     document.getElementById('hud-log')!.addEventListener('click', () => this.openLog());
     document.getElementById('hud-menu')!.addEventListener('click', () => this.openMenu());
     window.addEventListener('keydown', event => this.keyDown(event));
     window.addEventListener('keyup', event => this.scene.keys.delete(this.normalize(event.key)));
     window.addEventListener('blur', () => this.scene.keys.clear());
+    window.addEventListener('pointermove', event => {
+      if (!event.movementX && !event.movementY) return;
+      const button = (event.target as HTMLElement).closest?.('button');
+      if (button && button !== this.pointerButton) this.audio.event('sfx.ui.focus');
+      this.pointerButton = button ?? undefined;
+    });
     window.addEventListener('resize', () => this.resize());
     this.resize();
+    this.syncAudio();
     window.setTimeout(() => {
-      if (!this.renderReady) this.status.textContent = story.ui.slow;
+      if (!this.renderReady && !this.resourceFailed) this.status.textContent = explorationUi.slow;
     }, 15000);
   }
   get state() { return this.session.state; }
+  private syncAudio(): void {
+    this.audio.setStage(musicStage(this.state, this.explorationStarted));
+  }
+  private showMusic(track: Track): void {
+    const toast = document.getElementById('bgm-toast')!;
+    const music = audioConfig.tracks[track];
+    toast.textContent = ui.audio.bgmToast.replace('{author}', music.author).replace('{title}', music.title);
+    if (this.bgmToastTimer !== undefined) clearTimeout(this.bgmToastTimer);
+    toast.hidden = false; toast.classList.remove('leaving');
+    toast.style.animation = 'none'; void toast.offsetWidth; toast.style.animation = '';
+    this.bgmToastTimer = window.setTimeout(() => {
+      toast.classList.add('leaving');
+      this.bgmToastTimer = window.setTimeout(() => { toast.hidden = true; }, 180);
+    }, 3180);
+    this.updateAudioStatus();
+  }
+  private updateAudioStatus(): void {
+    const app = document.getElementById('app')!;
+    const { current, musicStarts, ducked } = this.audio.playback;
+    app.dataset.audioBgm = current;
+    app.dataset.audioStatus = this.audio.status;
+    app.dataset.audioStarts = String(musicStarts);
+    app.dataset.audioDucked = String(ducked);
+    const status = document.getElementById('audio-status');
+    if (status) status.textContent = ui.audio[this.audio.status];
+    const retry = document.getElementById('audio-retry');
+    if (retry) retry.hidden = !this.audio.hasFailures;
+  }
   private normalize(key: string): string { return key.length === 1 ? key.toLowerCase() : key; }
   private resize(): void {
     const app = document.getElementById('app')!;
     const available = Math.min(innerWidth / 960, innerHeight / 540);
-    app.style.setProperty('--scale', String(available >= 1 ? Math.floor(available) : available));
-    document.getElementById('small-window')!.textContent = story.ui.small;
+    app.style.setProperty('--scale', String(available));
+    document.getElementById('small-window')!.textContent = explorationUi.small;
     document.getElementById('small-window')!.hidden = innerWidth >= 960 && innerHeight >= 540;
   }
   private keyDown(event: KeyboardEvent): void {
+    if (this.swapping) { event.preventDefault(); return; }
     if ((event.target instanceof HTMLInputElement && !['range', 'checkbox'].includes(event.target.type)) || event.target instanceof HTMLTextAreaElement
       || (event.target instanceof HTMLElement && event.target.isContentEditable)) return;
     const key = this.normalize(event.key);
+    if (this.view === 'boot') {
+      if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'Tab', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(key)) event.preventDefault();
+      return;
+    }
     const movement = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'];
     if (movement.includes(key)) {
       event.preventDefault();
       if (this.view === 'world') this.scene.keys.add(key);
+    }
+    if (this.scene.changingRoom) {
+      if (['j', 'c', 'Enter', 'z', 'x', 'Shift'].includes(key)) event.preventDefault();
+      return;
+    }
+    if (this.view === 'log' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown'].includes(key)) {
+      event.preventDefault(); this.screen?.key(key); return;
     }
     if (event.repeat) return;
     if (this.view === 'entry') {
@@ -119,32 +193,43 @@ export class App {
         event.preventDefault();
         this.entered = true;
         this.audio.unlock();
-        void requestFullscreen(document.documentElement);
-        this.showTitle();
+        this.diamondSwap(() => this.showTitle());
       }
       return;
     }
     if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) event.preventDefault();
     if (['world', 'puzzle'].includes(this.view) && key === 'j') { this.openLog(); return; }
     if (['world', 'puzzle'].includes(this.view) && key === 'c') { this.openMenu(); return; }
-    if (this.view === 'world' && isConfirm(key)) { if (this.target) this.interact(this.target.id); return; }
+    if (this.view === 'world' && isConfirm(key)) {
+      if (this.target) { this.audio.event('sfx.ui.confirm'); this.interact(this.target.id); } return;
+    }
+    if (this.view !== 'dialogue' && isConfirm(key)) this.audio.event('sfx.ui.confirm');
+    if (this.view !== 'dialogue' && isBack(key)) this.audio.event('sfx.ui.back');
     this.screen?.key(key);
   }
   private activate(screen: Screen): void {
+    this.stopWorldEntry?.();
+    this.stopWorldEntry = undefined;
     if (this.typeTimer !== undefined) clearInterval(this.typeTimer);
     this.typeTimer = undefined;
     this.screen = screen;
     this.view = screen.view;
+    if (screen.view !== 'dialogue' && !(screen.view === 'puzzle' && screen.audioScope === 'cleaner')) this.audio.stopMachine();
+    this.audio.setDialogue(screen.view === 'dialogue');
+    this.syncAudio();
     document.getElementById('app')!.dataset.view = screen.view;
     this.scene.keys.clear();
     this.panel.hidden = screen.view !== 'title' && screen.view !== 'entry';
-    this.hud.hidden = ['title', 'entry'].includes(screen.view);
-    document.getElementById('hud-controls')!.textContent = screen.view === 'dialogue' ? story.ui.next
-      : screen.view === 'world' ? story.ui.controls : story.ui.back;
+    this.panel.inert = false;
+    this.hud.hidden = ['title', 'entry', 'boot'].includes(screen.view);
+    document.getElementById('hud-controls')!.textContent = screen.view === 'dialogue' ? explorationUi.next
+      : screen.view === 'world' ? explorationUi.controls : explorationUi.back;
     this.root.replaceChildren();
     screen.render();
   }
   world(): void {
+    // 普通继续和安定区快捷入口均补齐Nep原话；复用原去重/保存失败提示，不写新存档字段。
+    if (this.state.phase !== 'cycle') this.log('a-note');
     this.activate({ view: 'world', render: () => {}, key: () => {} });
   }
   play(): void {
@@ -152,9 +237,23 @@ export class App {
     this.session.save();
     const stable = ['stable', 'registration', 'reunion'].includes(this.state.phase);
     this.scene.drawWorld(stable);
+    if (isNew) {
+      this.activate({
+        view: 'boot',
+        render: () => {
+          this.stopWorldEntry = playWorldEntry(this.root, () => {
+            this.log('a-note');
+            this.dialogue(story.dialogue.arrival as Line[], () => {
+              this.observe('arrival-intro'); this.world();
+            }, true);
+          });
+        },
+        key: () => {},
+      });
+      return;
+    }
     this.world();
     if (this.resumeHandler?.()) return;
-    if (isNew) this.dialogue(story.dialogue.arrival as Line[], () => { this.observe('arrival-intro'); this.world(); }, true);
   }
   showTitle(message?: string): void {
     this.activate({
@@ -165,10 +264,13 @@ export class App {
         const items: MenuItem[] = [];
         if (!this.session.blocked) items.push({
           label: this.session.loadStatus === 'ok' ? ui.app.continue : ui.app.start,
-          action: () => this.play(),
+          action: () => {
+            this.leaveDesktop?.();
+            if (!this.cycle.enterFromTitle()) this.diamondSwap(() => this.play());
+          },
         });
         if (this.session.blocked || this.session.loadStatus === 'ok') items.push({ label: ui.app.restart, action: () => this.restartDialog() });
-        items.push({ label: story.ui.settings, action: () => this.openSettings(() => this.showTitle()) });
+        items.push({ label: explorationUi.settings, action: () => this.openSettings(() => this.showTitle()) });
         if (this.titleProvider) items.push(...this.titleProvider());
         for (const item of items) this.actionButton(item.label, item.action, this.actions);
         (this.actions.firstElementChild as HTMLElement)?.focus();
@@ -176,20 +278,51 @@ export class App {
       key: key => {
         const buttons = [...this.actions.querySelectorAll('button')];
         const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
-        if (key === 'ArrowLeft' || key === 'ArrowRight') buttons[(index + (key === 'ArrowLeft' ? buttons.length - 1 : 1)) % buttons.length]?.focus();
+        if (key === 'ArrowLeft' || key === 'ArrowRight') {
+          this.audio.event('sfx.ui.focus');
+          buttons[(index + (key === 'ArrowLeft' ? buttons.length - 1 : 1)) % buttons.length]?.focus();
+        }
         if (isConfirm(key)) (document.activeElement as HTMLButtonElement)?.click();
       },
     });
+    this.cycle.title();
+  }
+  titleDialogue(lines: Line[], done: () => void): void {
+    this.dialogue(lines, done, true);
+    this.panel.hidden = false;
+    this.panel.inert = true;
+    this.hud.hidden = true;
+  }
+  diamondSwap(done: () => void): void {
+    if (this.swapping) return;
+    this.swapping = true;
+    this.scene.keys.clear();
+    const veil = node('div', undefined, 'diamond-swap');
+    document.getElementById('app')!.append(veil);
+    window.setTimeout(() => { done(); }, 180);
+    window.setTimeout(() => { veil.remove(); this.swapping = false; }, 370);
+  }
+  endCard(text: string, back: string): void {
+    this.activate({ view: 'menu', render: () => {
+      this.hud.hidden = true;
+      const card = node('section', undefined, 'cycle-end');
+      card.append(node('h1', text));
+      this.actionButton(back, () => this.showTitle(), card);
+      this.root.append(card);
+    }, key: key => { if (isBack(key) || isConfirm(key)) this.showTitle(); } });
   }
   private restartDialog(): void {
     this.choice(ui.app.restartQuestion, [
       { label: ui.app.cancel, action: () => this.showTitle() },
-      { label: ui.app.confirm, action: () => { this.session.restart(true); this.play(); } },
+      { label: ui.app.confirm, action: () => {
+        this.leaveDesktop?.(); this.session.restart(true); this.explorationStarted = false;
+        this.audio.setStage('intro', true); this.play();
+      } },
     ], () => this.showTitle());
   }
   actionButton(label: string, action: () => void, parent: HTMLElement): HTMLButtonElement {
     const button = node('button', label);
-    button.addEventListener('click', () => { this.audio.unlock(); action(); });
+    button.addEventListener('click', () => { this.audio.unlock(); this.audio.event('sfx.ui.confirm'); action(); });
     parent.append(button);
     return button;
   }
@@ -206,7 +339,7 @@ export class App {
           button.dataset.focus = String(focus === index);
           button.addEventListener('focus', () => { focus = index; });
         });
-        window.append(list, node('small', story.ui.back));
+        window.append(list, node('small', explorationUi.back));
         this.root.append(window);
         (list.children[focus] as HTMLElement)?.focus();
       },
@@ -215,6 +348,7 @@ export class App {
         const previous = horizontal ? 'ArrowLeft' : 'ArrowUp';
         const next = horizontal ? 'ArrowRight' : 'ArrowDown';
         if ([previous, next].includes(key)) {
+          this.audio.event('sfx.ui.focus');
           focus = (focus + (key === previous ? items.length - 1 : 1)) % items.length;
           this.activate(screen);
         } else if (isConfirm(key)) items[focus]?.action();
@@ -222,23 +356,31 @@ export class App {
     };
     this.activate(screen);
   }
-  dialogue(lines: Line[], done: (completed?: boolean) => void = () => this.world(), necessary = false): void {
+  dialogue(lines: Line[], done: (completed?: boolean) => void = () => this.world(), necessary = false,
+    illustrate?: (index: number, layer: HTMLElement) => void): void {
     let index = -1;
     let complete = true;
     let reveal = () => {};
     const history = node('div', undefined, 'chat-history');
     const shell = node('section', undefined, 'chat-shell');
-    const controls = node('small', story.ui.next, 'chat-controls');
+    const controls = node('small', explorationUi.next, 'chat-controls');
     shell.append(history, controls);
     const advance = () => {
       if (!complete) return;
       index++;
       if (index >= lines.length) { done(true); return; }
       const line = lines[index];
+      illustrate?.(index, this.root);
       const speaker = ui.speakers[line.speaker];
       const message = node('div', undefined, 'message');
       const avatar = node('div', speaker.name.slice(0, 1), `avatar avatar-${line.speaker}`);
       avatar.setAttribute('aria-hidden', 'true');
+      const image = node('img');
+      image.alt = '';
+      image.addEventListener('load', () => {
+        avatar.classList.add('has-portrait'); avatar.replaceChildren(image);
+      }, { once: true });
+      image.src = speaker.portrait;
       const bubble = node('div', undefined, 'bubble');
       bubble.append(node('strong', speaker.name));
       const text = node('p');
@@ -290,6 +432,12 @@ export class App {
     };
     this.activate(screen);
   }
+  phone(lines: Line[], done: (completed?: boolean) => void, necessary = false): void {
+    this.audio.event('sfx.phone.connect');
+    this.dialogue(lines, completed => {
+      this.audio.event('sfx.phone.disconnect'); done(completed);
+    }, necessary);
+  }
   observe(evidence: Evidence): void {
     if (!this.state.evidence.includes(evidence)) {
       this.state.evidence.push(evidence);
@@ -300,28 +448,36 @@ export class App {
     if (!addLog(this.state, id)) return;
     this.session.save();
     const toast = document.getElementById('toast')!;
-    toast.textContent = story.ui.updated;
+    toast.textContent = explorationUi.updated;
     toast.hidden = false;
-    this.audio.tone(880, 0.1);
+    this.audio.event('sfx.result.basic');
+    this.syncAudio();
     if (this.toastTimer !== undefined) clearTimeout(this.toastTimer);
     this.toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2000);
   }
   openLog(): void {
-    if (!['world', 'puzzle'].includes(this.view) || !this.screen) return;
+    if (!['world', 'puzzle'].includes(this.view) || !this.screen || this.scene.changingRoom) return;
     const previous = this.screen;
+    const list = node('div', undefined, 'log-list');
     this.activate({
       view: 'log',
       render: () => {
         const window = node('section', undefined, 'window');
-        window.append(node('h2', story.ui.log));
-        const list = node('div', undefined, 'log-list');
-        if (!this.state.log.length) list.append(node('p', story.ui.emptyLog));
+        window.append(node('h2', explorationUi.log));
+        if (!this.state.log.length) list.append(node('p', explorationUi.emptyLog));
         const logs: Record<string, string> = { ...story.logs, ...this.extraLogs };
         for (const id of this.state.log) list.append(node('p', logs[id] ?? id));
-        window.append(list, node('small', story.ui.back));
+        window.append(list, node('small', explorationUi.logControls));
         this.root.append(window);
       },
-      key: key => { if (isBack(key)) this.activate(previous); },
+      key: key => {
+        if (isBack(key)) { this.activate(previous); return; }
+        const line = 30, page = Math.max(line, list.clientHeight - line);
+        if (key === 'ArrowUp') list.scrollTop -= line;
+        if (key === 'ArrowDown') list.scrollTop += line;
+        if (['ArrowLeft', 'PageUp'].includes(key)) list.scrollTop -= page;
+        if (['ArrowRight', 'PageDown'].includes(key)) list.scrollTop += page;
+      },
     });
   }
   hintStage(): HintStage {
@@ -330,43 +486,52 @@ export class App {
       : this.state.phase === 'entrance' ? 'calibration' : 'experiment';
   }
   openMenu(): void {
-    if (!['world', 'puzzle'].includes(this.view) || !this.screen) return;
+    if (!['world', 'puzzle'].includes(this.view) || !this.screen || this.scene.changingRoom) return;
     const previous = this.screen;
     const restore = () => this.activate(previous);
     const menu = () => {
       const items: MenuItem[] = [];
-      if (this.state.evidence.includes('met-karo')) {
+      if (this.state.branch) {
         if (this.menuProvider) items.push(...this.menuProvider(menu));
         for (const id of ['greet', 'patterns', 'flirt'] as const) items.push({
-          label: story.ui[id], action: () => this.dialogue(story.dialogue[id] as Line[], menu),
+          label: (hasNewCasualCall(this.state, id) ? explorationUi.newCall : '') + explorationUi[id],
+          action: () => {
+            const episode = casualTopics.topics[id].episodes[casualCallIndex(this.state, id)];
+            this.phone(episode.lines as Line[], completed => {
+              if (completed && finishCasualCall(this.state, id)) this.session.save();
+              menu();
+            });
+          },
         });
       }
       if (this.state.phase === 'branch' || this.state.phase === 'maintenance' || this.state.phase === 'entrance') {
         const stage = this.hintStage();
         items.push({
-          label: story.ui.think[Math.min(2, this.state.hints[stage])],
+          label: explorationUi.think[Math.min(2, this.state.hints[stage])],
           action: () => {
             const level = nextHint(this.state, stage); this.session.save();
-            this.dialogue(this.hintProvider?.(stage, level) ?? [{ speaker: 'pruto', text: story.ui.modulePending }], menu);
+            const lines = this.hintProvider?.(stage, level);
+            if (lines) this.dialogue(lines, menu);
           },
         });
       }
       items.push(
-        { label: story.ui.settings, action: () => this.openSettings(menu) },
-        { label: ui.app.back, action: () => { const saved = this.session.save(); this.showTitle(saved ? ui.app.saved : undefined); } },
+        { label: explorationUi.settings, action: () => this.openSettings(menu) },
+        { label: ui.app.back, action: () => { const saved = this.session.save(); this.diamondSwap(() => this.showTitle(saved ? ui.app.saved : undefined)); } },
       );
-      this.choice(story.ui.menu, items, restore, false);
+      this.choice(explorationUi.menu, items, restore, false);
     };
     menu();
   }
-  puzzle(title: string, render: (container: HTMLElement) => void, key: (key: string) => void): () => void {
+  puzzle(title: string, render: (container: HTMLElement) => void, key: (key: string) => void, audioScope?: 'cleaner'): () => void {
     const screen: Screen = {
       view: 'puzzle',
+      audioScope,
       render: () => {
         const window = node('section', undefined, 'window');
         window.append(node('h2', title));
         render(window);
-        window.append(node('small', story.ui.back));
+        window.append(node('small', explorationUi.back));
         this.root.append(window);
       },
       key,
@@ -377,7 +542,7 @@ export class App {
   }
   private openSettings(back: () => void): void {
     let focus = 0;
-    const persist = () => { if (!saveSettings(this.storage, this.settings)) {
+    const persist = () => { this.audio.updateSettings(); if (!saveSettings(this.storage, this.settings)) {
       const warning = document.getElementById('save-warning')!;
       warning.textContent = ui.app.saveFailure; warning.hidden = false;
     } };
@@ -385,37 +550,50 @@ export class App {
       view: 'settings',
       render: () => {
         const window = node('section', undefined, 'window');
-        window.append(node('h2', story.ui.settings));
+        window.append(node('h2', explorationUi.settings));
         ['bgm', 'sfx'].forEach((key, index) => {
           const id = key as 'bgm' | 'sfx';
-          const label = node('label', `${story.ui[id]} ${this.settings[id]}%`, 'volume-row');
+          const label = node('label', `${explorationUi[id]} ${this.settings[id]}%`, 'volume-row');
           const input = node('input');
           input.type = 'range'; input.min = '0'; input.max = '100'; input.step = '10'; input.value = String(this.settings[id]);
-          input.setAttribute('aria-label', story.ui[id]);
+          input.setAttribute('aria-label', explorationUi[id]);
           input.addEventListener('focus', () => { focus = index; });
           input.addEventListener('input', () => {
             this.settings[id] = Number(input.value); persist();
-            label.firstChild!.textContent = `${story.ui[id]} ${this.settings[id]}%`;
+            this.audio.event('sfx.ui.confirm');
+            label.firstChild!.textContent = `${explorationUi[id]} ${this.settings[id]}%`;
           });
           label.append(input); window.append(label);
         });
-        const mute = this.actionButton(this.settings.muted ? story.ui.muted : story.ui.mute, () => {
+        const mute = this.actionButton(this.settings.muted ? explorationUi.muted : explorationUi.mute, () => {
           this.settings.muted = !this.settings.muted; persist(); this.activate(screen);
         }, window);
         mute.addEventListener('focus', () => { focus = 2; });
-        window.append(node('small', story.ui.back));
+        const audioStatus = node('p', ui.audio[this.audio.status]); audioStatus.id = 'audio-status';
+        audioStatus.setAttribute('role', 'status'); window.append(audioStatus);
+        const retry = this.actionButton(ui.audio.retry, () => {
+          this.audio.retry(); focus = 2; mute.focus();
+        }, window);
+        retry.id = 'audio-retry'; retry.hidden = !this.audio.hasFailures;
+        retry.addEventListener('focus', () => { focus = 3; });
+        window.append(node('small', explorationUi.back));
         this.root.append(window);
-        (window.querySelectorAll<HTMLElement>('input,button')[focus])?.focus();
+        (window.querySelectorAll<HTMLElement>('input,button:not([hidden])')[focus])?.focus();
       },
       key: key => {
         if (isBack(key)) { back(); return; }
-        if (['ArrowUp', 'ArrowDown'].includes(key)) { focus = (focus + (key === 'ArrowUp' ? 2 : 1)) % 3; this.activate(screen); }
+        if (['ArrowUp', 'ArrowDown'].includes(key)) {
+          const count = this.audio.hasFailures ? 4 : 3;
+          this.audio.event('sfx.ui.focus');
+          focus = (focus + (key === 'ArrowUp' ? count - 1 : 1)) % count; this.activate(screen);
+        }
         if (focus < 2 && ['ArrowLeft', 'ArrowRight'].includes(key)) {
           const id = focus === 0 ? 'bgm' : 'sfx';
           this.settings[id] = Phaser.Math.Clamp(this.settings[id] + (key === 'ArrowRight' ? 10 : -10), 0, 100);
           persist(); this.activate(screen);
         }
         if (focus === 2 && isConfirm(key)) { this.settings.muted = !this.settings.muted; persist(); this.activate(screen); }
+        if (focus === 3 && isConfirm(key)) { this.audio.retry(); focus = 2; this.activate(screen); }
       },
     };
     this.activate(screen);
@@ -432,6 +610,15 @@ export class App {
     });
   }
   interact(id: string): void {
+    if (this.cycle.interact(id)) return;
+    if (this.target?.id === id && this.target.inspectionId) {
+      if (this.target.inspectionId === 'junction-bench' && this.scene.karoIsHere()) {
+        this.dialogue(inspections.dialogue['junction-bench'] as Line[]); return;
+      }
+      const lines = inspections.lines[this.target.inspectionId as keyof typeof inspections.lines];
+      this.dialogue(lines.map((text): Line => ({ speaker: 'pruto', text })));
+      return;
+    }
     if (this.state.phase === 'revisit' && ['p01', 'merin', 'cleaner'].includes(id) && this.collectionHandler) {
       this.collectionHandler(id); return;
     }
@@ -439,35 +626,47 @@ export class App {
       this.puzzleHandler(id); return;
     }
     if (id === 'karo') {
-      if (this.state.branch) { this.dialogue(story.dialogue.greet as Line[]); return; }
+      if (this.state.branch) {
+        const lines = this.state.phase === 'entrance' ? story.dialogue['karo-entrance']
+          : this.state.evidence.includes('experiment-intro') ? story.dialogue['karo-experiment']
+          : story.dialogue['karo-maintenance'];
+        this.dialogue(lines as Line[]); return;
+      }
       if (!canDivide(this.state)) {
         const needed = this.state.evidence.includes('p01') ? 'need-note' : 'need-p01';
         this.dialogue(story.dialogue[needed] as Line[]); return;
       }
-      this.dialogue(story.dialogue.gate as Line[], () => this.choice(story.ui.branchQuestion, [
+      this.dialogue(story.dialogue.gate as Line[], () => this.choice(explorationUi.branchQuestion, [
         ...(['symbols', 'objects'] as const).map(branch => ({
-          label: branch === 'symbols' ? story.ui.chooseSymbols : story.ui.chooseObjects,
+          label: branch === 'symbols' ? explorationUi.chooseSymbols : explorationUi.chooseObjects,
           action: () => {
             this.state.branch = branch;
             this.state.phase = 'branch';
+            this.audio.event('sfx.gate.activate');
             this.session.save();
-            this.scene.resumeAtSafePoint();
-            this.dialogue([{ speaker: 'pruto', text: story.ui.roomHint }], () => this.world(), true);
+            this.scene.startKaroDeparture(branch);
+            this.world();
           },
         })),
-        { label: story.ui.cancel, action: () => this.world() },
+        { label: explorationUi.cancel, action: () => this.world() },
       ], () => this.world()), true);
       return;
     }
     const dialogues = story.dialogue as Record<string, Line[]>;
+    if (id === 'merin' && this.state.experiment.discovered.length === 4 && this.state.evidence.includes('storage')) {
+      this.dialogue(dialogues['merin-late']); return;
+    }
     if (dialogues[id]) {
       this.dialogue(dialogues[id], completed => {
-        if (completed && ['p01', 'old-note', 'range', 'diagnosis'].includes(id)) {
-          this.observe(id as Evidence);
-          this.log(id);
+        if (completed) {
+          if (id === 'merin') this.log(id);
+          else if (['p01', 'old-note', 'range', 'diagnosis'].includes(id)) {
+            this.observe(id as Evidence);
+            this.log(id);
+          }
         }
         this.world();
       });
-    } else this.dialogue([{ speaker: 'pruto', text: story.ui.modulePending }]);
+    }
   }
 }

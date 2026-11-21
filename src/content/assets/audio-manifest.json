@@ -1,6 +1,4 @@
 {
-  "status": "staged-not-connected",
-  "note": "已批准资源物理就位；不自动加载/播放。阶段控制、批次队列与游戏混音尚未接入。",
   "aliases": {
     "sfx.ui.back": "sfx.ui.confirm"
   },
@@ -8,232 +6,170 @@
     {
       "id": "bgm.intro",
       "url": "/assets/bgm/intro.ogg",
-      "sourceAtConversion": "assets/bgm/intro.mp3",
       "sha256": "6c008ebbcfd018e5b6225178e63410aff6944b28bca084d19d2cebdb82cc19a7",
       "bytes": 2005013,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.sienna-ii",
       "url": "/assets/bgm/sienna-ii.ogg",
-      "sourceAtConversion": "assets/bgm/BandCampDownloader.app - Sienna II - Spacey.ogg",
       "sha256": "3c4c6e67f4635cc9f52d8a3e0474e72517a5089c567dab3bfc1db2ffb3911e1a",
       "bytes": 9186478,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.good-old-fashioned-techno",
       "url": "/assets/bgm/good-old-fashioned-techno.ogg",
-      "sourceAtConversion": "assets/bgm/BandCampDownloader.app - Good Old-Fashioned Techno - Spacey.ogg",
       "sha256": "7f745db178dd0226bf7911a2fa6d28ffcdacca90e7a03d9dadc989f3574ccd6a",
       "bytes": 1502555,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.good-old-fashioned-techno-alternate",
       "url": "/assets/bgm/good-old-fashioned-techno-alternate.ogg",
-      "sourceAtConversion": "assets/bgm/BandCampDownloader.app - Good Old-Fashioned Techno _Alternate Version_ - Spacey.ogg",
       "sha256": "a9fcb77cccb7b7c48c9f0391c6c5daa88f6ed914850d4213e66a8640d5789195",
       "bytes": 1505253,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.the-valley",
       "url": "/assets/bgm/the-valley.ogg",
-      "sourceAtConversion": "assets/bgm/BandCampDownloader.app - The Valley - Spacey.mp3",
       "sha256": "8654371e62d50cbbd1cb3a5d74d30fbec88fa77d19eaccfb433b7368b2b7c1f3",
       "bytes": 2461524,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.fleeting-colors-1-5x",
       "url": "/assets/bgm/fleeting-colors-1-5x.ogg",
-      "sourceAtConversion": "assets/bgm/BandCampDownloader.app - Fleeting Colors - Spacey.ogg",
       "sha256": "de8d4db5fa02b16a939bffed48a9b85aeb25002f3835333f3997f525a621eb37",
       "bytes": 1301545,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "bgm.end-of-journey",
       "url": "/assets/bgm/end-of-journey.ogg",
-      "sourceAtConversion": "assets/bgm/endofjourney.mp3",
       "sha256": "fbf8e3734c7557df8c2e3e2d05a6a801f3b4ab82d342c2dc834da9fbd4b05c9c",
       "bytes": 3800780,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.machine.clean",
       "url": "/assets/sfx/machine-clean-short.ogg",
-      "sourceAtConversion": "assets/sfx/kenney_sci-fi-sounds/Audio/computerNoise_002.ogg",
       "sha256": "af7c3188a351d4984b4e9e1f06bdb0449f2fa5101a6a82e7a5c19fa9aa868636",
       "bytes": 26632,
       "codec": "opus",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.ui.focus",
       "url": "/assets/sfx/ui-focus.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/bong_001.ogg",
       "sha256": "d21d0f0b782445db579d11e2506b24cd1ac9d664ee33aeaf807761aa7b6fd710",
       "bytes": 4848,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.ui.confirm",
       "url": "/assets/sfx/ui-confirm.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/back_003.ogg",
       "sha256": "ff5e87de1230b1a5f1fa83e5a4ba9d7eb1c07154267ac34b510a17d4caa03cef",
       "bytes": 7208,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.result.basic",
       "url": "/assets/sfx/result-basic.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/confirmation_001.ogg",
       "sha256": "063564703b6094d70718a3e787a55cc9141611e4ecd6b6637f8828f79b4a8c3a",
       "bytes": 8968,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.result.elevated",
       "url": "/assets/sfx/result-elevated.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/confirmation_002.ogg",
       "sha256": "33b17a9a9a2397c62b285c52c33a907fdffb476909c99e42dde603f6a7a8b12c",
       "bytes": 14169,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.result.complete",
       "url": "/assets/sfx/result-complete.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/confirmation_003.ogg",
       "sha256": "3091bf0be0497f825769ee0733ca7bdc3bcd59bd6c6e8f2ba8f93d580ff38022",
       "bytes": 9535,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.error.input",
       "url": "/assets/sfx/error-input.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/error_005.ogg",
       "sha256": "3f75b11df5b06d68d2c25fbf0e9c9d9e7dd9250562a4007ee34856b8a309a2ae",
       "bytes": 7266,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.phone.connect",
       "url": "/assets/sfx/phone-connect.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/question_002.ogg",
       "sha256": "46056f10c70dda860e93bd27b66f4d33c0b7154eff28def06471b50028efa5b3",
       "bytes": 9455,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.phone.disconnect",
       "url": "/assets/sfx/phone-disconnect.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/question_004.ogg",
       "sha256": "585ecb58b529dc49b5c5ce5ba93427bf73b7052bae55e49c43ba8f169c93ac99",
       "bytes": 9821,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.switch.activate",
       "url": "/assets/sfx/switch-activate.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/select_004.ogg",
       "sha256": "eb6cb435f3f2ab14f85f46a2bdd9073ec511d0f1f8d8c890c6636045703a5fd4",
       "bytes": 6909,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.switch.deactivate",
       "url": "/assets/sfx/switch-deactivate.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/select_005.ogg",
       "sha256": "ad09146e4ea33b931b2f5dfb4051a4f1fe4a36f1a48c42c5e9269c292ae21214",
       "bytes": 6767,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.button.mechanical",
       "url": "/assets/sfx/button-mechanical.ogg",
-      "source": "assets/source/sfx/kenney/interface-sounds/Audio/switch_002.ogg",
       "sha256": "6fc395be2ad1f99ce318a5d28f98fb76dbeb676d83a0b28239d8c1fb90736180",
       "bytes": 7097,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
-    },
-    {
-      "id": "sfx.door.open",
-      "url": "/assets/sfx/door-open.ogg",
-      "source": "assets/source/sfx/kenney/sci-fi-sounds/Audio/doorOpen_002.ogg",
-      "sha256": "84473b70b0b2f69bd325fffee5790f030ff6597d178efddc7e4c201933a6c6c1",
-      "bytes": 19864,
-      "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
-    },
-    {
-      "id": "sfx.door.close",
-      "url": "/assets/sfx/door-close.ogg",
-      "source": "assets/source/sfx/kenney/sci-fi-sounds/Audio/doorClose_002.ogg",
-      "sha256": "01c7d15e90ae1b218812597d04c20e3df872367ebf22cd99d66dddd5fdb542a4",
-      "bytes": 20530,
-      "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.gate.activate",
       "url": "/assets/sfx/gate-activate.ogg",
-      "source": "assets/source/sfx/kenney/sci-fi-sounds/Audio/forceField_002.ogg",
       "sha256": "051b0eafc479695af4ca3607d41fd4be41bae7c21f4f9508d004722b09f1bd63",
       "bytes": 27647,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     },
     {
       "id": "sfx.gate.deactivate",
       "url": "/assets/sfx/gate-deactivate.ogg",
-      "source": "assets/source/sfx/kenney/sci-fi-sounds/Audio/forceField_001.ogg",
       "sha256": "5574e69dd04e5f59322c5ddffde5978f077b09170ae5e29cec0bd9901828cd90",
       "bytes": 28947,
       "codec": "vorbis",
-      "playbackRate": 1,
-      "status": "staged-not-connected"
+      "playbackRate": 1
     }
   ]
 }

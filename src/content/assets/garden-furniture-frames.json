@@ -1,0 +1,60 @@
+{
+  "frames": {
+    "garden-sofa": {
+      "texture": "garden-furniture",
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 16
+    },
+    "garden-table": {
+      "texture": "garden-furniture",
+      "x": 64,
+      "y": 0,
+      "w": 16,
+      "h": 14
+    },
+    "garden-chair": {
+      "texture": "garden-furniture",
+      "x": 128,
+      "y": 0,
+      "w": 11,
+      "h": 15
+    },
+    "garden-bookcase": {
+      "texture": "garden-furniture",
+      "x": 192,
+      "y": 0,
+      "w": 16,
+      "h": 32
+    },
+    "garden-lamp": {
+      "texture": "garden-furniture",
+      "x": 0,
+      "y": 64,
+      "w": 9,
+      "h": 27
+    },
+    "garden-cushion": {
+      "texture": "garden-furniture",
+      "x": 64,
+      "y": 64,
+      "w": 14,
+      "h": 12
+    },
+    "garden-pot": {
+      "texture": "garden-furniture",
+      "x": 128,
+      "y": 64,
+      "w": 8,
+      "h": 12
+    },
+    "garden-coffee-corner": {
+      "texture": "garden-furniture",
+      "x": 128,
+      "y": 128,
+      "w": 32,
+      "h": 24
+    }
+  }
+}

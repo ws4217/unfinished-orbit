@@ -1,0 +1,22 @@
+{
+  "speed": 512,
+  "parking": {
+    "junction": { "x": 480, "y": 240 },
+    "maintenance": { "x": 464, "y": 272 },
+    "stable": { "x": 512, "y": 224 }
+  },
+  "departure": {
+    "symbols": [{ "room": "junction", "points": [[480,240],[480,192],[912,192]] }],
+    "objects": [{ "room": "junction", "points": [[480,240],[480,192],[48,192]] }]
+  },
+  "return": {
+    "symbols": [
+      { "room": "junction", "points": [[912,192],[736,192],[736,384],[912,384]] },
+      { "room": "maintenance", "points": [[48,352],[416,352],[416,272],[464,272]] }
+    ],
+    "objects": [
+      { "room": "junction", "points": [[48,192],[416,192],[416,304],[736,304],[736,384],[912,384]] },
+      { "room": "maintenance", "points": [[48,352],[416,352],[416,272],[464,272]] }
+    ]
+  }
+}

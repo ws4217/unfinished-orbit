@@ -1,0 +1,156 @@
+{
+  "frames": {
+    "glass-blue": {
+      "texture": "steel-objects",
+      "x": 240,
+      "y": 160,
+      "w": 32,
+      "h": 16
+    },
+    "tree-large": {
+      "texture": "steel-objects",
+      "x": 64,
+      "y": 432,
+      "w": 48,
+      "h": 80,
+      "anchor": {
+        "x": 23,
+        "y": 78
+      }
+    },
+    "shrub-a": {
+      "texture": "steel-objects",
+      "x": 48,
+      "y": 416,
+      "w": 16,
+      "h": 16,
+      "anchor": {
+        "x": 8,
+        "y": 15
+      }
+    },
+    "shrub-b": {
+      "texture": "steel-objects",
+      "x": 64,
+      "y": 416,
+      "w": 16,
+      "h": 16,
+      "anchor": {
+        "x": 8,
+        "y": 15
+      }
+    },
+    "metal-table": {
+      "texture": "steel-objects",
+      "x": 240,
+      "y": 288,
+      "w": 48,
+      "h": 16
+    },
+    "cabinet": {
+      "texture": "steel-objects",
+      "x": 448,
+      "y": 384,
+      "w": 48,
+      "h": 32
+    },
+    "tool-module": {
+      "texture": "steel-objects",
+      "x": 400,
+      "y": 448,
+      "w": 16,
+      "h": 16
+    },
+    "tool-board": {
+      "texture": "steel-objects",
+      "x": 416,
+      "y": 448,
+      "w": 16,
+      "h": 16
+    },
+    "tool-chip": {
+      "texture": "steel-objects",
+      "x": 400,
+      "y": 464,
+      "w": 16,
+      "h": 16
+    },
+    "tool-wrench": {
+      "texture": "steel-objects",
+      "x": 416,
+      "y": 464,
+      "w": 16,
+      "h": 16
+    },
+    "grass-base": {
+      "texture": "steel-objects",
+      "x": 0,
+      "y": 400,
+      "w": 16,
+      "h": 16
+    },
+    "grass-detail": {
+      "texture": "steel-objects",
+      "x": 0,
+      "y": 416,
+      "w": 16,
+      "h": 16
+    },
+    "grass-stones": {
+      "texture": "steel-objects",
+      "x": 0,
+      "y": 480,
+      "w": 16,
+      "h": 16
+    },
+    "maintenance-notice-screen": {
+      "texture": "steel-objects",
+      "x": 480,
+      "y": 320,
+      "w": 32,
+      "h": 32
+    },
+    "terminal-blue-short": {
+      "texture": "steel-objects",
+      "x": 496,
+      "y": 272,
+      "w": 16,
+      "h": 16
+    },
+    "terminal-green-tall": {
+      "texture": "steel-objects",
+      "x": 448,
+      "y": 272,
+      "w": 16,
+      "h": 32
+    },
+    "maintenance-cleaner-unit": {
+      "texture": "steel-objects",
+      "x": 48,
+      "y": 336,
+      "w": 48,
+      "h": 32
+    },
+    "terminal-red-short": {
+      "texture": "steel-objects",
+      "x": 496,
+      "y": 256,
+      "w": 16,
+      "h": 16
+    },
+    "reception-round": {
+      "texture": "steel-objects",
+      "x": 384,
+      "y": 0,
+      "w": 32,
+      "h": 32
+    },
+    "arrival-chair": {
+      "texture": "steel-objects",
+      "x": 384,
+      "y": 144,
+      "w": 16,
+      "h": 32
+    }
+  }
+}

@@ -8,7 +8,7 @@ export function moveVector(keys: Set<string>, elapsed: number): { x: number; y: 
   let y = Number(keys.has('ArrowDown') || keys.has('s')) - Number(keys.has('ArrowUp') || keys.has('w'));
   const length = Math.hypot(x, y);
   if (length > 0) { x /= length; y /= length; }
-  return { x: x * 128 * elapsed, y: y * 128 * elapsed };
+  return { x: x * 256 * elapsed, y: y * 256 * elapsed };
 }
 export function nearest<T extends Target>(x: number, y: number, objects: T[]): T | undefined {
   return objects.filter(item => Math.hypot(item.x - x, item.y - y) <= 48)

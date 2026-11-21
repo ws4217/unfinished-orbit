@@ -1,0 +1,200 @@
+{
+  "rooms": {
+    "arrival": {
+      "floor": "floor-light",
+      "panel": "floor-panel",
+      "wall": "wall-face",
+      "foot": "wall-foot",
+      "top": "top-analysis",
+      "side": "top-analysis",
+      "lip": "lip-analysis",
+      "trim": 10592941
+    },
+    "public": {
+      "floor": "floor-public",
+      "panel": "floor-panel",
+      "wall": "wall-public",
+      "foot": "wall-public",
+      "top": "top-technical",
+      "side": "top-technical",
+      "lip": "lip-technical",
+      "trim": 8759695
+    },
+    "junction": {
+      "floor": "floor-light",
+      "panel": "floor-light",
+      "wall": "wall-technical",
+      "foot": "wall-technical",
+      "top": "top-technical",
+      "side": "top-technical",
+      "lip": "lip-technical",
+      "trim": 7832225
+    },
+    "symbols": {
+      "floor": "floor-light",
+      "panel": "floor-light",
+      "wall": "wall-face",
+      "foot": "wall-foot",
+      "top": "top-analysis",
+      "side": "top-analysis",
+      "lip": "lip-analysis",
+      "trim": 10133447
+    },
+    "objects": {
+      "floor": "floor-warm-plain",
+      "panel": "floor-warm-plain",
+      "wall": "wall-copper",
+      "foot": "wall-copper",
+      "top": "top-copper",
+      "side": "top-copper",
+      "lip": "lip-copper",
+      "trim": 12030066
+    },
+    "maintenance": {
+      "floor": "floor-service",
+      "panel": "floor-panel",
+      "wall": "wall-face",
+      "foot": "wall-foot",
+      "top": "top-technical",
+      "side": "top-technical",
+      "lip": "lip-technical",
+      "trim": 10592941
+    },
+    "stable": {
+      "natural": true,
+      "floor": "grass-base",
+      "panel": "grass-detail"
+    }
+  },
+  "stableScenery": [
+    {
+      "frame": "tree-large",
+      "x": 144,
+      "y": 192
+    },
+    {
+      "frame": "tree-large",
+      "x": 256,
+      "y": 192
+    },
+    {
+      "frame": "tree-large",
+      "x": 448,
+      "y": 184
+    },
+    {
+      "frame": "tree-large",
+      "x": 640,
+      "y": 192
+    },
+    {
+      "frame": "tree-large",
+      "x": 784,
+      "y": 192
+    },
+    {
+      "frame": "tree-large",
+      "x": 128,
+      "y": 288
+    },
+    {
+      "frame": "tree-large",
+      "x": 800,
+      "y": 304
+    },
+    {
+      "frame": "tree-large",
+      "x": 112,
+      "y": 432
+    },
+    {
+      "frame": "plant",
+      "x": 800,
+      "y": 448
+    },
+    {
+      "frame": "shrub-a",
+      "x": 208,
+      "y": 464
+    },
+    {
+      "frame": "shrub-b",
+      "x": 304,
+      "y": 472
+    },
+    {
+      "frame": "shrub-a",
+      "x": 560,
+      "y": 472
+    },
+    {
+      "frame": "shrub-b",
+      "x": 752,
+      "y": 464
+    },
+    {
+      "frame": "garden-stone",
+      "x": 176,
+      "y": 176
+    },
+    {
+      "frame": "garden-stone",
+      "x": 736,
+      "y": 432
+    }
+  ],
+  "stableGrassDetails": [
+    {
+      "x": 224,
+      "y": 160
+    },
+    {
+      "x": 256,
+      "y": 160
+    },
+    {
+      "x": 400,
+      "y": 240
+    },
+    {
+      "x": 432,
+      "y": 240
+    },
+    {
+      "x": 400,
+      "y": 272
+    },
+    {
+      "x": 336,
+      "y": 352
+    },
+    {
+      "x": 368,
+      "y": 384
+    },
+    {
+      "x": 464,
+      "y": 400
+    },
+    {
+      "x": 496,
+      "y": 432
+    },
+    {
+      "x": 528,
+      "y": 272
+    },
+    {
+      "x": 560,
+      "y": 272
+    },
+    {
+      "x": 736,
+      "y": 288
+    },
+    {
+      "x": 768,
+      "y": 320
+    }
+  ]
+}

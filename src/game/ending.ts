@@ -8,16 +8,16 @@ export function installEnding(app: App): void {
   Object.assign(app.extraLogs, data.logs);
   const beforeInteract = app.puzzleHandler;
   const beforeResume = app.resumeHandler;
+  const arrived = () => app.dialogue(data.dialogue.arrived as Line[], () => {
+    app.state.phase = 'stable'; app.session.save(); app.world();
+  }, true);
   const register = () => {
     app.state.phase = 'registration'; app.session.save();
-    app.dialogue(data.dialogue.registration as Line[], () => {
+    app.phone(data.dialogue.registration as Line[], () => {
       app.state.registered = true;
+      app.audio.event('sfx.result.elevated');
       app.session.save(); app.log('registered');
-      app.dialogue(data.dialogue.arrived as Line[], () => {
-        app.state.phase = 'stable';
-        app.session.save();
-        app.world();
-      }, true);
+      arrived();
     }, true);
   };
   const reunion = () => {
@@ -27,7 +27,7 @@ export function installEnding(app: App): void {
     }, true));
   };
   app.resumeHandler = () => {
-    if (app.state.phase === 'registration') { register(); return true; }
+    if (app.state.phase === 'registration') { if (app.state.registered) arrived(); else register(); return true; }
     if (app.state.phase === 'reunion') { reunion(); return true; }
     return beforeResume?.() ?? false;
   };
@@ -38,6 +38,7 @@ export function installEnding(app: App): void {
       if (completed && collect(app.state, item)) {
         app.session.save(); app.log(item);
         if (tokenReady(app.state)) {
+          app.audio.event('sfx.result.complete');
           app.log('gift-token');
           app.dialogue([{ speaker: 'pruto', text: data.ui.tokenReady }], () => app.world(), true); return;
         }
@@ -62,7 +63,7 @@ export function installEnding(app: App): void {
     } else if (id === 'art') app.dialogue(data.dialogue.art as Line[]);
     else if (id === 'karo-stable') app.dialogue(data.dialogue.arrived as Line[]);
     else if (id === 'return') {
-      app.scene.drawWorld(false); app.scene.teleport(832, 832); app.world();
+      app.scene.returnToPublic(); app.world();
     } else beforeInteract?.(id);
   };
 }

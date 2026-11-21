@@ -1,6 +1,7 @@
 import type { App, Line } from './app.ts';
 import data from '../content/text/branch.json';
-import { ELEMENTS, type Evidence } from '../core/state.ts';
+import ui from '../content/text/ui.json' with { type: 'json' };
+import type { Evidence } from '../core/state.ts';
 import { canFirstPhone, orderingError, swap } from '../core/rules.ts';
 import { firstSync, submitMapping, secondSync, submitOrdering, reportRead, thirdSync } from '../core/branch.ts';
 
@@ -16,7 +17,7 @@ export function installBranch(app: App): void {
     }, true);
   };
   const third = () => {
-    app.dialogue(data.dialogue[`phone3-${app.state.branch!}`] as Line[], () => {
+    app.phone(data.dialogue[`phone3-${app.state.branch!}`] as Line[], () => {
       thirdSync(app.state); app.session.save(); app.log('p01-contradiction'); app.world();
     }, true);
   };
@@ -29,18 +30,19 @@ export function installBranch(app: App): void {
     if (!app.state.branch) return [];
     const topics = [];
     if (canFirstPhone(app.state)) topics.push({
-      label: (app.state.phones.first ? '' : data.ui.new) + data.ui.phone1,
-      action: () => app.dialogue(data.dialogue[`phone1-${app.state.branch!}`] as Line[], completed => {
+      label: (app.state.phones.first ? '' : ui.exploration.newCall) + data.ui.phone1,
+      action: () => app.phone(data.dialogue[`phone1-${app.state.branch!}`] as Line[], completed => {
         if (completed) { firstSync(app.state); app.session.save(); app.log('mapping-clues'); }
         back();
       }),
     });
     if (app.state.phones.first && (app.state.branch === 'objects' || app.state.puzzles.mappingDone)) topics.push({
-      label: (app.state.phones.second ? '' : data.ui.new) + data.ui.phone2,
-      action: () => app.dialogue(data.dialogue[`phone2-${app.state.branch!}`] as Line[], completed => {
+      label: (app.state.phones.second ? '' : ui.exploration.newCall) + data.ui.phone2,
+      action: () => app.phone(data.dialogue[`phone2-${app.state.branch!}`] as Line[], completed => {
         if (!completed || app.state.phones.second) { back(); return; }
         // Partner execution is event driven, never a real timed task or a second playable route.
         secondSync(app.state);
+        if (app.state.phase === 'report') app.audio.event('sfx.gate.deactivate');
         app.session.save(); app.log('ordering-rules');
         if (app.state.phase === 'report') report(); else back();
       }),
@@ -78,6 +80,7 @@ function slots(app: App): void {
   let selected: number | null = null;
   let restore = () => {};
   const choose = (index: number) => {
+    app.audio.event('sfx.ui.confirm');
     focus = index;
     if (index === 4) { submit(); return; }
     if (app.state.puzzles[symbols ? 'mappingDone' : 'orderingDone']) { restore(); return; }
@@ -95,15 +98,17 @@ function slots(app: App): void {
     }
     const error = symbols ? submitMapping(app.state) : submitOrdering(app.state);
     if (error) {
+      app.audio.event('sfx.error.input');
       let text = data.errors[error];
       if (error === 'ordering') {
         const rule = orderingError(app.state.puzzles.objects);
         if (rule && rule > 0) text += ' ' + data.ui.rules[rule - 1];
       }
-      app.dialogue([{ speaker: 'pruto', text }], restore);
+      app.dialogue([{ speaker: 'pruto', text: data.ui.selfTalk.replace('{text}', text) }], restore);
       return;
     }
     selected = null;
+    app.audio.event(symbols ? 'sfx.result.basic' : 'sfx.gate.deactivate');
     app.session.save();
     if (symbols) {
       app.log('ordering-rules');
@@ -111,15 +116,20 @@ function slots(app: App): void {
     } else app.resumeHandler?.();
   };
   restore = app.puzzle(symbols ? data.ui.mappingTitle : data.ui.orderingTitle, container => {
-    const hint = document.createElement('p'); hint.textContent = data.ui.slotHelp; hint.className = 'puzzle-help';
+    container.dataset.puzzle = symbols ? 'mapping' : 'ordering';
+    const hint = document.createElement('p'); hint.textContent = symbols ? data.ui.mappingHelp : data.ui.slotHelp; hint.className = 'puzzle-help';
     container.append(hint);
     const slots = document.createElement('div'); slots.className = 'slots';
     app.state.puzzles[key].forEach((element, index) => {
-      const label = (symbols ? data.ui.symbols[index] : `${index + 1}`) + '\n' + data.ui.elements[element];
-      const button = app.actionButton(label, () => choose(index), slots);
+      const column = document.createElement('div'); column.className = 'slot-column';
+      const symbol = document.createElement('span'); symbol.className = 'slot-symbol';
+      symbol.textContent = symbols ? data.ui.symbols[index] : `${index + 1}`;
+      column.append(symbol);
+      const button = app.actionButton(data.ui.elements[element], () => choose(index), column);
       button.dataset.selected = String(selected === index);
       button.dataset.focus = String(focus === index);
       button.addEventListener('focus', () => { focus = index; });
+      slots.append(column);
     });
     container.append(slots);
     const confirm = app.actionButton(data.ui.confirm, () => choose(4), container);
@@ -130,7 +140,7 @@ function slots(app: App): void {
     }
     (container.querySelectorAll('button')[focus] as HTMLElement)?.focus();
   }, key => {
-    if (key === 'ArrowLeft' || key === 'ArrowRight') { focus = (focus + (key === 'ArrowLeft' ? 4 : 1)) % 5; restore(); }
+    if (key === 'ArrowLeft' || key === 'ArrowRight') { app.audio.event('sfx.ui.focus'); focus = (focus + (key === 'ArrowLeft' ? 4 : 1)) % 5; restore(); }
     else if (key === 'Enter' || key === 'z') choose(focus);
     else if (key === 'Shift' || key === 'x') {
       if (selected !== null) { selected = null; restore(); } else app.world();
