@@ -1,5 +1,10 @@
 export interface Rect { x: number; y: number; w: number; h: number }
+export interface Point { x: number; y: number }
+export type Facing = 'up' | 'down' | 'left' | 'right';
 export interface Target { id: string; x: number; y: number }
+export function facingOf(dx: number, dy: number): Facing {
+  return Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : (dy < 0 ? 'up' : 'down');
+}
 export function inside(x: number, y: number, rect: Rect): boolean {
   return x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h;
 }

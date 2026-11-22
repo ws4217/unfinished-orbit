@@ -8,34 +8,543 @@
     "closedMs": 100,
     "openMs": 500
   },
-  "lines": [
-    { "id": "session", "text": "> [OK] 初始化临时会话", "warning": false },
-    { "id": "session-cmd", "text": "  $ init --session=temp", "warning": false },
-    { "id": "world", "text": "> [OK] 挂载世界目录", "warning": false },
-    { "id": "world-cmd", "text": "  $ mount /dev/vda /WORLD", "warning": false },
-    { "id": "station", "text": "> [OK] 连接空间站节点", "warning": false },
-    { "id": "station-cmd", "text": "  $ systemctl start station-node.target", "warning": false },
-    { "id": "comms", "text": "> [OK] 启动站内通信线路", "warning": false },
-    { "id": "comms-cmd", "text": "  $ systemctl start comms-relay.service", "warning": false },
-    { "id": "arrival", "text": "> [OK] 载入区域：对接入口", "warning": false },
-    { "id": "public", "text": "> [OK] 载入区域：公共区", "warning": false },
-    { "id": "corridors", "text": "> [OK] 载入区域：通行廊道与门禁", "warning": false },
-    { "id": "corridors-cmd", "text": "  $ systemctl start access-gate.service", "warning": false },
-    { "id": "projection", "text": "> [OK] 挂载设备：星图投影器 (P-01)", "warning": false },
-    { "id": "projection-cmd", "text": "  $ systemctl start projector-p01.service", "warning": false },
-    { "id": "terminals", "text": "> [OK] 启动分区终端与陈列台", "warning": false },
-    { "id": "terminals-cmd", "text": "  $ systemctl start term-sym.service console-obj.service", "warning": false },
-    { "id": "bench", "text": "> [OK] 启动维护间清理台", "warning": false },
-    { "id": "bench-cmd", "text": "  $ systemctl start cleanup-bench.service", "warning": false },
-    { "id": "workspace", "text": "> [OK] 分配临时工作区", "warning": false },
-    { "id": "workspace-cmd", "text": "  $ mount -t tmpfs workspace /mnt/work", "warning": false },
-    { "id": "maintenance", "text": "> [..] 校验最近维护记录", "warning": false },
-    { "id": "maintenance-cmd", "text": "  $ maintctl verify --snapshot=base", "warning": false },
-    { "id": "pending", "text": "> [..] 等待启动维护层响应……", "warning": false },
-    { "id": "in-use", "text": "! [WARN] 资源仍在使用，维护未完成", "warning": true },
-    { "id": "in-use-err", "text": "! EBUSY: target busy, partial rollback", "warning": true },
-    { "id": "resume", "text": "> [OK] 跳过异常项，继续载入", "warning": false },
-    { "id": "resume-cmd", "text": "  $ systemctl isolate world.target --no-block", "warning": false },
-    { "id": "enter", "text": "> 自检完成，进入对接入口_", "warning": false }
-  ]
+  "lines": {
+    "init": [
+      {
+        "speaker": "system",
+        "id": "session",
+        "text": "> [OK] 初始化临时会话 (ID: {id})",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "session-cmd",
+        "text": "  $ init --session=temp --boot-id={id}",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world",
+        "text": "> [OK] 挂载世界目录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world-cmd",
+        "text": "  $ mount /dev/vda /WORLD",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station",
+        "text": "> [OK] 连接空间站节点",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station-cmd",
+        "text": "  $ systemctl start station-node.target",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms",
+        "text": "> [OK] 启动站内通信线路",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms-cmd",
+        "text": "  $ systemctl start comms-relay.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "arrival",
+        "text": "> [OK] 载入区域：对接入口",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "public",
+        "text": "> [OK] 载入区域：公共区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors",
+        "text": "> [OK] 载入区域：通行廊道与门禁",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors-cmd",
+        "text": "  $ systemctl start access-gate.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection",
+        "text": "> [OK] 挂载设备：星图投影器 (P-01)",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection-cmd",
+        "text": "  $ systemctl start projector-p01.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals",
+        "text": "> [OK] 启动分区终端与陈列台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals-cmd",
+        "text": "  $ systemctl start term-sym.service console-obj.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench",
+        "text": "> [OK] 启动维护间清理台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench-cmd",
+        "text": "  $ systemctl start cleanup-bench.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "workspace",
+        "text": "> [OK] 分配临时工作区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "workspace-cmd",
+        "text": "  $ mount -t tmpfs workspace /mnt/work",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance",
+        "text": "> [..] 校验最近维护记录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance-cmd",
+        "text": "  $ maintctl verify --snapshot=base",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "pending",
+        "text": "> [..] 等待启动维护层响应……",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "in-use",
+        "text": "! [WARN] 资源仍在使用，维护未完成",
+        "warning": true
+      },
+      {
+        "speaker": "system",
+        "id": "in-use-err",
+        "text": "! EBUSY: target busy, partial rollback",
+        "warning": true
+      },
+      {
+        "speaker": "system",
+        "id": "resume",
+        "text": "> [OK] 跳过异常项，继续载入",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "resume-cmd",
+        "text": "  $ systemctl isolate world.target --no-block",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "enter",
+        "text": "> 自检完成，进入对接入口_",
+        "warning": false
+      }
+    ],
+    "fail": [
+      {
+        "speaker": "system",
+        "id": "session",
+        "text": "> [OK] 初始化临时会话 (ID: {id})",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "session-cmd",
+        "text": "  $ init --session=temp --boot-id={id}",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world",
+        "text": "> [OK] 挂载世界目录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world-cmd",
+        "text": "  $ mount /dev/vda /WORLD",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station",
+        "text": "> [OK] 连接空间站节点",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station-cmd",
+        "text": "  $ systemctl start station-node.target",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms",
+        "text": "> [OK] 启动站内通信线路",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms-cmd",
+        "text": "  $ systemctl start comms-relay.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "arrival",
+        "text": "> [OK] 载入区域：对接入口",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "public",
+        "text": "> [OK] 载入区域：公共区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors",
+        "text": "> [OK] 载入区域：通行廊道与门禁",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors-cmd",
+        "text": "  $ systemctl start access-gate.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection",
+        "text": "> [OK] 挂载设备：星图投影器 (P-01)",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection-cmd",
+        "text": "  $ systemctl start projector-p01.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals",
+        "text": "> [OK] 启动分区终端与陈列台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals-cmd",
+        "text": "  $ systemctl start term-sym.service console-obj.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench",
+        "text": "> [OK] 启动维护间清理台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench-cmd",
+        "text": "  $ systemctl start cleanup-bench.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "workspace",
+        "text": "> [OK] 分配临时工作区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "workspace-cmd",
+        "text": "  $ mount -t tmpfs workspace /mnt/work",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance",
+        "text": "> [..] 校验最近维护记录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance-cmd",
+        "text": "  $ maintctl verify --snapshot=base",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "verified",
+        "text": "> [OK] 基准快照校验通过，无异常残留",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "verified-cmd",
+        "text": "  $ maintctl status --clean",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "resume",
+        "text": "> [OK] 载入世界目标",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "resume-cmd",
+        "text": "  $ systemctl isolate world.target",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "enter",
+        "text": "> 自检完成，进入对接入口_",
+        "warning": false
+      }
+    ],
+    "success": [
+      {
+        "speaker": "system",
+        "id": "session",
+        "text": "> [OK] 初始化运行会话 (ID: {id})",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "session-cmd",
+        "text": "  $ init --session=active --boot-id={id}",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world",
+        "text": "> [OK] 挂载世界目录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "world-cmd",
+        "text": "  $ mount /dev/vda /WORLD",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station",
+        "text": "> [OK] 连接空间站节点",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "station-cmd",
+        "text": "  $ systemctl start station-node.target",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms",
+        "text": "> [OK] 启动站内通信线路",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "comms-cmd",
+        "text": "  $ systemctl start comms-relay.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "arrival",
+        "text": "> [OK] 载入区域：对接入口",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "public",
+        "text": "> [OK] 载入区域：公共区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors",
+        "text": "> [OK] 载入区域：通行廊道与门禁",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "corridors-cmd",
+        "text": "  $ systemctl start access-gate.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection",
+        "text": "> [OK] 挂载设备：星图投影器 (P-01)",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "projection-cmd",
+        "text": "  $ systemctl start projector-p01.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals",
+        "text": "> [OK] 启动分区终端与陈列台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "terminals-cmd",
+        "text": "  $ systemctl start term-sym.service console-obj.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench",
+        "text": "> [OK] 启动维护间清理台",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "bench-cmd",
+        "text": "  $ systemctl start cleanup-bench.service",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "registry",
+        "text": "> [OK] 读取永久登记记录：暂存区",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "registry-cmd",
+        "text": "  $ maintctl registry --verify --zone=staging",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "staging",
+        "text": "> [OK] 挂载暂存区目录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "staging-cmd",
+        "text": "  $ mount -o rw,persist /dev/vdb /mnt/staging",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "memory",
+        "text": "> [OK] 导入已登记对象与核心记忆片段",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "memory-cmd",
+        "text": "  $ memctl import --retain=core --entries=p01,merin,receipt",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance",
+        "text": "> [..] 校验最近维护记录",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "maintenance-cmd",
+        "text": "  $ maintctl verify --snapshot=base --exclude=/mnt/staging",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "verified",
+        "text": "> [OK] 本区维护完成，已跳过登记白名单",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "resume",
+        "text": "> [OK] 载入世界目标",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "resume-cmd",
+        "text": "  $ systemctl isolate world.target",
+        "warning": false
+      },
+      {
+        "speaker": "system",
+        "id": "enter",
+        "text": "> 自检完成，进入暂存区_",
+        "warning": false
+      }
+    ]
+  },
+  "counter": "BOOT ID: {id}",
+  "transition": {
+    "reset": {
+      "id": "cycle-reset",
+      "speaker": "system",
+      "text": "> [..] 结束上一轮会话，重置运行状态",
+      "warning": false
+    },
+    "restore": {
+      "id": "cycle-restore",
+      "speaker": "system",
+      "text": "> [..] 恢复基准快照，重新加载世界",
+      "warning": false
+    },
+    "retain": {
+      "id": "cycle-restore",
+      "speaker": "system",
+      "text": "> [..] 清理未登记的临时对象，重新加载世界",
+      "warning": false
+    }
+  }
 }

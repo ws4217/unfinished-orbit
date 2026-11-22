@@ -233,13 +233,21 @@ export class Audio {
   text(speaker: string, character: string): void {
     if (!this.context || /\s/.test(character) || performance.now() - this.lastText < config.textIntervalMs) return;
     this.lastText = performance.now();
+    this.playText(speaker);
+  }
+  bootLine(warning: boolean): void {
+    if (warning) this.retrigger('sfx.error.input');
+    else this.playText('pruto');
+  }
+  private playText(speaker: string): void {
+    if (!this.context) return;
     const settings = this.settings();
     if (settings.muted || settings.sfx === 0) return;
     try {
       const source = this.context.createOscillator();
       source.type = 'sine';
       source.frequency.value = speaker === 'karo' ? 540 : speaker === 'merin' ? 320 : 700;
-      this.startVoice(source, 'text', 0, 0.05, 0.018);
+      this.startVoice(source, 'text', 0, 0.10, 0.018);
     } catch { this.markFailed('text-playback'); }
   }
 }

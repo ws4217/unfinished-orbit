@@ -6,6 +6,9 @@ export function validToken(input: string): boolean {
 export function canDivide(state: GameState): boolean {
   return state.evidence.includes('p01') && state.evidence.includes('old-note');
 }
+export function hasStartedExperiment(state: GameState): boolean {
+  return state.evidence.includes('experiment-intro') || state.experiment.discovered.length > 0;
+}
 export function canFirstPhone(state: GameState): boolean {
   return state.branch === 'symbols' ? state.evidence.includes('symbol-terminal')
     : state.branch === 'objects' && ['base-dark', 'base-moon', 'base-tomorrow', 'base-comet']

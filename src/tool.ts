@@ -4,7 +4,7 @@ import './ui/styles/pixel.css';
 import { validToken } from './core/rules.ts';
 
 if (new URLSearchParams(location.search).has('embedded')) document.body.classList.add('embedded-card');
-for (const id of ['title', 'stage', 'status'] as const) {
+for (const id of ['title', 'stage'] as const) {
   document.getElementById(id)!.textContent = ui.tool[id];
 }
 document.getElementById('token-label')!.textContent = ui.tool.tokenLabel;
@@ -17,10 +17,13 @@ document.getElementById('token-form')!.addEventListener('submit', event => {
   event.preventDefault();
   const value = (document.getElementById('token') as HTMLInputElement).value;
   if (!validToken(value)) {
-    document.getElementById('status')!.textContent = ui.tool.wrong;
+    const status = document.getElementById('status')!;
+    status.hidden = false;
+    status.textContent = ui.tool.wrong;
     return;
   }
   document.getElementById('token-form')!.hidden = true;
+  document.getElementById('status')!.hidden = true;
   document.getElementById('letter')!.hidden = false;
   document.body.classList.add('gift-open');
   document.title = ui.tool.letterTitle;

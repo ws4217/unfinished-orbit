@@ -974,13 +974,6 @@
           }
         },
         {
-          "id": "return",
-          "label": "返回公共区",
-          "frame": "terminal",
-          "x": 240,
-          "y": 368
-        },
-        {
           "id": "karo-stable",
           "label": "Karo",
           "frame": "character-karo",
@@ -989,6 +982,15 @@
         }
       ],
       "decorations": [
+        {
+          "id": "return",
+          "label": "安定区入口",
+          "textId": "stable-entry",
+          "frame": "terminal",
+          "x": 240,
+          "y": 368,
+          "stand": { "x": 240, "y": 404 }
+        },
         {
           "id": "decor-stable-table",
           "label": "暖色小桌",

@@ -109,6 +109,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 .slots button[data-selected="true"] { outline: 4px solid #e7ba75; outline-offset: -6px; }
 .puzzle-help { font-size: 20px; line-height: 24px; margin: 8px 0; }
 .rule-list { font-size: 20px; line-height: 24px; margin: 12px 0 0; }
+.rule-list-garbled { overflow-wrap: anywhere; }
 #hud::before {
   content: "";
   position: absolute;
@@ -147,7 +148,6 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 #small-window { position: absolute; font-size: 10px; line-height: 20px; padding: 2px 8px; }
 .chat-shell { bottom: 0; }
 .chat-history { padding-bottom: 52px; }
-.chat-controls { display: none; }
 .message { gap: 12px; margin: 12px 0; }
 .avatar { flex-basis: 40px; height: 40px; font-size: 20px; line-height: 20px; border-width: 2px; }
 .avatar.has-portrait { flex-basis: 44px; width: 44px; height: 44px; }
@@ -178,12 +178,16 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 .record-tool { border: 2px solid #8ca8ac; }
 .world-entry { position: absolute; inset: 0; overflow: hidden; background: #030810; cursor: default; outline: none; }
 .world-entry-terminal { position: absolute; inset: 48px 40px; color: #9dc9bf; }
-.world-entry-terminal h2 { margin: 0 0 28px; font-size: 20px; line-height: 28px; color: #d2dedb; }
+.world-entry-terminal h2 { margin: 0 0 8px; font-size: 20px; line-height: 28px; color: #d2dedb; }
+.world-entry-counter { margin: 0 0 14px; font-size: 20px; color: #d2dedb; }
 .world-entry-record { height: 280px; overflow: hidden; border-left: 2px solid #315a61; padding-left: 16px; }
 .world-entry-record p { height: 28px; margin: 0; font-size: 20px; line-height: 28px; white-space: pre; }
 .world-entry-record .world-entry-warning { color: #ebbd7f; }
 .world-entry-iris { position: absolute; inset: 0; width: 960px; height: 540px; image-rendering: pixelated; pointer-events: none; }
 .world-entry-revealing { background: transparent; }
+.world-entry[data-stage="gap"] { background: #000; }
+.cycle-end-light > * { animation: cycle-end-light-in .18s ease-out both; }
+@keyframes cycle-end-light-in { from { opacity: 0; } to { opacity: 1; } }
 
 .maintenance-route { position:absolute; inset:0; z-index:19; padding:26px 54px; text-align:center; background:#071d30; outline:none; }
 .route-title { margin:0 0 14px; }

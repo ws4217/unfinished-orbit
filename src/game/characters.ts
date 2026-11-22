@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import config from '../content/assets/prototype-characters.json';
+import type { Facing } from '../core/world-geometry.ts';
 
 export type CharacterId = keyof typeof config.characters;
-export type Facing = keyof typeof config.directions;
 export function loadCharacters(scene: Phaser.Scene): void {
   const frame = { frameWidth: config.frame.width, frameHeight: config.frame.height };
   for (const [id, character] of Object.entries(config.characters)) {

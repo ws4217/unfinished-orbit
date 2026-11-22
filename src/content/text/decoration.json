@@ -1,179 +1,462 @@
 {
   "lines": {
     "arrival-window": [
-      "（窗外黑漆漆的。）",
-      "（在这里待久了，大概会忘记白天是什么样。）"
+      {
+        "speaker": "pruto",
+        "text": "（窗外黑漆漆的。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（在这里待久了，大概会忘记白天是什么样。）"
+      }
     ],
     "arrival-cabinet": [
-      "（柜门都关着。）",
-      "（不知道里面放的是什么，还是别乱开了。）"
+      {
+        "speaker": "pruto",
+        "text": "（柜门都关着。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（不知道里面放的是什么，还是别乱开了。）"
+      }
     ],
     "arrival-terminal": [
-      "（好高的终端……）",
-      "（要是我能再长高一点就好了。）"
+      {
+        "speaker": "pruto",
+        "text": "（好高的终端……）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（要是我能再长高一点就能够到了。）"
+      }
     ],
     "arrival-bench": [
-      "（这椅子长得有点怪。）",
-      "（希望坐着比看着舒服。）"
+      {
+        "speaker": "pruto",
+        "text": "（这椅子长得有点怪。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（希望坐着比看着舒服。）"
+      }
     ],
     "arrival-plant": [
-      "（入口旁摆着一棵小树。）",
-      "（来来往往的人，它大概都见过。）"
+      {
+        "speaker": "pruto",
+        "text": "（入口旁摆着一棵小树。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（来来往往的人，它大概都见过。）"
+      }
     ],
     "public-tree": [
-      "（空间站里居然能种这么大的树。）",
-      "（有了它之后，感觉这里就不太像空间站了。）"
+      {
+        "speaker": "pruto",
+        "text": "（空间站里居然能种这么大的树。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（有了它之后，感觉这里就不太像空间站了。）"
+      }
     ],
     "public-shrub-a": [
-      "（这丛灌木不高。）",
-      "（总算看到个跟我差不多高的东西。）"
+      {
+        "speaker": "pruto",
+        "text": "（这丛灌木不高。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（总算看到个跟我差不多高的东西。）"
+      }
     ],
     "public-shrub-b": [
-      "（这丛灌木长得挺茂密。）",
-      "（修得还挺整齐。）"
+      {
+        "speaker": "pruto",
+        "text": "（这丛灌木长得挺茂密。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（修得还挺整齐。）"
+      }
     ],
     "public-green-bed": [
-      "（绿地边上铺着几颗小石子。）",
-      "（不知道是谁一点点摆好的。）"
+      {
+        "speaker": "pruto",
+        "text": "（绿地边上铺着几颗小石子。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（不知道是谁一点点摆好的。）"
+      }
     ],
     "public-table": [
-      "（金属桌子，看着就挺凉。）",
-      "（还是别趴在上面睡了。）"
+      {
+        "speaker": "pruto",
+        "text": "（金属桌子，看着就挺凉。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（还是别趴在上面睡了。）"
+      }
     ],
     "public-bench-a": [
-      "（这张椅子离树很近。）",
-      "（坐在这里看会儿树也不错。）"
+      {
+        "speaker": "pruto",
+        "text": "（这张椅子离树很近。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（坐在这里看会儿树也不错。）"
+      }
     ],
     "public-bench-b": [
-      "（这张长椅还空着。）",
-      "（有人一起坐就好了。）"
+      {
+        "speaker": "pruto",
+        "text": "（这张长椅还空着。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（有人一起坐就好了。）"
+      }
     ],
     "public-reception": [
-      "（一台圆形的接待设备。）",
-      "（好想知道里面有什么……）"
+      {
+        "speaker": "pruto",
+        "text": "（一台圆形的接待设备。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（好想知道里面有什么……）"
+      }
     ],
     "maintenance-module": [
-      "（一块蓝色的零件，看不出是干什么的。）",
-      "（还是让它待在原处吧。）"
+      {
+        "speaker": "pruto",
+        "text": "（一块蓝色的零件，看不出是干什么的。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（还是让它待在原处吧。）"
+      }
     ],
     "maintenance-board": [
-      "（线路板上的线排得整整齐齐。）",
-      "（光看着就觉得很难修。）"
+      {
+        "speaker": "pruto",
+        "text": "（线路板上的线排得乱七八糟。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（光看着就觉得很难修。）"
+      }
     ],
     "maintenance-chip": [
-      "（这个方块看着像芯片。）",
-      "（仔细看了下，好像更像薯片。）"
+      {
+        "speaker": "pruto",
+        "text": "（这个方块看着像一枚芯片。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（感觉好像更像薯片。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（好想咬一口尝尝味道……）"
+      }
     ],
     "maintenance-wrench": [
-      "（扳手，这个我认识。）",
-      "（感觉可以用来遛狗。）"
+      {
+        "speaker": "pruto",
+        "text": "（扳手，这个我认识。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（小时候看到过有狗狗把它当骨头啃，吃得津津有味。）"
+      }
     ],
     "maintenance-terminal": [
-      "（这里也有个终端。）",
-      "（够不到……）"
+      {
+        "speaker": "pruto",
+        "text": "（这里也有个终端。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（够不到……）"
+      }
     ],
     "maintenance-bench": [
-      "（维护间也放了张长椅。）",
-      "（看来修理工们也是挺轻松的。）"
+      {
+        "speaker": "pruto",
+        "text": "（维护间也放了张长椅。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（看来修理工们也是挺轻松的。）"
+      }
     ],
     "locked-gate": [
-      "（门禁还亮着，现在过不去。）",
-      "（等它解除再走吧。）"
+      {
+        "speaker": "pruto",
+        "text": "（门禁还亮着，现在过不去。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（等它解除再走吧。）"
+      }
     ],
     "junction-cabinet": [
-      "（机柜一排排地靠在墙边。）",
-      "（中间倒是留得很宽。）"
+      {
+        "speaker": "pruto",
+        "text": "（机柜一排排地靠在墙边。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（中间倒是留得很宽。）"
+      }
     ],
     "junction-vent": [
-      "（墙上装着通风口。）",
-      "（站在这里应该不会太闷。）"
+      {
+        "speaker": "pruto",
+        "text": "（墙上装着通风口。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（站在这里应该不会太闷。）"
+      }
     ],
     "junction-pipe": [
-      "（管线贴着墙绕了过去。）",
-      "（不用从脚下跨过去，真好。）"
+      {
+        "speaker": "pruto",
+        "text": "（管线贴着墙绕了过去。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（不用从脚下跨过去，真好。）"
+      }
     ],
     "junction-table": [
-      "（走廊边上放着一张小桌。）",
-      "（临时放点东西应该挺方便。）"
+      {
+        "speaker": "pruto",
+        "text": "（走廊边上放着一张小桌。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（临时放点东西应该挺方便。）"
+      }
     ],
     "junction-bench": [
-      "（桌子旁的长椅还空着。）",
-      "（先坐一会儿也不错。）"
+      {
+        "speaker": "pruto",
+        "text": "（桌子旁的长椅还空着。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（先坐一会儿也不错。）"
+      }
     ],
     "junction-screen": [
-      "（一台立在设备柜旁的终端。）",
-      "（先不碰它了。）"
+      {
+        "speaker": "pruto",
+        "text": "（一台立在设备柜旁的终端。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（上面写着：“系统当前处于‘免打扰’模式”。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（看来它不想被我打扰，还是不要碰了。"
+      }
     ],
     "symbols-screen": [
-      "（一块亮着的记录屏。）",
-      "（先不碰它了。）"
+      {
+        "speaker": "pruto",
+        "text": "（一块亮着的显示屏，好像是个RPG终端。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（中间有只大大的骷髅。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（感觉这骷髅的架子好大呀……）"
+      }
     ],
     "symbols-cabinet": [
-      "（这个柜子窄窄的。）",
-      "（放在墙边倒是不占地方。）"
+      {
+        "speaker": "pruto",
+        "text": "（柜子窄窄的。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（放在墙边倒是不占地方。）"
+      }
     ],
     "symbols-bench": [
-      "（操作台旁留了个座位。）",
-      "（看来不用一直站着工作。）"
+      {
+        "speaker": "pruto",
+        "text": "（操作台旁留了个座位。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（看来不用一直站着工作。）"
+      }
     ],
     "symbols-plant": [
-      "（设备旁摆着一盆植物。）",
-      "（看累了屏幕，可以看看它。）"
+      {
+        "speaker": "pruto",
+        "text": "（设备旁摆着一盆植物。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（看累了屏幕，可以看看它。）"
+      }
     ],
     "objects-cabinet": [
-      "（这几台设备挨得很近。）",
-      "（拜其所赐，旁边很空旷，给操作的地方留出了空间。）"
+      {
+        "speaker": "pruto",
+        "text": "（这几台设备挨得很近。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（拜其所赐，旁边很空旷，给操作的地方留出了空间。）"
+      }
     ],
     "objects-unit": [
-      "（一台高高的设备。）",
-      "（还是别随便碰它的开关了。）"
+      {
+        "speaker": "pruto",
+        "text": "（一台高高的设备。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（还是别随便碰它的开关了。）"
+      }
     ],
     "objects-vent": [
-      "（这里也装了通风设施。）",
-      "（这么多设备，应该挺需要的。）"
+      {
+        "speaker": "pruto",
+        "text": "（这里也装了通风设施。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（这么多设备，应该挺需要的。）"
+      }
+    ],
+    "stable-entry": [
+      {
+        "speaker": "pruto",
+        "text": "（这是刚才进来时的入口。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（从这边看，只是一块安静的终端屏幕。）"
+      }
     ],
     "stable-table": [
-      "（草地上摆着一张小桌。）",
-      "（坐下来时，东西总算有地方放了。）"
+      {
+        "speaker": "pruto",
+        "text": "（草地上摆着一张小桌。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（坐下来时，东西总算有地方放了。）"
+      }
     ],
     "stable-chair": [
-      "（这把椅子就摆在小桌旁。）",
-      "（可以坐得离对方近一些。）"
+      {
+        "speaker": "pruto",
+        "text": "（这把椅子就摆在小桌旁。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（可以坐得离对方近一些。）"
+      }
     ],
     "stable-bookcase": [
-      "（书架上已经放了些书。）",
-      "（以后可以慢慢看。）"
+      {
+        "speaker": "pruto",
+        "text": "（书架上已经放了些书。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（以后可以慢慢看。）"
+      }
     ],
     "stable-lamp": [
-      "（沙发旁立着一盏灯。）",
-      "（不用把整个地方照得很亮也没关系。）"
+      {
+        "speaker": "pruto",
+        "text": "（沙发旁立着一盏灯。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（不用把整个地方照得很亮也没关系。）"
+      }
     ],
     "stable-cushion": [
-      "（地上放着一个坐垫。）",
-      "（不想坐椅子的时候，也有别的选择。）"
+      {
+        "speaker": "pruto",
+        "text": "（地上放着一个坐垫。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（不想坐椅子的时候，也有别的选择。）"
+      }
     ],
     "stable-pot": [
-      "（这里的盆栽比树小多了。）",
-      "（搬起来应该不费劲。）"
+      {
+        "speaker": "pruto",
+        "text": "（这里的盆栽比树小多了。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（搬起来应该不费劲。）"
+      }
     ],
     "stable-coffee": [
-      "（咖啡机和研磨机摆在了一起。）",
-      "（连慢慢喝点东西的地方都有了。）"
+      {
+        "speaker": "pruto",
+        "text": "（咖啡机和研磨机摆在了一起。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（连慢慢喝点东西的地方都有了。）"
+      }
     ],
     "stable-woods": [
-      "（树木之间留着空隙。）",
-      "（从这里还能看到里面的桌椅。）"
+      {
+        "speaker": "pruto",
+        "text": "（树木之间留着空隙。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（从这里还能看到里面的桌椅。）"
+      }
     ],
     "stable-stones": [
-      "（草地上散着几块石头。）",
-      "（走路的时候稍微留意一下就好。）"
+      {
+        "speaker": "pruto",
+        "text": "（草地上散着几块石头。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（走路的时候稍微留意一下就好。）"
+      }
     ]
   },
   "dialogue": {
     "junction-bench": [
-      { "speaker": "pruto", "text": "（桌子旁的长椅还空着呢。）" },
-      { "speaker": "pruto", "text": "要过来坐会儿吗？" },
-      { "speaker": "karo", "text": "不用，我站着就好。" }
+      {
+        "speaker": "pruto",
+        "text": "（桌子旁的长椅还空着呢。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "要过来坐会儿吗？"
+      },
+      {
+        "speaker": "karo",
+        "text": "不用，我站着就好。"
+      }
     ]
   },
   "ui": {

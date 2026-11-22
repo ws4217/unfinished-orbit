@@ -1,4 +1,5 @@
-import type { App, Line } from './app.ts';
+import type { App } from './app.ts';
+import { fillText, type DialogueLine } from '../content/text/line.ts';
 import data from '../content/text/experiment.json';
 import { experimentResult, discoverExperiment, canFindEntrance } from '../core/rules.ts';
 
@@ -23,6 +24,10 @@ function showPaper(layer: HTMLElement, printed: boolean): void {
   layer.append(sample);
 }
 
+function illustrate(line: DialogueLine, layer: HTMLElement): void {
+  if (line.paper) showPaper(layer, line.paper === 'printed');
+}
+
 export function installExperiment(app: App): void {
   Object.assign(app.extraLogs, data.logs);
   const branchInteract = app.puzzleHandler;
@@ -33,16 +38,13 @@ export function installExperiment(app: App): void {
     introPending = true;
     // 沿用既有标记表示开始实验，进入介绍即保存／切曲；零结果恢复时重播介绍。
     app.observe('experiment-intro');
-    app.dialogue(data.dialogue.intro as Line[], () => { introPending = false; open(); }, true, (index, layer) => {
-      const paper = data.dialogue.intro[index].paper;
-      if (paper) showPaper(layer, paper === 'printed');
-    });
+    app.dialogue(data.dialogue.intro, () => { introPending = false; open(); }, true, illustrate);
   };
   app.hintProvider = (stage, level) => stage === 'experiment'
-    ? [{ speaker: 'pruto', text: data.hints[level - 1] }] : branchHints!(stage, level);
+    ? [data.hints[level - 1]] : branchHints!(stage, level);
   const finalize = () => {
     const witness = app.state.branch === 'symbols' ? data.font.symbols : data.font.objects;
-    app.dialogue([...witness, ...data.dialogue.final] as Line[], () => {
+    app.dialogue([...witness, ...data.dialogue.final], () => {
       app.state.phase = 'entrance'; app.session.save(); app.log('entrance-goal'); app.world();
     }, true);
   };
@@ -54,7 +56,7 @@ export function installExperiment(app: App): void {
   app.puzzleHandler = id => {
     if (id !== 'cleaner') { branchInteract?.(id); return; }
     if (!app.state.evidence.includes('range') || !app.state.evidence.includes('diagnosis')) {
-      app.dialogue([{ speaker: 'pruto', text: app.state.evidence.includes('range') ? data.ui.needDiagnosis : data.ui.needRange }]);
+      app.dialogue([app.state.evidence.includes('range') ? data.prompts.needDiagnosis : data.prompts.needRange]);
       return;
     }
     if (!app.state.evidence.includes('experiment-intro') || introPending) introduce();
@@ -77,7 +79,7 @@ export function installExperiment(app: App): void {
         else restore();
       };
       if (index === 3) {
-        app.dialogue(data.dialogue.storage as Line[], completed => {
+        app.dialogue(data.dialogue.storage, completed => {
           if (completed) { app.observe('storage'); app.log('storage'); }
           after();
         });
@@ -89,19 +91,15 @@ export function installExperiment(app: App): void {
       app.session.save();
       if (fresh) app.log(`exp-${result.id}`);
       for (const conclusion of conclusions) app.log(conclusion);
-      const dialogue: Line[] = fresh ? [...data.dialogue[result.id] as Line[]] : [{
-        speaker: 'pruto', text: data.ui.repeatResult
-          .replace('{result}', result.outcome === 'excluded' ? data.ui.skipped : result.success ? data.ui.success : data.ui.failed)
-          .replace('{retained}', result.retained ? data.ui.retained : data.ui.blank),
-      }];
-      for (const conclusion of conclusions) dialogue.push(...data.dialogue[conclusion] as Line[]);
-      app.dialogue(dialogue, after, fresh || conclusions.length > 0, (line, layer) => {
-        if (line === 0) showPaper(layer, result.retained);
-      });
+      const dialogue: DialogueLine[] = fresh ? [...data.dialogue[result.id]] : [fillText(data.prompts.repeatResult, {
+        result: result.outcome === 'excluded' ? data.ui.skipped : result.success ? data.ui.success : data.ui.failed,
+        retained: result.retained ? data.ui.retained : data.ui.blank,
+      })];
+      dialogue[0] = { ...dialogue[0], paper: result.retained ? 'printed' : 'blank' };
+      for (const conclusion of conclusions) dialogue.push(...data.dialogue[conclusion]);
+      app.dialogue(dialogue, after, fresh || conclusions.length > 0, illustrate);
     };
     restore = app.puzzle(data.ui.title, container => {
-      const description = document.createElement('p'); description.textContent = data.ui.copied; description.className = 'puzzle-help';
-      container.append(description);
       const list = document.createElement('div'); list.className = 'menu-list';
       const labels = [
         `${data.ui.held}：${app.state.experiment.held ? data.ui.on : data.ui.off}`,

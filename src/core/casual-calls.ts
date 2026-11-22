@@ -1,5 +1,9 @@
 import { CASUAL_CALL_LIMITS, type CasualTopic, type GameState } from './state.ts';
 
+export function rollGoatCall(random = Math.random): boolean {
+  return random() < 0.0351;
+}
+
 /** 返回下一组索引；听完全部后固定在末组。只在调用方确认完整听完后推进。 */
 export function casualCallIndex(state: GameState, topic: CasualTopic): number {
   return Math.min(state.casualCalls?.[topic] ?? 0, CASUAL_CALL_LIMITS[topic] - 1);

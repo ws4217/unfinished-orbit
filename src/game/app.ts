@@ -3,20 +3,18 @@ import ui from '../content/text/ui.json' with { type: 'json' };
 import story from '../content/text/exploration.json';
 import inspections from '../content/text/decoration.json' with { type: 'json' };
 import { browserStorage, SaveSession, loadSettings, saveSettings, type Settings } from '../core/storage.ts';
-import { addLog, canDivide, nextHint } from '../core/rules.ts';
+import { addLog, canDivide, hasStartedExperiment, nextHint } from '../core/rules.ts';
 import { type Evidence, type HintStage } from '../core/state.ts';
 import { StationScene, type WorldObject } from './world.ts';
 import { Audio } from '../audio/game-audio.ts';
 import { musicStage, type Track } from '../audio/audio-policy.ts';
 import audioConfig from '../content/assets/audio-playback.json' with { type: 'json' };
-import casualTopics from '../content/text/phone-topics.json';
-import { casualCallIndex, hasNewCasualCall, finishCasualCall } from '../core/casual-calls.ts';
-import { playWorldEntry } from '../ui/world-entry.ts';
+import { dialogueSpeaker, type DialogueLine } from '../content/text/line.ts';
+import { casualCallIndex, hasNewCasualCall, finishCasualCall, rollGoatCall } from '../core/casual-calls.ts';
+import { playWorldEntry, type WorldEntryMode } from '../ui/world-entry.ts';
 import { CycleVisit } from './cycle-visit.ts';
 
 const { exploration: explorationUi } = ui;
-type Speaker = keyof typeof ui.speakers;
-export interface Line { speaker: Speaker; text: string; color?: string; spans?: { text: string; color?: string }[] }
 type View = 'entry' | 'title' | 'boot' | 'world' | 'dialogue' | 'menu' | 'log' | 'settings' | 'puzzle';
 interface Screen { view: View; render: () => void; key: (key: string) => void; audioScope?: 'cleaner' }
 interface MenuItem { label: string; action: () => void }
@@ -59,7 +57,7 @@ export class App {
   collectionHandler?: (id: string) => void;
   menuProvider?: (back: () => void) => MenuItem[];
   titleProvider?: () => MenuItem[];
-  hintProvider?: (stage: HintStage, level: number) => Line[];
+  hintProvider?: (stage: HintStage, level: number) => readonly DialogueLine[];
   resumeHandler?: () => boolean;
   extraLogs: Record<string, string> = {};
   constructor() {
@@ -83,11 +81,11 @@ export class App {
       },
       target: object => {
         this.target = object;
-        document.getElementById('target')!.textContent = object ? explorationUi.interact + object.label : '';
+        document.getElementById('target')!.textContent = object ? `${explorationUi.interact} ${object.label}` : '';
       },
       meetKaro: () => {
         this.observe('met-karo');
-        this.dialogue(story.dialogue['meet-karo'] as Line[], () => this.world(), true);
+        this.dialogue(story.dialogue['meet-karo'], () => this.world(), true);
       },
       failed: () => {
         this.resourceFailed = true;
@@ -154,7 +152,7 @@ export class App {
     app.dataset.audioStarts = String(musicStarts);
     app.dataset.audioDucked = String(ducked);
     const status = document.getElementById('audio-status');
-    if (status) status.textContent = ui.audio[this.audio.status];
+    if (status) status.hidden = !this.audio.hasFailures;
     const retry = document.getElementById('audio-retry');
     if (retry) retry.hidden = !this.audio.hasFailures;
   }
@@ -197,7 +195,8 @@ export class App {
       }
       return;
     }
-    if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) event.preventDefault();
+    if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)
+      || (key === 'Escape' && this.view === 'dialogue')) event.preventDefault();
     if (['world', 'puzzle'].includes(this.view) && key === 'j') { this.openLog(); return; }
     if (['world', 'puzzle'].includes(this.view) && key === 'c') { this.openMenu(); return; }
     if (this.view === 'world' && isConfirm(key)) {
@@ -222,8 +221,9 @@ export class App {
     this.panel.hidden = screen.view !== 'title' && screen.view !== 'entry';
     this.panel.inert = false;
     this.hud.hidden = ['title', 'entry', 'boot'].includes(screen.view);
-    document.getElementById('hud-controls')!.textContent = screen.view === 'dialogue' ? explorationUi.next
-      : screen.view === 'world' ? explorationUi.controls : explorationUi.back;
+    const controls = document.getElementById('hud-controls')!;
+    controls.hidden = screen.view === 'dialogue';
+    controls.textContent = screen.view === 'world' ? explorationUi.controls : explorationUi.back;
     this.root.replaceChildren();
     screen.render();
   }
@@ -235,20 +235,14 @@ export class App {
   play(): void {
     const isNew = !this.state.evidence.includes('arrival-intro') && this.state.phase === 'arrival';
     this.session.save();
-    const stable = ['stable', 'registration', 'reunion'].includes(this.state.phase);
+    const stable = ['stable-intro', 'stable', 'registration', 'reunion'].includes(this.state.phase);
     this.scene.drawWorld(stable);
     if (isNew) {
-      this.activate({
-        view: 'boot',
-        render: () => {
-          this.stopWorldEntry = playWorldEntry(this.root, () => {
-            this.log('a-note');
-            this.dialogue(story.dialogue.arrival as Line[], () => {
-              this.observe('arrival-intro'); this.world();
-            }, true);
-          });
-        },
-        key: () => {},
+      this.boot('init', () => {
+        this.log('a-note');
+        this.dialogue(story.dialogue.arrival, () => {
+          this.observe('arrival-intro'); this.world();
+        }, true);
       });
       return;
     }
@@ -256,6 +250,7 @@ export class App {
     if (this.resumeHandler?.()) return;
   }
   showTitle(message?: string): void {
+    this.cycle.prepareTitle();
     this.activate({
       view: 'title',
       render: () => {
@@ -287,7 +282,7 @@ export class App {
     });
     this.cycle.title();
   }
-  titleDialogue(lines: Line[], done: () => void): void {
+  titleDialogue(lines: readonly DialogueLine[], done: () => void): void {
     this.dialogue(lines, done, true);
     this.panel.hidden = false;
     this.panel.inert = true;
@@ -302,10 +297,11 @@ export class App {
     window.setTimeout(() => { done(); }, 180);
     window.setTimeout(() => { veil.remove(); this.swapping = false; }, 370);
   }
-  endCard(text: string, back: string): void {
+  endCard(text: string, back: string, light = false): void {
     this.activate({ view: 'menu', render: () => {
       this.hud.hidden = true;
       const card = node('section', undefined, 'cycle-end');
+      if (light) card.classList.add('cycle-end-light');
       card.append(node('h1', text));
       this.actionButton(back, () => this.showTitle(), card);
       this.root.append(card);
@@ -356,31 +352,31 @@ export class App {
     };
     this.activate(screen);
   }
-  dialogue(lines: Line[], done: (completed?: boolean) => void = () => this.world(), necessary = false,
-    illustrate?: (index: number, layer: HTMLElement) => void): void {
+  dialogue(lines: readonly DialogueLine[], done: (completed?: boolean) => void = () => this.world(), necessary = false,
+    onLine?: (line: DialogueLine, layer: HTMLElement) => void): void {
     let index = -1;
     let complete = true;
     let reveal = () => {};
     const history = node('div', undefined, 'chat-history');
     const shell = node('section', undefined, 'chat-shell');
-    const controls = node('small', explorationUi.next, 'chat-controls');
-    shell.append(history, controls);
+    shell.append(history);
     const advance = () => {
       if (!complete) return;
       index++;
       if (index >= lines.length) { done(true); return; }
       const line = lines[index];
-      illustrate?.(index, this.root);
-      const speaker = ui.speakers[line.speaker];
+      const speaker = dialogueSpeaker(line);
       const message = node('div', undefined, 'message');
       const avatar = node('div', speaker.name.slice(0, 1), `avatar avatar-${line.speaker}`);
       avatar.setAttribute('aria-hidden', 'true');
-      const image = node('img');
-      image.alt = '';
-      image.addEventListener('load', () => {
-        avatar.classList.add('has-portrait'); avatar.replaceChildren(image);
-      }, { once: true });
-      image.src = speaker.portrait;
+      if (speaker.portrait) {
+        const image = node('img');
+        image.alt = '';
+        image.addEventListener('load', () => {
+          avatar.classList.add('has-portrait'); avatar.replaceChildren(image);
+        }, { once: true });
+        image.src = speaker.portrait;
+      }
       const bubble = node('div', undefined, 'bubble');
       bubble.append(node('strong', speaker.name));
       const text = node('p');
@@ -388,6 +384,7 @@ export class App {
       bubble.append(text);
       message.append(avatar, bubble);
       history.append(message);
+      onLine?.(line, this.root);
       const segments = line.spans ?? [{ text: line.text, color: line.color }];
       const total = segments.reduce((sum, part) => sum + Array.from(part.text).length, 0);
       let count = 0;
@@ -426,17 +423,19 @@ export class App {
       view: 'dialogue',
       render: () => { this.root.append(shell); advance(); },
       key: key => {
-        if (isBack(key)) { if (!complete) reveal(); else if (!necessary) done(false); }
+        if (isBack(key)) { if (!complete) reveal(); }
+        else if (key === 'Escape' && !necessary) done(false);
         else if (isConfirm(key) && complete) advance();
       },
     };
     this.activate(screen);
   }
-  phone(lines: Line[], done: (completed?: boolean) => void, necessary = false): void {
+  phone(lines: readonly DialogueLine[], done: (completed?: boolean) => void, necessary = false,
+    onLine?: (line: DialogueLine, layer: HTMLElement) => void): void {
     this.audio.event('sfx.phone.connect');
     this.dialogue(lines, completed => {
       this.audio.event('sfx.phone.disconnect'); done(completed);
-    }, necessary);
+    }, necessary, onLine);
   }
   observe(evidence: Evidence): void {
     if (!this.state.evidence.includes(evidence)) {
@@ -489,21 +488,26 @@ export class App {
     if (!['world', 'puzzle'].includes(this.view) || !this.screen || this.scene.changingRoom) return;
     const previous = this.screen;
     const restore = () => this.activate(previous);
+    const showGoat = rollGoatCall();
     const menu = () => {
       const items: MenuItem[] = [];
-      if (this.state.branch) {
+      if (this.state.branch && !hasStartedExperiment(this.state)) {
         if (this.menuProvider) items.push(...this.menuProvider(menu));
         for (const id of ['greet', 'patterns', 'flirt'] as const) items.push({
           label: (hasNewCasualCall(this.state, id) ? explorationUi.newCall : '') + explorationUi[id],
           action: () => {
-            const episode = casualTopics.topics[id].episodes[casualCallIndex(this.state, id)];
-            this.phone(episode.lines as Line[], completed => {
+            const episode = story.calls[id].episodes[casualCallIndex(this.state, id)];
+            this.phone(episode.lines, completed => {
               if (completed && finishCasualCall(this.state, id)) this.session.save();
               menu();
             });
           },
         });
       }
+      if (showGoat) items.push({
+        label: explorationUi.goat,
+        action: () => this.phone(story.calls.goat.episodes[0].lines, menu),
+      });
       if (this.state.phase === 'branch' || this.state.phase === 'maintenance' || this.state.phase === 'entrance') {
         const stage = this.hintStage();
         items.push({
@@ -569,7 +573,8 @@ export class App {
           this.settings.muted = !this.settings.muted; persist(); this.activate(screen);
         }, window);
         mute.addEventListener('focus', () => { focus = 2; });
-        const audioStatus = node('p', ui.audio[this.audio.status]); audioStatus.id = 'audio-status';
+        const audioStatus = node('p', ui.audio.failed); audioStatus.id = 'audio-status';
+        audioStatus.hidden = !this.audio.hasFailures;
         audioStatus.setAttribute('role', 'status'); window.append(audioStatus);
         const retry = this.actionButton(ui.audio.retry, () => {
           this.audio.retry(); focus = 2; mute.focus();
@@ -598,13 +603,31 @@ export class App {
     };
     this.activate(screen);
   }
-  transition(done: () => void): void {
+  whiteTransition(atWhite: () => void, done: () => void): void {
+    const halfMs = 250;
     this.activate({
-      view: 'dialogue',
+      view: 'boot',
       render: () => {
-        const fade = node('div', undefined, 'fade');
-        this.root.append(fade);
-        window.setTimeout(done, 650);
+        const veil = node('div', undefined, 'white-swap');
+        veil.dataset.stage = 'in';
+        this.root.append(veil);
+        const fade = (from: number, to: number) =>
+          veil.animate([{ opacity: from }, { opacity: to }], { duration: halfMs, fill: 'forwards' }).finished;
+        void fade(0, 1).then(() => {
+          if (!veil.isConnected) return;
+          atWhite();
+          veil.dataset.stage = 'out';
+          return fade(1, 0).then(() => { if (veil.isConnected) done(); });
+        });
+      },
+      key: () => {},
+    });
+  }
+  boot(mode: WorldEntryMode, done: () => void, beforeReveal?: () => void): void {
+    this.activate({
+      view: 'boot',
+      render: () => {
+        this.stopWorldEntry = playWorldEntry(this.root, mode, warning => this.audio.bootLine(warning), done, beforeReveal);
       },
       key: () => {},
     });
@@ -612,17 +635,17 @@ export class App {
   interact(id: string): void {
     if (this.cycle.interact(id)) return;
     if (this.target?.id === id && this.target.inspectionId) {
-      if (this.target.inspectionId === 'junction-bench' && this.scene.karoIsHere()) {
-        this.dialogue(inspections.dialogue['junction-bench'] as Line[]); return;
+      if (this.target.inspectionId === 'junction-bench' && !this.state.registered && this.scene.karoIsHere()) {
+        this.dialogue(inspections.dialogue['junction-bench']); return;
       }
       const lines = inspections.lines[this.target.inspectionId as keyof typeof inspections.lines];
-      this.dialogue(lines.map((text): Line => ({ speaker: 'pruto', text })));
+      this.dialogue(lines);
       return;
     }
     if (this.state.phase === 'revisit' && ['p01', 'merin', 'cleaner'].includes(id) && this.collectionHandler) {
       this.collectionHandler(id); return;
     }
-    if (this.puzzleHandler && (['symbol-terminal', 'object-terminal', 'cleaner', 'register', 'rest', 'return', 'art', 'karo-stable'].includes(id) || id.startsWith('base-'))) {
+    if (this.puzzleHandler && (['symbol-terminal', 'object-terminal', 'cleaner', 'register', 'rest', 'art', 'karo-stable'].includes(id) || id.startsWith('base-'))) {
       this.puzzleHandler(id); return;
     }
     if (id === 'karo') {
@@ -630,13 +653,13 @@ export class App {
         const lines = this.state.phase === 'entrance' ? story.dialogue['karo-entrance']
           : this.state.evidence.includes('experiment-intro') ? story.dialogue['karo-experiment']
           : story.dialogue['karo-maintenance'];
-        this.dialogue(lines as Line[]); return;
+        this.dialogue(lines); return;
       }
       if (!canDivide(this.state)) {
         const needed = this.state.evidence.includes('p01') ? 'need-note' : 'need-p01';
-        this.dialogue(story.dialogue[needed] as Line[]); return;
+        this.dialogue(story.dialogue[needed]); return;
       }
-      this.dialogue(story.dialogue.gate as Line[], () => this.choice(explorationUi.branchQuestion, [
+      this.dialogue(story.dialogue.gate, () => this.choice(explorationUi.branchQuestion, [
         ...(['symbols', 'objects'] as const).map(branch => ({
           label: branch === 'symbols' ? explorationUi.chooseSymbols : explorationUi.chooseObjects,
           action: () => {
@@ -652,9 +675,9 @@ export class App {
       ], () => this.world()), true);
       return;
     }
-    const dialogues = story.dialogue as Record<string, Line[]>;
+    const dialogues: Readonly<Partial<Record<string, readonly DialogueLine[]>>> = story.dialogue;
     if (id === 'merin' && this.state.experiment.discovered.length === 4 && this.state.evidence.includes('storage')) {
-      this.dialogue(dialogues['merin-late']); return;
+      this.dialogue(story.dialogue['merin-late']); return;
     }
     if (dialogues[id]) {
       this.dialogue(dialogues[id], completed => {

@@ -1,16 +1,17 @@
 import http from 'node:http';
-import { createReadStream } from 'node:fs';
+import { createReadStream, existsSync } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
-const root = path.basename(directory) === 'dist' ? directory : path.join(directory, 'dist');
+const root = existsSync(path.join(directory, 'src', 'main.ts')) ? path.join(directory, 'dist') : directory;
 const types = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8',
   '.png': 'image/png', '.svg': 'image/svg+xml', '.ogg': 'audio/ogg',
   '.opus': 'audio/ogg', '.woff2': 'font/woff2', '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8',
 };
 
 try {
@@ -49,13 +50,16 @@ const server = http.createServer(async (request, response) => {
     response.writeHead(404).end();
   }
 });
-const port = Number(process.env.ORBIT_PORT ?? 4217);
+const port = Number(process.env.ORBIT_PORT ?? process.env.PORT ?? 4217);
+const host = process.env.ORBIT_HOST ?? '127.0.0.1';
 server.on('error', (error) => {
   console.error(error.code === 'EADDRINUSE'
     ? `端口${port}已被占用，请关闭原服务后重试；不会自动切换端口。`
     : `本地服务启动失败：${error.message}`);
   process.exitCode = 1;
 });
-server.listen(port, '127.0.0.1', () => {
-  console.log(`未完成的轨道：http://127.0.0.1:${server.address().port}/（关闭此进程即可停止）`);
+server.listen(port, host, () => {
+  const { address, port } = server.address();
+  const urlHost = address.includes(':') ? `[${address}]` : address;
+  console.log(`未完成的轨道：http://${urlHost}:${port}/`);
 });

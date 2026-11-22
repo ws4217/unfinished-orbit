@@ -67,23 +67,23 @@
       },
       {
         "speaker": "pruto",
-        "text": "（“P-01终于把那张星图完整映出来了。我等得有点困，去旁边坐了一会儿。”）"
+        "text": "（“P-01终于把星图映出来了，真的等了好久哇。”）"
       },
       {
         "speaker": "pruto",
-        "text": "（“等我回来时，那些空着的地方也亮起来了。我认不全那些星星，但还是看入迷了。”）"
+        "text": "（“现在，那些空着的地方也亮起来了。我认不全那些星星，但还是看入迷了。”）"
       },
       {
         "speaker": "pruto",
-        "text": "（“我还画了张草图。下次有人问起，就不用只拿手比画了。”——曾在这里驻足的居民。）"
+        "text": "（“我还留了张草图，下次可以给朋友好好讲讲。”——Sarton。）"
       },
       {
         "speaker": "pruto",
-        "text": "（看来投影的速度挺慢的嘛。）"
+        "text": "（完整映出来的星图……看来得等好一会儿才能看到了。）"
       },
       {
         "speaker": "pruto",
-        "text": "（还是去看看投影器吧。）"
+        "text": "（去看看P-01现在是什么样吧。）"
       }
     ],
     "merin-late": [
@@ -105,11 +105,11 @@
       },
       {
         "speaker": "merin",
-        "text": "……您看到的也是这样吗。"
+        "text": "……您看到的也是这样吗。总觉得今天站里不太安稳。"
       },
       {
         "speaker": "pruto",
-        "text": "嗯，我们正在找维护的办法。"
+        "text": "嗯，我们正在找维护的办法。放心吧，等弄好了，一定让你看到完整的星图。"
       },
       {
         "speaker": "merin",
@@ -127,7 +127,7 @@
     "merin": [
       {
         "speaker": "merin",
-        "text": "您好，欢迎来到公共区。如果走累了，这边有座位可以休息。"
+        "text": "您好，朋友，欢迎来到公共区。如果走累了，这边有座位可以休息。"
       },
       {
         "speaker": "pruto",
@@ -151,11 +151,11 @@
       },
       {
         "speaker": "merin",
-        "text": "嗯。只是投影总是不完整，有些星座怎么也找不全。"
+        "text": "嗯。只是投影总是不完整，每次都没什么好东西能展示给大家，总觉得有点过意不去。"
       },
       {
         "speaker": "pruto",
-        "text": "等它亮全了，我指给你看呀！"
+        "text": "等它亮全了，我指给你认星座呀！"
       },
       {
         "speaker": "merin",
@@ -187,7 +187,7 @@
       },
       {
         "speaker": "merin",
-        "text": "抱歉，我也不知道自己怎么会突然这么说……可能是最近太累了吧。"
+        "text": "抱歉，我也不知道自己怎么会突然这么说……可能是最近太累，记错了吧。"
       },
       {
         "speaker": "pruto",
@@ -261,7 +261,7 @@
       },
       {
         "speaker": "karo",
-        "text": "本来想画个圆，画到一半觉得这样就行。"
+        "text": "本来想画个圆，画到一半觉得这样就可以。"
       },
       {
         "speaker": "pruto",
@@ -327,19 +327,19 @@
       },
       {
         "speaker": "pruto",
-        "text": "门上的单人操作，就是一边只能进一个人？"
+        "text": "门上写着“单人操作”，就是一边只能进一个人？"
       },
       {
         "speaker": "karo",
-        "text": "嗯。分头进，有事打电话。"
+        "text": "嗯，我们可以分头进，有事打电话。"
       },
       {
         "speaker": "pruto",
-        "text": "那有看不懂的，我随时问你咯。"
+        "text": "那有看不懂的，我就问你啦。"
       },
       {
         "speaker": "karo",
-        "text": "这么一说，我倒有点压力了。"
+        "text": "我要是也不懂怎么办呢？"
       },
       {
         "speaker": "pruto",
@@ -355,7 +355,7 @@
       },
       {
         "speaker": "karo",
-        "text": "我试过，沉思一会儿，脑子会灵光不少。"
+        "text": "嗯。沉思几秒，脑子会灵光不少。"
       },
       {
         "speaker": "pruto",
@@ -456,5 +456,474 @@
     "old-note": "居民留言提到：P-01曾完整投影，居民还留下了一张草图。",
     "range": "维护告示牌：本区域定期例行更新，清理临时工作区，为下一轮运行提供可用空间；线框标出了清理范围。",
     "diagnosis": "P-01本轮维护部分完成；关联旧资源仍在使用，记录与当前投影状态不一致。"
+  },
+  "calls": {
+    "greet": {
+      "episodes": [
+        {
+          "id": "greet-01",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "Karo？"
+            },
+            {
+              "speaker": "karo",
+              "text": "嗯，怎么了？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "没什么事。就是想打电话给你。"
+            },
+            {
+              "speaker": "karo",
+              "text": "我还以为你发现什么重要线索了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "让你失望了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "倒也没有，正好歇一会儿。"
+            }
+          ]
+        },
+        {
+          "id": "greet-02",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "公共区好多小板凳。你一般会坐在哪休息？"
+            },
+            {
+              "speaker": "karo",
+              "text": "我一般靠墙坐着，这样背部比较舒服。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我肯定会坐在窗边，边休息边看星空。"
+            },
+            {
+              "speaker": "karo",
+              "text": "然后看着看着就忘了时间了。"
+            }
+          ]
+        },
+        {
+          "id": "greet-03",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "这里真安静啊。"
+            },
+            {
+              "speaker": "karo",
+              "text": "我刚才停下来仔细听了听。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "听见什么了？"
+            },
+            {
+              "speaker": "karo",
+              "text": "听到墙后面有滋滋的电流声。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我一点都听不到。"
+            },
+            {
+              "speaker": "karo",
+              "text": "可能它离我比较近吧，希望不会有危险。"
+            }
+          ]
+        },
+        {
+          "id": "greet-04",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "盯着字看久了，都快不认识字了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "我也是。刚刚看终端文档还看串行了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "好希望这些机器有文本转语音功能。"
+            },
+            {
+              "speaker": "karo",
+              "text": "还是别了，真的把日志读出来就太难顶了。"
+            }
+          ]
+        },
+        {
+          "id": "greet-05",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "Karo。"
+            },
+            {
+              "speaker": "karo",
+              "text": "又有什么事了？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我要说什么事情来着，突然忘记了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "感觉你比我还要健忘。"
+            }
+          ]
+        },
+        {
+          "id": "greet-06",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "你在看屏幕时，会不自觉越凑越近吗？"
+            },
+            {
+              "speaker": "karo",
+              "text": "会，因为看不清。然后发现凑得太近，更看不清了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我也差不多。"
+            },
+            {
+              "speaker": "karo",
+              "text": "下次离得远些吧，免得眼睛痛。"
+            }
+          ]
+        },
+        {
+          "id": "greet-07",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "我每次到房间都会记录一下，怎么还是找不到路呢？"
+            },
+            {
+              "speaker": "karo",
+              "text": "你都记了些什么？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "房间名字，里面有什么东西，有时候画点装饰。"
+            },
+            {
+              "speaker": "karo",
+              "text": "那出入口位置呢？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "……我以为这个用脑袋就能记住。"
+            },
+            {
+              "speaker": "karo",
+              "text": "看来真不能指望让你带路。"
+            }
+          ]
+        },
+        {
+          "id": "greet-08",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "你出去玩的时候，会提前规划好吗？"
+            },
+            {
+              "speaker": "karo",
+              "text": "会先挑几个想去的地方。具体怎么逛，到了再说。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "逛景点时，我一般看到好玩的就停下来玩，最后总是时间不够，逛不完。"
+            },
+            {
+              "speaker": "karo",
+              "text": "那跟你出去玩，得多留点时间。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "有时候也可能发现从没去过的新区域哦。"
+            },
+            {
+              "speaker": "karo",
+              "text": "到时候想回去，可就麻烦咯。"
+            }
+          ]
+        },
+        {
+          "id": "greet-09",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "不好啦，不好啦！"
+            },
+            {
+              "speaker": "karo",
+              "text": "怎么了？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我好像卡进隐藏区域了……这里看起来好奇怪。"
+            },
+            {
+              "speaker": "karo",
+              "text": "这里真的有隐藏区域嘛？你细说说。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "哦不对，我好像把全息投影看成房间了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "大笨蛋！"
+            }
+          ]
+        },
+        {
+          "id": "greet-10",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "你那边进展如何了？"
+            },
+            {
+              "speaker": "karo",
+              "text": "线索不够，在等你那边的情报呢。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "哦，那我还是专心解谜吧。"
+            },
+            {
+              "speaker": "karo",
+              "text": "确实得快点了，我发现这里开始变得不稳定了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "那等谜题解开后，我们再闲聊。"
+            },
+            {
+              "speaker": "karo",
+              "text": "你还真是个话痨呀……"
+            }
+          ]
+        }
+      ]
+    },
+    "patterns": {
+      "episodes": [
+        {
+          "id": "patterns-01",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "这里有些图案好规整啊，我都分不清是机器印的，还是谁手画的。"
+            },
+            {
+              "speaker": "karo",
+              "text": "线条很齐的话，多半是印上去的吧。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "说不定真有人手特别稳，徒手就能画出标准圆呢。"
+            },
+            {
+              "speaker": "karo",
+              "text": "你试过徒手画圆嘛？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "试过呀，结果每次总是手抖，最后都画成扁扁的土豆了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "找个杯盖描，不就圆了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "那哪有徒手画出来有成就感！"
+            },
+            {
+              "speaker": "karo",
+              "text": "行，那祝你早日画出圆一点的土豆。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "（为什么是土豆呢……）"
+            }
+          ]
+        },
+        {
+          "id": "patterns-02",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "我盯着那些图案看了半天，越看越觉得怪。"
+            },
+            {
+              "speaker": "karo",
+              "text": "看出什么门道了？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "把几个符号连着看，越看越像一张诡异的脸……"
+            },
+            {
+              "speaker": "karo",
+              "text": "……你是盯屏幕盯太久，眼花了吧。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我说的是真的！你看看你旁边，肯定也有长得像人脸的东西。"
+            },
+            {
+              "speaker": "karo",
+              "text": "……还真别说，旁边这个插座，表情看着好……慈祥。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "哈哈，我没说错吧！"
+            },
+            {
+              "speaker": "karo",
+              "text": "完了，以后不敢直视插座了。"
+            }
+          ]
+        }
+      ]
+    },
+    "flirt": {
+      "episodes": [
+        {
+          "id": "flirt-01",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "我每次打电话，你好像接得都挺快的。"
+            },
+            {
+              "speaker": "karo",
+              "text": "这会儿正好没什么事。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "要是换别人，你也会接这么快吗？"
+            },
+            {
+              "speaker": "karo",
+              "text": "除了你，也没人会一直给我打电话呀。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "那等出去了，我也要继续给你打。"
+            },
+            {
+              "speaker": "karo",
+              "text": "可别打欠费了。"
+            }
+          ]
+        },
+        {
+          "id": "flirt-02",
+          "lines": [
+            {
+              "speaker": "pruto",
+              "text": "晚上好呀。"
+            },
+            {
+              "speaker": "karo",
+              "text": "现在应该不是晚上吧。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "我看看……3:51 PM。好吧，我是笨蛋……"
+            },
+            {
+              "speaker": "karo",
+              "text": "正常，这里分不出白天黑夜，外面一直黑漆漆的。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "那我要是在这儿上班，作息肯定全乱套了。"
+            },
+            {
+              "speaker": "karo",
+              "text": "确实，搞不好连吃饭睡觉都会忘。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "说起吃饭……之前Nep带我去过一家西餐厅，可好吃了！"
+            },
+            {
+              "speaker": "pruto",
+              "text": "等出去了，我带你去尝尝？"
+            },
+            {
+              "speaker": "karo",
+              "text": "嗯，一言为定。"
+            }
+          ]
+        }
+      ]
+    },
+    "goat": {
+      "episodes": [
+        {
+          "id": "arian-01",
+          "lines": [
+            {
+              "speaker": "unknown",
+              "text": "……滋滋……"
+            },
+            {
+              "speaker": "pruto",
+              "text": "你好……请问你是哪位？"
+            },
+            {
+              "speaker": "unknown",
+              "text": "……滋滋……救命……航线有偏，无法锁定……白羊座。"
+            },
+            {
+              "speaker": "unknown",
+              "text": "请问……你能看见白羊座 C 星吗？"
+            },
+            {
+              "speaker": "pruto",
+              "text": "白羊座……C星？等等，你是不是打错了？我这儿窗外黑漆漆的，什么也看不见呀……"
+            },
+            {
+              "speaker": "unknown",
+              "text": "……滋……听不清……希望它还在原来的轨道，这样我……滋滋……返程。"
+            },
+            {
+              "speaker": "unknown",
+              "text": "谢谢你……"
+            },
+            {
+              "speaker": "pruto",
+              "text": "喂？喂？……挂掉了。"
+            },
+            {
+              "speaker": "pruto",
+              "text": "（好奇怪……站内电话怎么会连接到星际航道？）"
+            },
+            {
+              "speaker": "pruto",
+              "text": "（白羊座 C 星……希望他最后能顺利找到路吧。）"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -47,7 +47,6 @@ button[data-focus="true"] { border-color: #b5f3ed; }
 #small-window { position: fixed; top: 0; left: 0; right: 0; margin: 0; padding: 6px; text-align: center; color: #ffcf96; background: #281a13; font-size: 13px; z-index: 100; }
 .chat-shell { position: absolute; left: 16px; right: 16px; bottom: 0; height: 270px; }
 .chat-history { height: 270px; overflow-y: auto; overscroll-behavior: contain; padding: 70px 12px 40px 0; mask-image: linear-gradient(to bottom, transparent 0, black 70px); }
-.chat-controls { position: absolute; bottom: 4px; right: 12px; color: #c6dce5; padding: 4px 8px; background: #091727; pointer-events: none; }
 .message { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; }
 .avatar { flex: 0 0 36px; height: 36px; display: grid; place-items: center; background: #33506b; border: 1px solid #a6b7cc; color: #f0f7ff; font-size: 18px; }
 .avatar-karo { background: #23494f; }
@@ -85,8 +84,6 @@ html:has(.embedded-card) { background: transparent; }
 .embedded-card .calibration-mark { width: 64px; height: 64px; line-height: 64px; margin: 48px auto; }
 .record-tool { width: 100%; height: 290px; border: 1px solid #55788c; display: block; margin-bottom: 12px; }
 .window a { color: #9fe8e1; margin-right: 20px; }
-.fade { position: absolute; inset: 0; background: #030810; animation: fade-in .6s ease-out; }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 .token-value { display: inline-block; user-select: text; color: #9fe8e1; margin-right: 16px; font-size: 18px; }
 .gift-open #stage, .gift-open #title, .gift-open #status, .gift-open .calibration-mark { display: none; }
 .gift-open .tool-panel { padding: 20px; }
@@ -98,6 +95,7 @@ html:has(.embedded-card) { background: transparent; }
   45%, 55% { clip-path: polygon(50% -60%,160% 50%,50% 160%,-60% 50%); }
 }
 .cycle-end { display: grid; place-content: center; justify-items: center; gap: 32px; }
+.white-swap { position: absolute; inset: 0; background: #fff; z-index: 18; }
 .sample-paper { position:absolute; top:32px; right:30px; margin:0; padding:8px 12px; background:#09283f; border:2px solid #7899a5; }
 .sample-paper figcaption { font-size:16px; margin-bottom:6px; }
 .sample-paper svg { width:75px; height:60px; background:#fffef4; fill:none; stroke:#243e57; stroke-width:2; }

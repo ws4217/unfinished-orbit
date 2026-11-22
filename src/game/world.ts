@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import { FRAMES } from './frame-catalog.ts';
 import ui from '../content/text/ui.json' with { type: 'json' };
-import { moveVector, nearest } from '../core/world-geometry.ts';
+import { facingOf, moveVector, nearest, type Facing } from '../core/world-geometry.ts';
 import type { GameState } from '../core/state.ts';
 import { getRoom, safeRoom, blocked, doorLock, exitAt, objectVisible, interactionTargets, type StationRoom, type WorldObject } from './station-map.ts';
 import { drawRoom, drawProp, objectLabel } from './station-renderer.ts';
-import { loadCharacters, registerCharacters, createCharacter, animateCharacter, type Facing } from './characters.ts';
-import { KaroJourney, karoBlocksPlayer, type KaroPresence } from '../core/karo-journey.ts';
+import { loadCharacters, registerCharacters, createCharacter, animateCharacter } from './characters.ts';
+import { KaroMotion, type KaroPresence } from '../core/karo-motion.ts';
 import type { Branch } from '../core/state.ts';
 
 export type { WorldObject } from './station-map.ts';
@@ -38,14 +38,15 @@ export class StationScene extends Phaser.Scene {
   private lateProp?: Phaser.GameObjects.Container;
   private repaired?: Phaser.GameObjects.Text;
   private changing = false;
-  private journey = new KaroJourney();
+  private karoMotion = new KaroMotion();
   private karo?: Phaser.GameObjects.Sprite;
   private karoShadow?: Phaser.GameObjects.Ellipse;
   private karoLabel?: Phaser.GameObjects.Text;
   private karoPresence?: KaroPresence;
   get changingRoom(): boolean { return this.changing; }
   karoIsHere(): boolean { return this.karoPresence?.room === this.room.id && !this.karoPresence.moving; }
-  startKaroDeparture(branch: Branch): void { this.journey.depart(branch); }
+  startKaroDeparture(branch: Branch): void { this.karoMotion.depart(branch); }
+  showStableKaro(): void { this.startKaroFollow(this.facing); }
   constructor(host: WorldHost) { super('station'); this.host = host; }
   preload(): void {
     this.failure = false;
@@ -67,13 +68,13 @@ export class StationScene extends Phaser.Scene {
   }
   drawWorld(stable: boolean): void {
     if (!this.started) return;
-    this.journey.reset(this.host.state());
+    this.karoMotion.reset(this.host.state());
     const app = document.getElementById('app');
     if (app) app.dataset.roomTransition = 'idle';
     this.enterRoom(safeRoom(this.host.state(), stable));
   }
   protected enterRoom(id: string, entry?: string, from?: string, preserveMovement = false): void {
-    if (id === 'junction' && from === this.host.state().branch) this.journey.returnFromPartner(this.host.state());
+    if (id === 'junction' && from === this.host.state().branch) this.karoMotion.returnFromPartner(this.host.state());
     this.room = getRoom(id);
     this.children.removeAll(true);
     this.objectImages.clear(); this.labels.clear(); this.gates = [];
@@ -118,6 +119,11 @@ export class StationScene extends Phaser.Scene {
     }
     this.shadow = this.add.ellipse(x, y + 2, 24, 8, 0x080d17, 0.5).setDepth(y - 1);
     this.player = createCharacter(this, 'pruto', x, y);
+    this.karoMotion.leaveFollow();
+    const state = this.host.state();
+    if (state.registered && (state.phase === 'stable' || state.phase === 'revisit')) {
+      this.startKaroFollow(entry === 'west' ? 'right' : entry === 'east' ? 'left' : 'down');
+    }
     this.karo = createCharacter(this, 'karo', 0, 0).setVisible(false);
     this.karoShadow = this.add.ellipse(0, 0, 20, 6, 0x080d17, 0.45).setVisible(false);
     this.karoLabel = this.add.text(0, 0, '', {
@@ -129,7 +135,12 @@ export class StationScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, 960, 540).centerOn(480, 270);
     this.host.roomChanged?.(id);
   }
-  returnToPublic(): void { if (this.started) this.changeRoom('public'); }
+  private startKaroFollow(facing: Facing): void {
+    if (!this.player) return;
+    const state = this.host.state();
+    this.karoMotion.followFrom(this.room.id, this.player, facing, (x, y) =>
+      blocked(this.room, x, y, state, ['karo', 'karo-stable']));
+  }
   private changeRoom(id: string, entry?: string): void {
     if (this.changing) return;
     this.changing = true;
@@ -149,6 +160,7 @@ export class StationScene extends Phaser.Scene {
   }
   private karoTarget(): WorldObject | undefined {
     if (!this.karoIsHere() || !this.karoPresence) return;
+    if (this.karoMotion.following && this.room.id !== 'stable') return;
     const { x, y } = this.karoPresence;
     const id = this.room.id === 'stable' ? 'karo-stable' : 'karo';
     const original = getRoom(id === 'karo-stable' ? 'stable' : 'junction').objects.find(object => object.id === id)!;
@@ -160,29 +172,21 @@ export class StationScene extends Phaser.Scene {
   private blockedAt(x: number, y: number): boolean {
     const karo = this.karoTarget();
     // 玩家可穿过行动中的Karo；若恰好在停点相遇，先允许走离，不能在停下那帧困住玩家。
-    const solid = this.karoPresence && karoBlocksPlayer(this.karoPresence, this.player);
+    const solid = this.karoPresence && this.karoMotion.blocksPlayer(this.karoPresence, this.player);
     return blocked(this.room, x, y, this.host.state(), ['karo', 'karo-stable'], karo && solid ? [karo] : []);
   }
   update(_time: number, delta: number): void {
     if (!this.player) return;
     const state = this.host.state();
-    if (this.host.active() && !this.changing) this.journey.advance(Math.min(delta, 50) / 1000);
-    this.karoPresence = this.journey.presence(state);
-    const here = this.karoPresence?.room === this.room.id;
-    this.karo?.setVisible(here); this.karoShadow?.setVisible(here);
-    if (here && this.karoPresence && this.karo) {
-      const { x, y, facing, moving } = this.karoPresence;
-      this.karo.setPosition(x, y).setDepth(y);
-      this.karoShadow?.setPosition(x, y + 2).setDepth(y - 1);
-      animateCharacter(this.karo, 'karo', facing, moving);
-    }
+    if (this.host.active() && !this.changing) this.karoMotion.advance(Math.min(delta, 50) / 1000);
+    this.karoPresence = this.karoMotion.presence(state);
     for (const [index, door] of this.room.doors.entries()) {
       const lock = doorLock(this.room, door, state);
       this.gates[index].image.setVisible(Boolean(lock));
       this.gates[index].label.setText(lock ?? '').setVisible(Boolean(lock));
     }
     for (const object of this.room.objects) this.objectImages.get(object.id)?.setVisible(objectVisible(object, state));
-    const late = state.experiment.discovered.length === 4 && state.evidence.includes('storage') && state.phase !== 'revisit';
+    const late = !state.entranceFound && state.experiment.discovered.length === 4 && state.evidence.includes('storage');
     this.lateProp?.setVisible(!late);
     this.lateOutline?.setVisible(late);
     this.repaired?.setVisible(state.phase === 'revisit');
@@ -191,17 +195,26 @@ export class StationScene extends Phaser.Scene {
     const movement = active ? moveVector(this.keys, Math.min(delta, 50) / 1000) : { x: 0, y: 0 };
     if (!this.blockedAt(this.player.x + movement.x, this.player.y)) this.player.x += movement.x;
     if (!this.blockedAt(this.player.x, this.player.y + movement.y)) this.player.y += movement.y;
+    this.karoPresence = this.karoMotion.trackLeader(this.player) ?? this.karoPresence;
+    const here = this.karoPresence?.room === this.room.id;
+    this.karo?.setVisible(here); this.karoShadow?.setVisible(here);
+    if (here && this.karoPresence && this.karo) {
+      const { x, y, facing, moving } = this.karoPresence;
+      this.karo.setPosition(x, y).setDepth(y);
+      this.karoShadow?.setPosition(x, y + 2).setDepth(y - 1);
+      animateCharacter(this.karo, 'karo', facing, moving);
+    }
     if (movement.x || movement.y) {
-      this.facing = Math.abs(movement.x) > Math.abs(movement.y)
-        ? (movement.x < 0 ? 'left' : 'right') : (movement.y < 0 ? 'up' : 'down');
+      this.facing = facingOf(movement.x, movement.y);
     }
     animateCharacter(this.player, 'pruto', this.facing, Boolean(movement.x || movement.y));
     this.player.setDepth(this.player.y);
     this.shadow?.setPosition(this.player.x, this.player.y + 2).setDepth(this.player.y - 1);
     const karo = this.karoTarget();
     const targets = interactionTargets(this.room, state).filter(item => !['karo', 'karo-stable'].includes(item.id));
-    if (karo) targets.push(karo);
-    const target = active ? nearest(this.player.x, this.player.y, targets) : undefined;
+    if (karo && !this.karoMotion.following) targets.push(karo);
+    const target = active ? nearest(this.player.x, this.player.y, targets)
+      ?? (karo && this.karoMotion.following ? nearest(this.player.x, this.player.y, [karo]) : undefined) : undefined;
     this.karoLabel?.setVisible(target?.id === karo?.id && Boolean(karo));
     if (karo) this.karoLabel?.setText(karo.label).setPosition(karo.x, karo.y + 6);
     this.highlight?.setVisible(Boolean(target));

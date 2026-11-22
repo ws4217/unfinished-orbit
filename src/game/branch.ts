@@ -1,23 +1,30 @@
-import type { App, Line } from './app.ts';
+import type { App } from './app.ts';
+import { fillText } from '../content/text/line.ts';
 import data from '../content/text/branch.json';
+import terminalSource from '../content/text/symbol-terminal.txt?raw';
+import terminalBytes from '../content/text/symbol-terminal.txt?url&no-inline';
 import ui from '../content/text/ui.json' with { type: 'json' };
-import type { Evidence } from '../core/state.ts';
+import { ELEMENTS, type Evidence } from '../core/state.ts';
+import { garbledRules } from '../core/terminal-encoding.ts';
 import { canFirstPhone, orderingError, swap } from '../core/rules.ts';
 import { firstSync, submitMapping, secondSync, submitOrdering, reportRead, thirdSync } from '../core/branch.ts';
 
+const ruleNames = new RegExp(ELEMENTS.map(id => data.ui.elements[id]).join('|'), 'g');
+const bodySymbols = [...data.ui.rules.join('\n').matchAll(ruleNames)].map(([name]) =>
+  data.ui.symbols[ELEMENTS.findIndex(id => data.ui.elements[id] === name)]);
+const damagedRules = garbledRules(terminalSource, bodySymbols);
+
 export function installBranch(app: App): void {
   Object.assign(app.extraLogs, data.logs);
-  app.hintProvider = (stage, level) => [{
-    speaker: 'pruto', text: data.hints[stage === 'mapping' ? 'mapping' : 'ordering'][level - 1],
-  }];
+  app.hintProvider = (stage, level) => [data.hints[stage === 'mapping' ? 'mapping' : 'ordering'][level - 1]];
   const report = () => {
     const branch = app.state.branch!;
-    app.dialogue(data.dialogue[`report-${branch}`] as Line[], () => {
+    app.dialogue(data.dialogue[`report-${branch}`], () => {
       reportRead(app.state); app.session.save(); third();
     }, true);
   };
   const third = () => {
-    app.phone(data.dialogue[`phone3-${app.state.branch!}`] as Line[], () => {
+    app.phone(data.dialogue[`phone3-${app.state.branch!}`], () => {
       thirdSync(app.state); app.session.save(); app.log('p01-contradiction'); app.world();
     }, true);
   };
@@ -31,14 +38,14 @@ export function installBranch(app: App): void {
     const topics = [];
     if (canFirstPhone(app.state)) topics.push({
       label: (app.state.phones.first ? '' : ui.exploration.newCall) + data.ui.phone1,
-      action: () => app.phone(data.dialogue[`phone1-${app.state.branch!}`] as Line[], completed => {
+      action: () => app.phone(data.dialogue[`phone1-${app.state.branch!}`], completed => {
         if (completed) { firstSync(app.state); app.session.save(); app.log('mapping-clues'); }
         back();
       }),
     });
     if (app.state.phones.first && (app.state.branch === 'objects' || app.state.puzzles.mappingDone)) topics.push({
       label: (app.state.phones.second ? '' : ui.exploration.newCall) + data.ui.phone2,
-      action: () => app.phone(data.dialogue[`phone2-${app.state.branch!}`] as Line[], completed => {
+      action: () => app.phone(data.dialogue[`phone2-${app.state.branch!}`], completed => {
         if (!completed || app.state.phones.second) { back(); return; }
         // Partner execution is event driven, never a real timed task or a second playable route.
         secondSync(app.state);
@@ -53,7 +60,7 @@ export function installBranch(app: App): void {
     if (id.startsWith('base-')) {
       const index = ['base-dark', 'base-moon', 'base-tomorrow', 'base-comet'].indexOf(id);
       if (index < 0) return;
-      app.dialogue([{ speaker: 'pruto', text: data.ui.clues[index] }], completed => {
+      app.dialogue([data.prompts.clues[index]], completed => {
         if (completed) app.observe(id as Evidence);
         app.world();
       });
@@ -61,12 +68,12 @@ export function installBranch(app: App): void {
     }
     if (!['symbol-terminal', 'object-terminal'].includes(id)) return;
     if (app.state.phase !== 'branch') {
-      app.dialogue(data.dialogue[`report-${app.state.branch!}`] as Line[]);
+      app.dialogue(data.dialogue[`report-${app.state.branch!}`]);
       return;
     }
     const open = () => slots(app);
     if (id === 'symbol-terminal' && !app.state.evidence.includes('symbol-terminal')) {
-      app.dialogue(data.dialogue.terminal as Line[], completed => {
+      app.dialogue(data.dialogue.terminal, completed => {
         if (completed) { app.observe('symbol-terminal'); open(); } else app.world();
       });
     } else open();
@@ -94,7 +101,7 @@ function slots(app: App): void {
   };
   const submit = () => {
     if (symbols && app.state.puzzles.mappingDone) {
-      app.dialogue(data.dialogue.mappingDone as Line[], restore); return;
+      app.dialogue(data.dialogue.mappingDone, restore); return;
     }
     const error = symbols ? submitMapping(app.state) : submitOrdering(app.state);
     if (error) {
@@ -104,7 +111,7 @@ function slots(app: App): void {
         const rule = orderingError(app.state.puzzles.objects);
         if (rule && rule > 0) text += ' ' + data.ui.rules[rule - 1];
       }
-      app.dialogue([{ speaker: 'pruto', text: data.ui.selfTalk.replace('{text}', text) }], restore);
+      app.dialogue([fillText(data.prompts.selfTalk, { text })], restore);
       return;
     }
     selected = null;
@@ -112,7 +119,7 @@ function slots(app: App): void {
     app.session.save();
     if (symbols) {
       app.log('ordering-rules');
-      app.dialogue(data.dialogue.mappingDone as Line[], restore);
+      app.dialogue(data.dialogue.mappingDone, restore);
     } else app.resumeHandler?.();
   };
   restore = app.puzzle(symbols ? data.ui.mappingTitle : data.ui.orderingTitle, container => {
@@ -134,9 +141,16 @@ function slots(app: App): void {
     container.append(slots);
     const confirm = app.actionButton(data.ui.confirm, () => choose(4), container);
     confirm.dataset.focus = String(focus === 4);
-    if (app.state.puzzles.mappingDone || app.state.phones.second) {
+    const readable = symbols ? app.state.puzzles.mappingDone : app.state.puzzles.mappingDone || app.state.phones.second;
+    if (symbols || readable) {
       const rules = document.createElement('p');
-      rules.textContent = data.ui.rules.join('\n'); rules.className = 'rule-list'; container.append(rules);
+      rules.className = 'rule-list';
+      rules.textContent = readable ? data.ui.rules.join('\n') : damagedRules;
+      if (!readable) {
+        rules.classList.add('rule-list-garbled');
+        rules.dataset.rawSource = terminalBytes;
+      }
+      container.append(rules);
     }
     (container.querySelectorAll('button')[focus] as HTMLElement)?.focus();
   }, key => {

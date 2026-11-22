@@ -1,4 +1,5 @@
 import type { GameState } from '../core/state.ts';
+import { hasStartedExperiment } from '../core/rules.ts';
 
 export type MusicStage = 'intro' | 'exploration' | 'techno' | 'valley' | 'fleeting' | 'ending';
 export type Track = MusicStage | 'alternate';
@@ -7,7 +8,7 @@ export function musicStage(state: GameState, explorationStarted: boolean): Music
   if (state.registered) return 'ending';
   if (state.entranceFound) return 'exploration';
   if (state.phase === 'entrance') return 'fleeting';
-  if (state.evidence.includes('experiment-intro') || state.experiment.conclusions.length > 0) return 'valley';
+  if (hasStartedExperiment(state)) return 'valley';
   if (['branch', 'report', 'phone3'].includes(state.phase)) return 'techno';
   if (state.phones.third || explorationStarted || state.evidence.some(id => ['p01', 'old-note', 'met-karo'].includes(id))) return 'exploration';
   return 'intro';

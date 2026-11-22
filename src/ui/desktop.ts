@@ -24,7 +24,7 @@ export function installDesktop(app: App): void {
   let desktop = false;
   const oldHints = app.hintProvider;
   app.hintProvider = (hintStage, level) => ['calibration', 'route'].includes(hintStage)
-    ? [{ speaker: 'pruto', text: level === 3 ? routeText.hint : data.hint[level - 1] }] : oldHints!(hintStage, level);
+    ? [level === 3 ? routeText.hint : data.hint[level - 1]] : oldHints!(hintStage, level);
   const leave = () => {
     if (!desktop) return;
     desktop = false;
@@ -37,10 +37,9 @@ export function installDesktop(app: App): void {
     leave();
     delete app.state.cycle;
     app.state.entranceFound = true;
-    app.state.phase = 'stable';
+    app.state.phase = 'stable-intro';
     app.session.save();
-    app.scene.drawWorld(true);
-    app.world();
+    app.whiteTransition(() => app.scene.drawWorld(true), () => app.resumeHandler?.());
   };
   const show = () => {
     desktop = true;
@@ -77,7 +76,7 @@ export function installDesktop(app: App): void {
     app.actionButton('×', () => { cardWindow.hidden = true; }, cardBar).setAttribute('aria-label', data.close);
     const frame = document.createElement('iframe');
     frame.src = './tool.html?embedded=1'; frame.title = data.card; frame.className = 'card-frame';
-    const help = make('p', `${cycleText.cardMind} ${data.cardHelp}`, 'card-help');
+    const help = make('p', cycleText.cardMind.map(line => line.text).join(','), 'card-help');
     const cardActions = make('div', undefined, 'card-actions');
     const reset = () => { cardWindow.style.left = '30px'; cardWindow.style.top = '100px'; };
     app.actionButton(data.reset, reset, cardActions);
@@ -138,7 +137,10 @@ export function installDesktop(app: App): void {
     shell.append(taskbar);
   };
   app.titleProvider = () => {
-    if (app.state.entranceFound) return [{ label: data.shortcut, action: () => { app.scene.drawWorld(true); app.world(); } }];
+    if (app.state.entranceFound) return [{ label: data.shortcut, action: () => {
+      if (['stable-intro', 'registration', 'reunion'].includes(app.state.phase)) app.play();
+      else { app.scene.drawWorld(true); app.world(); }
+    } }];
     if (portalOpen(app.state) && !desktop) return [{ label: data.exit, action: () => { if (!desktop) show(); } }];
     return [];
   };

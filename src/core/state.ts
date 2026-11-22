@@ -2,7 +2,7 @@ import { validCycle, type Cycle } from './cycle.ts';
 export const ELEMENTS = ['dark', 'moon', 'tomorrow', 'comet'] as const;
 export type Element = typeof ELEMENTS[number];
 export type Branch = 'symbols' | 'objects';
-export const PHASES = ['arrival', 'branch', 'report', 'phone3', 'maintenance', 'entrance', 'stable', 'registration', 'reunion', 'revisit', 'cycle'] as const;
+export const PHASES = ['arrival', 'branch', 'report', 'phone3', 'maintenance', 'entrance', 'stable-intro', 'stable', 'registration', 'reunion', 'revisit', 'cycle'] as const;
 export type Phase = typeof PHASES[number];
 export const EXPERIMENTS = ['inside-free', 'inside-held', 'outside-held', 'outside-free'] as const;
 export type Experiment = typeof EXPERIMENTS[number];
@@ -107,13 +107,14 @@ export function isGameState(value: unknown): value is GameState {
   if (puzzles.mappingDone && (!phones.first || !puzzles.symbols.every((id, i) => id === ELEMENTS[i]))) return false;
   if (puzzles.orderingDone && (!phones.second || !puzzles.objects.every((id, i) => id === ELEMENTS[i]))) return false;
   if (phones.second && !puzzles.mappingDone) return false;
-  if (['report', 'phone3', 'maintenance', 'entrance', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string)
+  if (['report', 'phone3', 'maintenance', 'entrance', 'stable-intro', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string)
     && (!puzzles.mappingDone || !puzzles.orderingDone || !phones.second)) return false;
-  if (['maintenance', 'entrance', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string) && !phones.third) return false;
-  if ((value.entranceFound || ['entrance', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string))
+  if (['maintenance', 'entrance', 'stable-intro', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string) && !phones.third) return false;
+  if ((value.entranceFound || ['entrance', 'stable-intro', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string))
     && (experiment.discovered.length !== 4 || !value.evidence.includes('storage'))) return false;
   if (value.registered && !value.entranceFound) return false;
-  if (['stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string) && !value.entranceFound) return false;
+  if (['stable-intro', 'stable', 'registration', 'reunion', 'revisit'].includes(value.phase as string) && !value.entranceFound) return false;
+  if (value.phase === 'stable-intro' && value.registered) return false;
   if (['reunion', 'revisit'].includes(value.phase as string) && !value.registered) return false;
   if (value.collections.length > 0 && value.phase !== 'revisit') return false;
   if (!experiment.conclusions.every(id =>
