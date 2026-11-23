@@ -13,10 +13,11 @@ import { dialogueSpeaker, type DialogueLine } from '../content/text/line.ts';
 import { casualCallIndex, hasNewCasualCall, finishCasualCall, rollGoatCall } from '../core/casual-calls.ts';
 import { playWorldEntry, type WorldEntryMode } from '../ui/world-entry.ts';
 import { CycleVisit } from './cycle-visit.ts';
+import { isPhone } from '../ui/mobile-controls.ts';
 
 const { exploration: explorationUi } = ui;
 type View = 'entry' | 'title' | 'boot' | 'world' | 'dialogue' | 'menu' | 'log' | 'settings' | 'puzzle';
-interface Screen { view: View; render: () => void; key: (key: string) => void; audioScope?: 'cleaner' }
+interface Screen { view: View; render: () => void; key: (key: string) => void; audioScope?: 'cleaner'; canBack?: boolean }
 interface MenuItem { label: string; action: () => void }
 const isBack = (key: string) => ['Shift', 'x'].includes(key);
 const isConfirm = (key: string) => ['Enter', 'z'].includes(key);
@@ -77,7 +78,7 @@ export class App {
       ready: () => {
         this.renderReady = true;
         document.getElementById('app')!.dataset.ready = 'true';
-        if (!this.entered) this.status.textContent = ui.app.enter;
+        if (!this.entered) this.status.textContent = isPhone() ? ui.mobile.enter : ui.app.enter;
       },
       target: object => {
         this.target = object;
@@ -112,7 +113,7 @@ export class App {
     document.getElementById('hud-log')!.addEventListener('click', () => this.openLog());
     document.getElementById('hud-menu')!.addEventListener('click', () => this.openMenu());
     window.addEventListener('keydown', event => this.keyDown(event));
-    window.addEventListener('keyup', event => this.scene.keys.delete(this.normalize(event.key)));
+    window.addEventListener('keyup', event => this.releaseKey(this.normalize(event.key)));
     window.addEventListener('blur', () => this.scene.keys.clear());
     window.addEventListener('pointermove', event => {
       if (!event.movementX && !event.movementY) return;
@@ -165,30 +166,33 @@ export class App {
     document.getElementById('small-window')!.hidden = innerWidth >= 960 && innerHeight >= 540;
   }
   private keyDown(event: KeyboardEvent): void {
-    if (this.swapping) { event.preventDefault(); return; }
     if ((event.target instanceof HTMLInputElement && !['range', 'checkbox'].includes(event.target.type)) || event.target instanceof HTMLTextAreaElement
       || (event.target instanceof HTMLElement && event.target.isContentEditable)) return;
-    const key = this.normalize(event.key);
+    this.pressKey(this.normalize(event.key), event.repeat, () => event.preventDefault());
+  }
+  releaseKey(key: string): void { this.scene.keys.delete(key); }
+  pressKey(key: string, repeat = false, prevent = () => {}): void {
+    if (document.getElementById('app')!.inert || this.swapping) { prevent(); return; }
     if (this.view === 'boot') {
-      if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'Tab', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(key)) event.preventDefault();
+      if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'Tab', ' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(key)) prevent();
       return;
     }
     const movement = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'];
     if (movement.includes(key)) {
-      event.preventDefault();
+      prevent();
       if (this.view === 'world') this.scene.keys.add(key);
     }
     if (this.scene.changingRoom) {
-      if (['j', 'c', 'Enter', 'z', 'x', 'Shift'].includes(key)) event.preventDefault();
+      if (['j', 'c', 'Enter', 'z', 'x', 'Shift'].includes(key)) prevent();
       return;
     }
     if (this.view === 'log' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown'].includes(key)) {
-      event.preventDefault(); this.screen?.key(key); return;
+      prevent(); this.screen?.key(key); return;
     }
-    if (event.repeat) return;
+    if (repeat) return;
     if (this.view === 'entry') {
       if (key === 'Enter' && this.renderReady) {
-        event.preventDefault();
+        prevent();
         this.entered = true;
         this.audio.unlock();
         this.diamondSwap(() => this.showTitle());
@@ -196,14 +200,14 @@ export class App {
       return;
     }
     if (['j', 'c', 'Enter', 'z', 'x', 'Shift', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)
-      || (key === 'Escape' && this.view === 'dialogue')) event.preventDefault();
+      || (key === 'Escape' && this.view === 'dialogue')) prevent();
     if (['world', 'puzzle'].includes(this.view) && key === 'j') { this.openLog(); return; }
     if (['world', 'puzzle'].includes(this.view) && key === 'c') { this.openMenu(); return; }
     if (this.view === 'world' && isConfirm(key)) {
       if (this.target) { this.audio.event('sfx.ui.confirm'); this.interact(this.target.id); } return;
     }
     if (this.view !== 'dialogue' && isConfirm(key)) this.audio.event('sfx.ui.confirm');
-    if (this.view !== 'dialogue' && isBack(key)) this.audio.event('sfx.ui.back');
+    if (this.view !== 'dialogue' && isBack(key) && this.screen?.canBack !== false) this.audio.event('sfx.ui.back');
     this.screen?.key(key);
   }
   private activate(screen: Screen): void {
@@ -222,8 +226,8 @@ export class App {
     this.panel.inert = false;
     this.hud.hidden = ['title', 'entry', 'boot'].includes(screen.view);
     const controls = document.getElementById('hud-controls')!;
-    controls.hidden = screen.view === 'dialogue';
-    controls.textContent = screen.view === 'world' ? explorationUi.controls : explorationUi.back;
+    controls.hidden = screen.view === 'dialogue' || screen.canBack === false;
+    controls.textContent = screen.view === 'world' ? (isPhone() ? ui.mobile.actions : explorationUi.controls) : explorationUi.back;
     this.root.replaceChildren();
     screen.render();
   }
@@ -322,10 +326,10 @@ export class App {
     parent.append(button);
     return button;
   }
-  choice(title: string, items: MenuItem[], back: () => void, horizontal = true, view: View = 'menu'): void {
+  choice(title: string, items: MenuItem[], back?: () => void, horizontal = true, view: View = 'menu'): void {
     let focus = 0;
     const screen: Screen = {
-      view,
+      view, canBack: Boolean(back),
       render: () => {
         const window = node('section', undefined, 'window');
         window.append(node('h2', title));
@@ -335,12 +339,13 @@ export class App {
           button.dataset.focus = String(focus === index);
           button.addEventListener('focus', () => { focus = index; });
         });
-        window.append(list, node('small', explorationUi.back));
+        window.append(list);
+        if (back) window.append(node('small', explorationUi.back));
         this.root.append(window);
         (list.children[focus] as HTMLElement)?.focus();
       },
       key: key => {
-        if (isBack(key)) { back(); return; }
+        if (isBack(key)) { back?.(); return; }
         const previous = horizontal ? 'ArrowLeft' : 'ArrowUp';
         const next = horizontal ? 'ArrowRight' : 'ArrowDown';
         if ([previous, next].includes(key)) {
@@ -488,25 +493,25 @@ export class App {
     if (!['world', 'puzzle'].includes(this.view) || !this.screen || this.scene.changingRoom) return;
     const previous = this.screen;
     const restore = () => this.activate(previous);
-    const showGoat = rollGoatCall();
-    const menu = () => {
+    const refresh = () => menu(rollGoatCall());
+    const menu = (showGoat: boolean) => {
       const items: MenuItem[] = [];
       if (this.state.branch && !hasStartedExperiment(this.state)) {
-        if (this.menuProvider) items.push(...this.menuProvider(menu));
+        if (this.menuProvider) items.push(...this.menuProvider(refresh));
         for (const id of ['greet', 'patterns', 'flirt'] as const) items.push({
           label: (hasNewCasualCall(this.state, id) ? explorationUi.newCall : '') + explorationUi[id],
           action: () => {
             const episode = story.calls[id].episodes[casualCallIndex(this.state, id)];
             this.phone(episode.lines, completed => {
               if (completed && finishCasualCall(this.state, id)) this.session.save();
-              menu();
+              refresh();
             });
           },
         });
       }
       if (showGoat) items.push({
         label: explorationUi.goat,
-        action: () => this.phone(story.calls.goat.episodes[0].lines, menu),
+        action: () => this.phone(story.calls.goat.episodes[0].lines, refresh),
       });
       if (this.state.phase === 'branch' || this.state.phase === 'maintenance' || this.state.phase === 'entrance') {
         const stage = this.hintStage();
@@ -515,17 +520,17 @@ export class App {
           action: () => {
             const level = nextHint(this.state, stage); this.session.save();
             const lines = this.hintProvider?.(stage, level);
-            if (lines) this.dialogue(lines, menu);
+            if (lines) this.dialogue(lines, refresh);
           },
         });
       }
       items.push(
-        { label: explorationUi.settings, action: () => this.openSettings(menu) },
+        { label: explorationUi.settings, action: () => this.openSettings(() => menu(showGoat)) },
         { label: ui.app.back, action: () => { const saved = this.session.save(); this.diamondSwap(() => this.showTitle(saved ? ui.app.saved : undefined)); } },
       );
       this.choice(explorationUi.menu, items, restore, false);
     };
-    menu();
+    refresh();
   }
   puzzle(title: string, render: (container: HTMLElement) => void, key: (key: string) => void, audioScope?: 'cleaner'): () => void {
     const screen: Screen = {
@@ -659,20 +664,25 @@ export class App {
         const needed = this.state.evidence.includes('p01') ? 'need-note' : 'need-p01';
         this.dialogue(story.dialogue[needed]); return;
       }
-      this.dialogue(story.dialogue.gate, () => this.choice(explorationUi.branchQuestion, [
-        ...(['symbols', 'objects'] as const).map(branch => ({
-          label: branch === 'symbols' ? explorationUi.chooseSymbols : explorationUi.chooseObjects,
-          action: () => {
-            this.state.branch = branch;
-            this.state.phase = 'branch';
-            this.audio.event('sfx.gate.activate');
-            this.session.save();
-            this.scene.startKaroDeparture(branch);
-            this.world();
-          },
-        })),
-        { label: explorationUi.cancel, action: () => this.world() },
-      ], () => this.world()), true);
+      const closing = story.dialogue['gate-choice'];
+      const briefing = this.state.evidence.includes('gate-briefed') ? closing : [...story.dialogue.gate, ...closing];
+      this.dialogue(briefing, () => {
+        this.observe('gate-briefed');
+        this.choice(explorationUi.branchQuestion, [
+          ...(['symbols', 'objects'] as const).map(branch => ({
+            label: branch === 'symbols' ? explorationUi.chooseSymbols : explorationUi.chooseObjects,
+            action: () => {
+              this.state.branch = branch;
+              this.state.phase = 'branch';
+              this.audio.event('sfx.gate.activate');
+              this.session.save();
+              this.scene.startKaroDeparture(branch);
+              this.world();
+            },
+          })),
+          { label: explorationUi.cancel, action: () => this.world() },
+        ]);
+      }, true);
       return;
     }
     const dialogues: Readonly<Partial<Record<string, readonly DialogueLine[]>>> = story.dialogue;

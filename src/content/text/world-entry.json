@@ -175,7 +175,7 @@
       {
         "speaker": "system",
         "id": "enter",
-        "text": "> 自检完成，进入对接入口_",
+        "text": "> 自检完成，进入对接入口",
         "warning": false
       }
     ],
@@ -339,7 +339,7 @@
       {
         "speaker": "system",
         "id": "enter",
-        "text": "> 自检完成，进入对接入口_",
+        "text": "> 自检完成，进入对接入口",
         "warning": false
       }
     ],

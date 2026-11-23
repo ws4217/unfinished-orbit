@@ -1,6 +1,7 @@
 import { MaintenanceRoute, type Direction, type RouteEvent } from '../core/maintenance-route.ts';
 import ui from '../content/text/ui.json' with { type: 'json' };
 import type { App } from '../game/app.ts';
+import { isPhone } from './mobile-controls.ts';
 
 const data = ui.maintenanceRoute;
 
@@ -28,7 +29,9 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   const rows = make('div', 'route-rows');
   const progress = make('p', 'route-progress');
   const feedback = make('p', 'route-feedback'); feedback.setAttribute('role', 'status');
-  const help = make('p', 'route-help'); help.textContent = data.help;
+  const phone = isPhone();
+  const portrait = matchMedia('(orientation: portrait)');
+  const help = make('p', 'route-help'); help.textContent = phone ? ui.mobile.route : data.help;
   const exit = app.actionButton(data.leave, () => { close(); back(); }, overlay);
   overlay.prepend(title, meter, progress, rows, feedback, help);
   stage.append(overlay); desktop.inert = true;
@@ -39,7 +42,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   let pausedTime = 0;
   const syncPause = () => {
     const now = performance.now();
-    if (!focused || document.hidden) pausedAt ??= now;
+    if (!focused || document.hidden || (phone && portrait.matches)) pausedAt ??= now;
     else if (pausedAt !== undefined) { pausedTime += now - pausedAt; pausedAt = undefined; }
   };
   const time = () => (pausedAt ?? performance.now()) - pausedTime;
@@ -80,6 +83,20 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   window.addEventListener('blur', () => { focused = false; syncPause(); paintClock(); }, options);
   window.addEventListener('focus', () => { focused = true; syncPause(); paintClock(); }, options);
   document.addEventListener('visibilitychange', () => { syncPause(); paintClock(); }, options);
+  if (phone) {
+    portrait.addEventListener('change', () => { syncPause(); paintClock(); }, options);
+    const pad = make('div', 'route-pad');
+    for (const direction of ['up', 'left', 'down', 'right'] as const) {
+      const button = make('button', 'route-key');
+      button.textContent = glyph[direction]; button.dataset.direction = direction;
+      button.addEventListener('pointerdown', event => {
+        event.preventDefault();
+        if (pausedAt === undefined) apply(model.press(direction, time()));
+      });
+      pad.append(button);
+    }
+    overlay.append(pad);
+  }
   window.addEventListener('keydown', event => {
     // 保留浏览器快捷键；其余输入不穿透到标题、日志或原桌面。
     if (event.ctrlKey || event.altKey || event.metaKey) return;

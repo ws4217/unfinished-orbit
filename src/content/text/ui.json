@@ -2,7 +2,7 @@
   "app": {
     "title": "UNFINISHED ORBIT",
     "subtitle": "未完成的轨道",
-    "stage": "RC2 · 游戏开发者：ws4217",
+    "stage": "1.0.0-ln2 · 游戏开发者：ws4217",
     "status": "初始化中……",
     "ready": "自动存档",
     "error": "初始化失败，请刷新重试。",
@@ -17,6 +17,13 @@
     "saveFailure": "自动保存失败",
     "saved": "进度已保存",
     "back": "返回标题"
+  },
+  "mobile": {
+    "rotate": "请将手机转为横屏游玩",
+    "enter": "点按 Z 开始",
+    "stick": "四向移动",
+    "actions": "Z 交互 · X 补全或返回 · 长按 X 挂断",
+    "route": "点按方向键输入"
   },
   "tool": {
     "title": "校准工具",

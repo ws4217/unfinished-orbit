@@ -81,11 +81,19 @@ export function installDesktop(app: App): void {
     const reset = () => { cardWindow.style.left = '30px'; cardWindow.style.top = '100px'; };
     app.actionButton(data.reset, reset, cardActions);
     const enter = app.actionButton(data.path, () => {
-      if (!located) return;
+      if (!located || cardWindow.hidden) return;
       gameWindow.hidden = false;
       cardWindow.hidden = true;
       playMaintenanceRoute(app, stage, shell, finish, () => { leave(); app.showTitle(); });
     }, cardActions);
+    // After dragging across the embedded frame, mobile browsers may suppress the next
+    // compatibility mouse click. Commit a tap released on this button just once.
+    enter.addEventListener('touchend', event => {
+      if (event.touches.length || event.changedTouches.length !== 1) return;
+      const point = event.changedTouches[0];
+      if (document.elementFromPoint(point.clientX, point.clientY) !== enter) return;
+      event.preventDefault(); enter.click();
+    }, { passive: false });
     enter.hidden = true;
     const check = () => {
       if (!desktop || !frame.contentDocument || gameWindow.hidden) return;

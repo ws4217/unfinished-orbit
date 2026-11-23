@@ -1,0 +1,90 @@
+import ui from '../content/text/ui.json' with { type: 'json' };
+import type { App } from '../game/app.ts';
+
+export const isPhone = () => /iPhone|iPod|Android.+Mobile|Windows Phone|Mobile.+Firefox/i.test(navigator.userAgent);
+
+/** A held stick is one held direction. Changing sector releases the previous key first. */
+export function installMobileControls(app: App): void {
+  if (!isPhone()) return;
+  document.body.classList.add('phone');
+  const stage = document.getElementById('app')!;
+  const controls = document.createElement('div');
+  controls.className = 'touch-controls';
+  const stick = document.createElement('div');
+  stick.className = 'touch-stick'; stick.setAttribute('aria-label', ui.mobile.stick);
+  const thumb = document.createElement('span'); stick.append(thumb);
+  controls.append(stick);
+  const button = (key: string) => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = `touch-key touch-${key}`;
+    el.textContent = key.toUpperCase(); controls.append(el); return el;
+  };
+  const z = button('z'), x = button('x');
+  const rotate = document.createElement('div');
+  rotate.className = 'touch-rotate'; rotate.textContent = ui.mobile.rotate;
+  document.body.append(controls, rotate);
+  let stickId: number | undefined, held = '';
+  let zId: number | undefined;
+  let xId: number | undefined, timer: number | undefined, long = false;
+  const direction = (key: string) => {
+    if (key === held) return;
+    if (held) app.releaseKey(held);
+    held = key;
+    if (held) app.pressKey(held);
+  };
+  const move = (event: PointerEvent) => {
+    if (stickId !== event.pointerId) return;
+    const rect = stick.getBoundingClientRect(), radius = rect.width / 2;
+    const dx = event.clientX - rect.left - radius, dy = event.clientY - rect.top - radius;
+    const length = Math.hypot(dx, dy);
+    const scale = length ? Math.min(1, (radius - thumb.offsetWidth / 2) / length) : 0;
+    thumb.style.transform = `translate(${dx * scale}px,${dy * scale}px)`;
+    direction(length <= radius * .3 ? '' : Math.abs(dx) > Math.abs(dy)
+      ? dx < 0 ? 'ArrowLeft' : 'ArrowRight' : dy < 0 ? 'ArrowUp' : 'ArrowDown');
+  };
+  const dropStick = () => { direction(''); stickId = undefined; thumb.style.transform = ''; };
+  const dropX = () => { clearTimeout(timer); xId = undefined; long = false; };
+  stick.addEventListener('pointerdown', event => {
+    event.preventDefault();
+    if (stickId !== undefined) return;
+    stickId = event.pointerId; stick.setPointerCapture(stickId); move(event);
+  });
+  stick.addEventListener('pointermove', move);
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture'] as const) {
+    stick.addEventListener(type, e => { if (stickId === e.pointerId) dropStick(); });
+  }
+  // Do not steal focus from an active menu choice or the native token input.
+  z.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    if (zId === undefined) { zId = e.pointerId; z.setPointerCapture(zId); }
+  });
+  z.addEventListener('pointerup', e => {
+    if (zId !== e.pointerId) return;
+    zId = undefined;
+    app.pressKey('Enter');
+  });
+  for (const type of ['pointercancel', 'lostpointercapture'] as const)
+    z.addEventListener(type, e => { if (zId === e.pointerId) zId = undefined; });
+  x.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    if (xId !== undefined) return;
+    xId = e.pointerId; x.setPointerCapture(xId);
+    if (stage.dataset.view === 'dialogue') timer = window.setTimeout(() => {
+      long = true;
+      if (stage.dataset.view === 'dialogue') app.pressKey('Escape');
+    }, 550);
+  });
+  x.addEventListener('pointerup', e => {
+    if (xId !== e.pointerId) return;
+    const short = !long; dropX(); if (short) app.pressKey('x');
+  });
+  for (const type of ['pointercancel', 'lostpointercapture'] as const)
+    x.addEventListener(type, e => { if (xId === e.pointerId) dropX(); });
+  controls.addEventListener('contextmenu', event => event.preventDefault());
+  const reset = () => { dropStick(); dropX(); zId = undefined; };
+  const portrait = matchMedia('(orientation: portrait)');
+  const orient = () => { reset(); stage.inert = portrait.matches; controls.inert = portrait.matches; };
+  portrait.addEventListener('change', orient); orient();
+  window.addEventListener('blur', reset);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
+}

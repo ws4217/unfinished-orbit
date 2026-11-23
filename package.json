@@ -1,7 +1,8 @@
 {
   "name": "unfinished-orbit",
   "private": true,
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0",
+  "releaseVersion": "1.0.0-ln2",
   "author": "ws4217",
   "type": "module",
   "engines": {

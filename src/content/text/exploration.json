@@ -360,10 +360,12 @@
       {
         "speaker": "pruto",
         "text": "真的假的？那我待会儿试试。"
-      },
+      }
+    ],
+    "gate-choice": [
       {
         "speaker": "karo",
-        "text": "在 C 菜单里。实在没思路，再打给我。"
+        "text": "在 C 菜单里就能“沉思”了。实在没思路，再打给我。"
       },
       {
         "speaker": "pruto",

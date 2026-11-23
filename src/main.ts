@@ -1,5 +1,7 @@
 import './ui/styles/base.css';
 import './ui/styles/pixel.css';
+import './ui/styles/mobile.css';
+import { installMobileControls } from './ui/mobile-controls.ts';
 import { App } from './game/app.ts';
 import { installBranch } from './game/branch.ts';
 import { installExperiment } from './game/experiment.ts';
@@ -14,6 +16,7 @@ void Promise.all([
   document.fonts.load('700 20px OrbitPixel'),
 ]).catch(error => console.warn('Local font unavailable; using monospace fallback.', error)).then(() => {
   const app = new App();
+  installMobileControls(app);
   installBranch(app);
   installExperiment(app);
   installDesktop(app);

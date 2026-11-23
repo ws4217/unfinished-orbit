@@ -105,7 +105,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 .slot-column { display: grid; gap: 8px; }
 .slot-symbol { display: block; text-align: center; font-size: 28px; line-height: 32px; }
 .slots .slot-column button { width: 100%; min-height: 48px; }
-.window[data-puzzle="mapping"] { top: 120px; max-height: 380px; }
+.window[data-puzzle="mapping"] { bottom: 40px; max-height: none; }
 .slots button[data-selected="true"] { outline: 4px solid #e7ba75; outline-offset: -6px; }
 .puzzle-help { font-size: 20px; line-height: 24px; margin: 8px 0; }
 .rule-list { font-size: 20px; line-height: 24px; margin: 12px 0 0; }
@@ -207,3 +207,4 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 .route-arrow[data-state="correct"] { color:#81ed9e; }
 .route-feedback { min-height:21px; color:#ffb1a4; }
 #app[data-view="boot"] #toast, #app[data-view="boot"] #bgm-toast { visibility: hidden; }
+#app:has(.window[data-puzzle]) #bgm-toast { top: 4px; padding-block: 2px; }
