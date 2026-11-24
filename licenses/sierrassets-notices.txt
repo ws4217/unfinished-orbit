@@ -1,0 +1,14 @@
+Sierrassets Interior / Furniture Pack
+
+Used in UNFINISHED ORBIT: selected furniture for the stable garden only.
+The project owner confirms lawful purchase / authorization of the supplied pack.
+See sierrassets-license.txt for the author's supplied license.
+
+These assets are included only as part of this game, not as a standalone asset pack.
+Do not extract, reuse, sell, share or redistribute them separately.
+The runtime atlas contains only selected crops and a coffee-corner composition;
+the original pack, editable files and unused artwork are not included.
+
+Technical note: browser games necessarily deliver rendering data to the browser.
+This notice is not a claim that extraction is technically impossible or that all
+distribution questions have been resolved.

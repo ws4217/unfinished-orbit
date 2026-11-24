@@ -1,0 +1,46 @@
+Music used in UNFINISHED ORBIT / 未完成的轨道
+
+Project-owner authorization statement:
+The project owner confirms that permission under Creative Commons Attribution
+4.0 International (CC BY 4.0) has been obtained from the original authors for
+all supplied audio. This records the owner's statement, not an independent
+verification of private permission documents. Earlier public-page license
+observations do not negate the owner's newly stated author-granted permission.
+
+License: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+No endorsement by the authors is implied. No additional restrictions are
+asserted over the CC-licensed music.
+
+Spacey (also supplied under the names Cryblik / spacey_432):
+- Sienna II
+  https://cryblik.bandcamp.com/track/sienna-ii
+- Good Old-Fashioned Techno
+  https://cryblik.bandcamp.com/
+- Good Old-Fashioned Techno (Alternate Version)
+  https://cryblik.bandcamp.com/
+- The Valley
+  https://cryblik.bandcamp.com/
+- Fleeting Colors
+  https://cryblik.bandcamp.com/track/fleeting-colors
+
+Scarfaith, from Fly into the Sky LP (Diverse System):
+- Intro (Fly into the Sky)
+  https://diversesystem.bandcamp.com/track/intro-fly-into-the-sky
+- End of a Journey
+  https://diversesystem.bandcamp.com/track/end-of-a-journey
+Album: https://diversesystem.bandcamp.com/album/fly-into-the-sky-lp
+
+Changes for this game:
+All seven music files were converted from the supplied originals to Ogg Opus,
+stereo, 96 kbps. Fleeting Colors was additionally sped up by 1.5x, with the
+corresponding pitch increase; its runtime playback rate is 1.0.
+No new cuts, loop edits or loudness normalization were made during integration.
+Music is played whole, with application-level looping and volume fades.
+Original author files are preserved outside the runtime package.
+
+Kenney Interface Sounds / Sci-Fi Sounds:
+The independently inspected original packages are CC0; their original CC0
+license notices remain in kenney-interface-sounds.txt and kenney-sci-fi-sounds.txt.
+Those more permissive original notices are not replaced by a CC BY label.
+The computerNoise_002 derivative is at most two seconds with an 80 ms end fade.
