@@ -8,7 +8,11 @@ import { installExperiment } from './game/experiment.ts';
 import { installDesktop } from './ui/desktop.ts';
 import { installEnding } from './game/ending.ts';
 import ui from './content/text/ui.json' with { type: 'json' };
+import { formatText } from './content/text/line.ts';
 
+document.title = formatText(ui.app.pageTitle, ui.app);
+document.getElementById('app')!.setAttribute('aria-label', ui.app.subtitle);
+document.getElementById('entry-target')!.textContent = ui.desktop.marks.diamond;
 document.getElementById('status')!.textContent = ui.app.status;
 // Canvas labels must be drawn after the local font is available, not rasterized in a fallback face.
 void Promise.all([

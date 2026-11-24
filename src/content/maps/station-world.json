@@ -2,7 +2,6 @@
   "rooms": [
     {
       "id": "arrival",
-      "label": "对接入口 / DOCK 01",
       "room": {
         "x": 224,
         "y": 160,
@@ -18,15 +17,13 @@
           "side": "east",
           "y": 288,
           "to": "public",
-          "entry": "west",
-          "label": "公共区"
+          "entry": "west"
         }
       ],
       "objects": [],
       "decorations": [
         {
           "id": "decor-arrival-window",
-          "label": "舷窗",
           "textId": "arrival-window",
           "frame": "glass-blue",
           "x": 512,
@@ -42,7 +39,6 @@
         },
         {
           "id": "decor-arrival-cabinet",
-          "label": "服务机柜",
           "textId": "arrival-cabinet",
           "frame": "cabinet",
           "x": 592,
@@ -60,7 +56,6 @@
         },
         {
           "id": "decor-arrival-terminal",
-          "label": "服务终端",
           "textId": "arrival-terminal",
           "frame": "terminal",
           "x": 448,
@@ -72,7 +67,6 @@
         },
         {
           "id": "decor-arrival-bench",
-          "label": "等候椅",
           "textId": "arrival-bench",
           "frame": "arrival-chair",
           "x": 544,
@@ -90,7 +84,6 @@
         },
         {
           "id": "decor-arrival-plant",
-          "label": "入口小树",
           "textId": "arrival-plant",
           "frame": "plant",
           "x": 272,
@@ -118,21 +111,18 @@
     },
     {
       "id": "public",
-      "label": "公共区 / P-01",
       "doors": [
         {
           "side": "west",
           "y": 320,
           "to": "arrival",
-          "entry": "east",
-          "label": "对接入口"
+          "entry": "east"
         },
         {
           "side": "east",
           "y": 256,
           "to": "junction",
-          "entry": "west",
-          "label": "岔路口"
+          "entry": "west"
         }
       ],
       "objects": [
@@ -150,8 +140,7 @@
           "stand": {
             "x": 240,
             "y": 208
-          },
-          "label": "居民留言"
+          }
         },
         {
           "id": "p01",
@@ -167,8 +156,7 @@
           "stand": {
             "x": 416,
             "y": 240
-          },
-          "label": "P-01 星图投影器"
+          }
         },
         {
           "id": "merin",
@@ -184,14 +172,12 @@
           "stand": {
             "x": 656,
             "y": 308
-          },
-          "label": "Merin"
+          }
         }
       ],
       "decorations": [
         {
           "id": "decor-public-tree",
-          "label": "大树",
           "textId": "public-tree",
           "frame": "tree-large",
           "x": 288,
@@ -209,7 +195,6 @@
         },
         {
           "id": "decor-public-shrub-a",
-          "label": "灌木",
           "textId": "public-shrub-a",
           "frame": "shrub-a",
           "x": 224,
@@ -227,7 +212,6 @@
         },
         {
           "id": "decor-public-shrub-b",
-          "label": "另一丛灌木",
           "textId": "public-shrub-b",
           "frame": "shrub-b",
           "x": 352,
@@ -245,7 +229,6 @@
         },
         {
           "id": "decor-public-green-bed",
-          "label": "种植区",
           "textId": "public-green-bed",
           "frame": "grass-base",
           "x": 224,
@@ -259,7 +242,6 @@
         },
         {
           "id": "decor-public-table",
-          "label": "金属桌",
           "textId": "public-table",
           "frame": "metal-table",
           "x": 560,
@@ -278,7 +260,6 @@
         },
         {
           "id": "decor-public-bench-a",
-          "label": "绿岛旁长椅",
           "textId": "public-bench-a",
           "frame": "bench",
           "x": 464,
@@ -290,7 +271,6 @@
         },
         {
           "id": "decor-public-bench-b",
-          "label": "空着的长椅",
           "textId": "public-bench-b",
           "frame": "bench",
           "x": 656,
@@ -302,7 +282,6 @@
         },
         {
           "id": "decor-public-reception",
-          "label": "接待设备",
           "textId": "public-reception",
           "frame": "reception-round",
           "x": 656,
@@ -375,7 +354,6 @@
     },
     {
       "id": "junction",
-      "label": "分工廊 / JUNCTION",
       "room": {
         "x": 192,
         "y": 128,
@@ -391,35 +369,30 @@
           "side": "west",
           "y": 352,
           "to": "public",
-          "entry": "east",
-          "label": "公共区"
+          "entry": "east"
         },
         {
           "side": "west",
           "y": 160,
           "to": "symbols",
-          "entry": "east",
-          "label": "符号维护室"
+          "entry": "east"
         },
         {
           "side": "east",
           "y": 160,
           "to": "objects",
-          "entry": "west",
-          "label": "物件维护室"
+          "entry": "west"
         },
         {
           "side": "east",
           "y": 352,
           "to": "maintenance",
-          "entry": "west",
-          "label": "维护间"
+          "entry": "west"
         }
       ],
       "objects": [
         {
           "id": "karo",
-          "label": "Karo",
           "frame": "character-karo",
           "x": 480,
           "y": 240
@@ -428,7 +401,6 @@
       "decorations": [
         {
           "id": "decor-junction-cabinet",
-          "label": "墙边机柜",
           "textId": "junction-cabinet",
           "frame": "cabinet",
           "x": 672,
@@ -446,7 +418,6 @@
         },
         {
           "id": "decor-junction-vent",
-          "label": "通风口",
           "textId": "junction-vent",
           "frame": "tech-vent",
           "x": 352,
@@ -462,7 +433,6 @@
         },
         {
           "id": "decor-junction-pipe",
-          "label": "墙边管线",
           "textId": "junction-pipe",
           "frame": "tech-pipe",
           "x": 576,
@@ -478,7 +448,6 @@
         },
         {
           "id": "decor-junction-table",
-          "label": "走廊小桌",
           "textId": "junction-table",
           "frame": "table",
           "x": 352,
@@ -491,7 +460,6 @@
         },
         {
           "id": "decor-junction-rack",
-          "label": "侧边设备柜",
           "textId": "junction-cabinet",
           "frame": "tech-rack",
           "x": 272,
@@ -503,7 +471,6 @@
         },
         {
           "id": "decor-junction-screen",
-          "label": "记录屏",
           "textId": "junction-screen",
           "frame": "terminal-blue-short",
           "x": 320,
@@ -515,7 +482,6 @@
         },
         {
           "id": "decor-junction-bench",
-          "label": "走廊长椅",
           "textId": "junction-bench",
           "frame": "bench",
           "x": 272,
@@ -527,7 +493,6 @@
         },
         {
           "id": "decor-junction-plant",
-          "label": "设备旁植物",
           "textId": "symbols-plant",
           "frame": "plant",
           "x": 688,
@@ -549,7 +514,6 @@
     },
     {
       "id": "symbols",
-      "label": "符号维护室 / MAPPING",
       "room": {
         "x": 192,
         "y": 128,
@@ -565,14 +529,12 @@
           "side": "east",
           "y": 288,
           "to": "junction",
-          "entry": "west",
-          "label": "返回分工廊"
+          "entry": "west"
         }
       ],
       "objects": [
         {
           "id": "symbol-terminal",
-          "label": "符号终端",
           "frame": "console",
           "x": 464,
           "y": 224
@@ -581,7 +543,6 @@
       "decorations": [
         {
           "id": "decor-symbols-screen",
-          "label": "辅助记录屏",
           "textId": "symbols-screen",
           "frame": "terminal-blue-short",
           "x": 272,
@@ -593,7 +554,6 @@
         },
         {
           "id": "decor-symbols-cabinet",
-          "label": "窄设备柜",
           "textId": "symbols-cabinet",
           "frame": "cabinet",
           "x": 640,
@@ -611,7 +571,6 @@
         },
         {
           "id": "decor-symbols-bench",
-          "label": "工作座椅",
           "textId": "symbols-bench",
           "frame": "bench",
           "x": 464,
@@ -623,7 +582,6 @@
         },
         {
           "id": "decor-symbols-plant",
-          "label": "设备旁植物",
           "textId": "symbols-plant",
           "frame": "plant",
           "x": 656,
@@ -645,7 +603,6 @@
     },
     {
       "id": "objects",
-      "label": "物件维护室 / ORDERING",
       "room": {
         "x": 160,
         "y": 128,
@@ -661,42 +618,36 @@
           "side": "west",
           "y": 320,
           "to": "junction",
-          "entry": "east",
-          "label": "返回分工廊"
+          "entry": "east"
         }
       ],
       "objects": [
         {
           "id": "base-dark",
-          "label": "暗星的底座",
           "frame": "projection",
           "x": 272,
           "y": 192
         },
         {
           "id": "base-moon",
-          "label": "弯月的底座",
           "frame": "projection",
           "x": 432,
           "y": 192
         },
         {
           "id": "base-tomorrow",
-          "label": "明日的底座",
           "frame": "projection",
           "x": 592,
           "y": 192
         },
         {
           "id": "base-comet",
-          "label": "彗星的底座",
           "frame": "projection",
           "x": 688,
           "y": 288
         },
         {
           "id": "object-terminal",
-          "label": "排列操作台",
           "frame": "console",
           "x": 480,
           "y": 352
@@ -705,7 +656,6 @@
       "decorations": [
         {
           "id": "decor-objects-cabinet",
-          "label": "测试机柜",
           "textId": "objects-cabinet",
           "frame": "test-cabinet-corrected",
           "x": 672,
@@ -723,7 +673,6 @@
         },
         {
           "id": "decor-objects-unit",
-          "label": "立式设备",
           "textId": "objects-unit",
           "frame": "tech-tank",
           "x": 352,
@@ -735,7 +684,6 @@
         },
         {
           "id": "decor-objects-vent",
-          "label": "通风设施",
           "textId": "objects-vent",
           "frame": "tech-vent",
           "x": 480,
@@ -773,7 +721,6 @@
     },
     {
       "id": "maintenance",
-      "label": "维护间 / LOCAL SERVICE",
       "room": {
         "x": 224,
         "y": 128,
@@ -789,14 +736,12 @@
           "side": "west",
           "y": 320,
           "to": "junction",
-          "entry": "east",
-          "label": "返回分工廊"
+          "entry": "east"
         }
       ],
       "objects": [
         {
           "id": "range",
-          "label": "维护告示牌",
           "frame": "maintenance-notice-screen",
           "x": 352,
           "y": 192,
@@ -809,14 +754,12 @@
         },
         {
           "id": "diagnosis",
-          "label": "P-01 诊断记录",
           "frame": "terminal-blue-short",
           "x": 624,
           "y": 192
         },
         {
           "id": "cleaner",
-          "label": "普通清理台",
           "frame": "maintenance-cleaner-unit",
           "x": 592,
           "y": 352,
@@ -831,7 +774,6 @@
       "decorations": [
         {
           "id": "decor-maintenance-module",
-          "label": "蓝色零件",
           "textId": "maintenance-module",
           "frame": "tool-module",
           "x": 464,
@@ -847,7 +789,6 @@
         },
         {
           "id": "decor-maintenance-board",
-          "label": "线路板",
           "textId": "maintenance-board",
           "frame": "tool-board",
           "x": 496,
@@ -863,7 +804,6 @@
         },
         {
           "id": "decor-maintenance-chip",
-          "label": "方形模块",
           "textId": "maintenance-chip",
           "frame": "tool-chip",
           "x": 528,
@@ -879,7 +819,6 @@
         },
         {
           "id": "decor-maintenance-wrench",
-          "label": "扳手",
           "textId": "maintenance-wrench",
           "frame": "tool-wrench",
           "x": 560,
@@ -895,7 +834,6 @@
         },
         {
           "id": "decor-maintenance-terminal",
-          "label": "另一个终端",
           "textId": "maintenance-terminal",
           "frame": "terminal-green-tall",
           "x": 688,
@@ -907,7 +845,6 @@
         },
         {
           "id": "decor-maintenance-bench",
-          "label": "维护间长椅",
           "textId": "maintenance-bench",
           "frame": "bench",
           "x": 352,
@@ -935,7 +872,6 @@
     },
     {
       "id": "stable",
-      "label": "安定区 / OUR SMALL ORBIT",
       "room": {
         "x": 160,
         "y": 128,
@@ -950,21 +886,18 @@
       "objects": [
         {
           "id": "register",
-          "label": "登记与记录台",
           "frame": "terminal",
           "x": 608,
           "y": 208
         },
         {
           "id": "art",
-          "label": "星图与标记",
           "frame": "projection",
           "x": 336,
           "y": 208
         },
         {
           "id": "rest",
-          "label": "休息一会儿",
           "frame": "bench",
           "x": 608,
           "y": 384,
@@ -975,7 +908,6 @@
         },
         {
           "id": "karo-stable",
-          "label": "Karo",
           "frame": "character-karo",
           "x": 512,
           "y": 224
@@ -984,7 +916,6 @@
       "decorations": [
         {
           "id": "return",
-          "label": "安定区入口",
           "textId": "stable-entry",
           "frame": "terminal",
           "x": 240,
@@ -993,7 +924,6 @@
         },
         {
           "id": "decor-stable-table",
-          "label": "暖色小桌",
           "textId": "stable-table",
           "frame": "garden-table",
           "x": 608,
@@ -1011,7 +941,6 @@
         },
         {
           "id": "decor-stable-chair",
-          "label": "木椅",
           "textId": "stable-chair",
           "frame": "garden-chair",
           "x": 560,
@@ -1029,7 +958,6 @@
         },
         {
           "id": "decor-stable-bookcase",
-          "label": "书架",
           "textId": "stable-bookcase",
           "frame": "garden-bookcase",
           "x": 680,
@@ -1047,7 +975,6 @@
         },
         {
           "id": "decor-stable-lamp",
-          "label": "落地灯",
           "textId": "stable-lamp",
           "frame": "garden-lamp",
           "x": 664,
@@ -1065,7 +992,6 @@
         },
         {
           "id": "decor-stable-cushion",
-          "label": "坐垫",
           "textId": "stable-cushion",
           "frame": "garden-cushion",
           "x": 560,
@@ -1079,7 +1005,6 @@
         },
         {
           "id": "decor-stable-pot",
-          "label": "小盆栽",
           "textId": "stable-pot",
           "frame": "garden-pot",
           "x": 704,
@@ -1097,7 +1022,6 @@
         },
         {
           "id": "decor-stable-coffee",
-          "label": "咖啡角",
           "textId": "stable-coffee",
           "frame": "garden-coffee-corner",
           "x": 304,
@@ -1115,7 +1039,6 @@
         },
         {
           "id": "decor-stable-woods",
-          "label": "林缘",
           "textId": "stable-woods",
           "frame": "grass-base",
           "x": 176,
@@ -1129,7 +1052,6 @@
         },
         {
           "id": "decor-stable-stones",
-          "label": "散石",
           "textId": "stable-stones",
           "frame": "garden-stone",
           "x": 176,

@@ -1,0 +1,101 @@
+{
+  "rooms": {
+    "arrival": "对接入口 / DOCK 01",
+    "public": "公共区 / P-01",
+    "junction": "分工廊 / JUNCTION",
+    "symbols": "符号维护室 / MAPPING",
+    "objects": "物件维护室 / ORDERING",
+    "maintenance": "维护间 / LOCAL SERVICE",
+    "stable": "安定区 / ENDING ORBIT"
+  },
+  "doors": {
+    "arrival": {
+      "public": "公共区"
+    },
+    "public": {
+      "arrival": "对接入口",
+      "junction": "分工廊"
+    },
+    "junction": {
+      "public": "公共区",
+      "symbols": "符号维护室",
+      "objects": "物件维护室",
+      "maintenance": "维护间"
+    },
+    "symbols": {
+      "junction": "分工廊"
+    },
+    "objects": {
+      "junction": "分工廊"
+    },
+    "maintenance": {
+      "junction": "分工廊"
+    },
+    "stable": {}
+  },
+  "objects": {
+    "old-note": "居民留言",
+    "p01": "P-01 星图投影器",
+    "merin": "Merin",
+    "karo": "Karo",
+    "symbol-terminal": "符号终端",
+    "base-dark": "暗星底座",
+    "base-moon": "弯月底座",
+    "base-tomorrow": "明日底座",
+    "base-comet": "彗星底座",
+    "object-terminal": "排列操作台",
+    "range": "维护告示牌",
+    "diagnosis": "P-01 诊断记录",
+    "cleaner": "普通清理台",
+    "register": "登记台",
+    "art": "星图与标记",
+    "rest": "休息一会儿",
+    "karo-stable": "Karo"
+  },
+  "decorations": {
+    "decor-arrival-window": "舷窗",
+    "decor-arrival-cabinet": "服务机柜",
+    "decor-arrival-terminal": "服务终端",
+    "decor-arrival-bench": "等候椅",
+    "decor-arrival-plant": "小树",
+    "decor-public-tree": "大树",
+    "decor-public-shrub-a": "灌木",
+    "decor-public-shrub-b": "灌木",
+    "decor-public-green-bed": "种植区",
+    "decor-public-table": "金属桌",
+    "decor-public-bench-a": "长椅",
+    "decor-public-bench-b": "长椅",
+    "decor-public-reception": "接待台",
+    "decor-junction-cabinet": "机柜",
+    "decor-junction-vent": "通风口",
+    "decor-junction-pipe": "管线",
+    "decor-junction-table": "小桌",
+    "decor-junction-rack": "设备柜",
+    "decor-junction-screen": "记录屏",
+    "decor-junction-bench": "长椅",
+    "decor-junction-plant": "绿植",
+    "decor-symbols-screen": "记录屏",
+    "decor-symbols-cabinet": "设备柜",
+    "decor-symbols-bench": "座椅",
+    "decor-symbols-plant": "绿植",
+    "decor-objects-cabinet": "测试机柜",
+    "decor-objects-unit": "立式设备",
+    "decor-objects-vent": "通风口",
+    "decor-maintenance-module": "零件",
+    "decor-maintenance-board": "线路板",
+    "decor-maintenance-chip": "方形模块",
+    "decor-maintenance-wrench": "扳手",
+    "decor-maintenance-terminal": "备用终端",
+    "decor-maintenance-bench": "长椅",
+    "return": "返回空间站",
+    "decor-stable-table": "小桌",
+    "decor-stable-chair": "木椅",
+    "decor-stable-bookcase": "书架",
+    "decor-stable-lamp": "落地灯",
+    "decor-stable-cushion": "坐垫",
+    "decor-stable-pot": "小盆栽",
+    "decor-stable-coffee": "咖啡角",
+    "decor-stable-woods": "树荫",
+    "decor-stable-stones": "石块"
+  }
+}

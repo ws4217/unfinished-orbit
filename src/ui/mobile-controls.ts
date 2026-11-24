@@ -14,10 +14,10 @@ export function installMobileControls(app: App): void {
   stick.className = 'touch-stick'; stick.setAttribute('aria-label', ui.mobile.stick);
   const thumb = document.createElement('span'); stick.append(thumb);
   controls.append(stick);
-  const button = (key: string) => {
+  const button = (key: keyof typeof ui.mobile.keys) => {
     const el = document.createElement('button');
     el.type = 'button'; el.className = `touch-key touch-${key}`;
-    el.textContent = key.toUpperCase(); controls.append(el); return el;
+    el.textContent = ui.mobile.keys[key]; controls.append(el); return el;
   };
   const z = button('z'), x = button('x');
   const rotate = document.createElement('div');

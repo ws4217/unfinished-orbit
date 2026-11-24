@@ -1,5 +1,6 @@
 import type { App } from './app.ts';
-import { fillText, type DialogueLine } from '../content/text/line.ts';
+import { fillText, formatText, type DialogueLine } from '../content/text/line.ts';
+import { EXPERIMENTS } from '../core/state.ts';
 import data from '../content/text/experiment.json';
 import { experimentResult, discoverExperiment, canFindEntrance } from '../core/rules.ts';
 
@@ -102,8 +103,9 @@ export function installExperiment(app: App): void {
     restore = app.puzzle(data.ui.title, container => {
       const list = document.createElement('div'); list.className = 'menu-list';
       const labels = [
-        `${data.ui.held}：${app.state.experiment.held ? data.ui.on : data.ui.off}`,
-        `${data.ui.outside}：${app.state.experiment.outside ? data.ui.on : data.ui.off}`,
+        ...(['held', 'outside'] as const).map(key => formatText(data.ui.switchLabel, {
+          label: data.ui[key], value: app.state.experiment[key] ? data.ui.on : data.ui.off,
+        })),
         data.ui.execute, data.ui.storage,
       ];
       labels.forEach((label, index) => {
@@ -113,7 +115,9 @@ export function installExperiment(app: App): void {
       });
       container.append(list);
       const discoveries = document.createElement('p');
-      discoveries.textContent = `${data.ui.discovered}：${app.state.experiment.discovered.length} / 4`;
+      discoveries.textContent = formatText(data.ui.progress, {
+        label: data.ui.discovered, count: String(app.state.experiment.discovered.length), total: String(EXPERIMENTS.length),
+      });
       container.append(discoveries);
       (list.children[focus] as HTMLElement)?.focus();
     }, key => {

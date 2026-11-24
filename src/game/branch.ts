@@ -1,18 +1,14 @@
 import type { App } from './app.ts';
 import { fillText } from '../content/text/line.ts';
 import data from '../content/text/branch.json';
-import terminalSource from '../content/text/symbol-terminal.txt?raw';
-import terminalBytes from '../content/text/symbol-terminal.txt?url&no-inline';
 import ui from '../content/text/ui.json' with { type: 'json' };
 import { ELEMENTS, type Evidence } from '../core/state.ts';
-import { garbledRules } from '../core/terminal-encoding.ts';
+import { terminalRules } from '../core/terminal-encoding.ts';
 import { canFirstPhone, orderingError, swap } from '../core/rules.ts';
 import { firstSync, submitMapping, secondSync, submitOrdering, reportRead, thirdSync } from '../core/branch.ts';
 
-const ruleNames = new RegExp(ELEMENTS.map(id => data.ui.elements[id]).join('|'), 'g');
-const bodySymbols = [...data.ui.rules.join('\n').matchAll(ruleNames)].map(([name]) =>
-  data.ui.symbols[ELEMENTS.findIndex(id => data.ui.elements[id] === name)]);
-const damagedRules = garbledRules(terminalSource, bodySymbols);
+const terminal = terminalRules(data.ui.rules, new Map(ELEMENTS.map((id, i) => [data.ui.elements[id], data.ui.symbols[i]])));
+const rawSource = `data:text/plain;charset=utf-8,${encodeURIComponent(terminal.raw)}`;
 
 export function installBranch(app: App): void {
   Object.assign(app.extraLogs, data.logs);
@@ -145,10 +141,10 @@ function slots(app: App): void {
     if (symbols || readable) {
       const rules = document.createElement('p');
       rules.className = 'rule-list';
-      rules.textContent = readable ? data.ui.rules.join('\n') : damagedRules;
+      rules.textContent = readable ? data.ui.rules.join('\n') : terminal.damaged;
       if (!readable) {
         rules.classList.add('rule-list-garbled');
-        rules.dataset.rawSource = terminalBytes;
+        rules.dataset.rawSource = rawSource;
       }
       container.append(rules);
     }

@@ -22,6 +22,10 @@ export function dialogueSpeaker({ speaker }: DialogueLine): { name: string; colo
   return ui.speakers[speaker as keyof typeof ui.speakers];
 }
 
+export function formatText(template: string, values: Readonly<Record<string, string>>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match);
+}
+
 export function fillText<T extends TextLine>(line: T, values: Readonly<Record<string, string>>): T {
-  return { ...line, text: line.text.replace(/\{(\w+)\}/g, (match, key: string) => values[key] ?? match) };
+  return { ...line, text: formatText(line.text, values) };
 }

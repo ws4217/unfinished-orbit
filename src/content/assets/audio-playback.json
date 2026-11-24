@@ -8,39 +8,25 @@
   "batchLimitBytes": 10485760,
   "tracks": {
     "intro": {
-      "asset": "bgm.intro",
-      "author": "Scarfaith",
-      "title": "Intro (Fly into the Sky)"
+      "asset": "bgm.intro"
     },
     "exploration": {
-      "asset": "bgm.sienna-ii",
-      "author": "Spacey",
-      "title": "Sienna II"
+      "asset": "bgm.sienna-ii"
     },
     "techno": {
-      "asset": "bgm.good-old-fashioned-techno",
-      "author": "Spacey",
-      "title": "Good Old-Fashioned Techno"
+      "asset": "bgm.good-old-fashioned-techno"
     },
     "alternate": {
-      "asset": "bgm.good-old-fashioned-techno-alternate",
-      "author": "Spacey",
-      "title": "Good Old-Fashioned Techno (Alternate Version)"
+      "asset": "bgm.good-old-fashioned-techno-alternate"
     },
     "valley": {
-      "asset": "bgm.the-valley",
-      "author": "Spacey",
-      "title": "The Valley"
+      "asset": "bgm.the-valley"
     },
     "fleeting": {
-      "asset": "bgm.fleeting-colors-1-5x",
-      "author": "Spacey",
-      "title": "Fleeting Colors"
+      "asset": "bgm.fleeting-colors-1-5x"
     },
     "ending": {
-      "asset": "bgm.end-of-journey",
-      "author": "Scarfaith",
-      "title": "End of a Journey"
+      "asset": "bgm.end-of-journey"
     }
   },
   "events": {

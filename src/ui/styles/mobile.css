@@ -6,18 +6,18 @@
   background: transparent; bottom: max(42px, env(safe-area-inset-bottom));
 }
 .touch-stick {
-  left: max(8px, env(safe-area-inset-left)); width: clamp(78px, 18vh, 112px);
+  left: max(8px, env(safe-area-inset-left)); width: clamp(117px, 27vh, 168px);
   aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
 }
 .touch-stick span { width: 43%; aspect-ratio: 1; border: 2px solid #cde9e9cf; border-radius: 50%; }
 .touch-key {
-  width: 46px; height: 46px; padding: 0; border-radius: 0;
-  text-shadow: 1px 1px 2px #000; font-size: 18px;
+  width: 69px; height: 69px; padding: 0; border-radius: 0;
+  text-shadow: 1px 1px 2px #000; font-size: 27px;
 }
 .touch-key:hover { background: transparent; }
 .touch-key:active { background: #547b8870; }
-.touch-z { right: max(8px, env(safe-area-inset-right)); bottom: max(69px, env(safe-area-inset-bottom)); }
-.touch-x { right: calc(max(8px, env(safe-area-inset-right)) + 52px); }
+.touch-z { right: calc(max(8px, env(safe-area-inset-right)) + 78px); }
+.touch-x { right: max(8px, env(safe-area-inset-right)); bottom: calc(max(42px, env(safe-area-inset-bottom)) + 40.5px); }
 .touch-rotate { display: none; }
 .phone #small-window, .phone:has(#app[data-view="title"] #desktop-shell:not([hidden])) .touch-controls,
 .phone:has(.maintenance-route) .touch-controls,
@@ -26,7 +26,7 @@
 .phone .touch-controls, .phone .card-drag-handle, .phone .route-pad { -webkit-user-select: none; user-select: none; }
 .phone button { touch-action: manipulation; }
 .phone .touch-key { touch-action: none; }
-.phone .chat-history { padding-right: 136px; }
+.phone .chat-history { padding-right: 204px; }
 .phone .route-row { height: 32px; }
 .phone .route-pad {
   position: absolute; bottom: 8px; right: 34px; display: grid;

@@ -155,11 +155,20 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 20px; border: 2px s
 .bubble { max-width: 824px; border: 2px solid #7899a5; padding: 8px 12px; background: #09283f; }
 .bubble strong { font-size: 20px; line-height: 24px; }
 .bubble p { font-size: 20px; line-height: 30px; margin-top: 4px; }
-#desktop-shell { background: #174f5b; }
+#desktop-shell { background: #008080; }
 .desktop-watermark { font-size: 20px; letter-spacing: 0; color: #477982; }
-.desktop-game { border-color: #b5ceca; box-shadow: 6px 6px 0 #071a29; }
-.titlebar { font-size: 20px; line-height: 24px; background: #12334a; }
+.desktop-game { border: 2px outset #c0c0c0; background: #c0c0c0; box-shadow: 2px 2px 0 #000; }
+.titlebar { font-size: 20px; line-height: 24px; background: #000080; color: white; }
 .titlebar button { min-height: 28px; height: 28px; font-size: 20px; padding: 0 8px; border: 0; border-left: 2px solid #527b89; box-shadow: none; }
+.nt351-titlebar { position: relative; z-index: 1; padding: 0; touch-action: none; cursor: grab; }
+.nt351-titlebar > span { flex: 1; text-align: center; }
+.nt351-titlebar > .nt351-system { width: 32px; background: #c0c0c0; color: black; border: 2px outset #c0c0c0; }
+.nt351-titlebar > .nt351-system:active { border-style: inset; }
+.nt351-titlebar .window-buttons button { background: #000080; color: white; border: 0; }
+.nt351-titlebar .window-buttons button:is(:hover, :focus-visible, :active) { background: #26269c; outline: none; }
+.nt351-menu { position: absolute; top: 100%; left: 0; display: grid; min-width: 132px; padding: 2px; background: #c0c0c0; border: 2px outset #c0c0c0; box-shadow: 2px 2px #000; }
+.nt351-menu button { background: #c0c0c0; color: black; border: 0; text-align: left; }
+.nt351-menu button:hover, .nt351-menu button:focus { background: #000080; color: white; outline: none; }
 .desktop-card { border-color: #b5ceca; background: #09283faa; box-shadow: 4px 4px 0 #071a29; }
 .card-help { font-size: 10px; line-height: 20px; margin: 6px 12px; }
 .card-actions { padding: 0 12px; }

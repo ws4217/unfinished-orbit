@@ -1,5 +1,6 @@
 import data from '../content/maps/station-world.json' with { type: 'json' };
 import inspectionText from '../content/text/decoration.json' with { type: 'json' };
+import labels from '../content/text/station-labels.json' with { type: 'json' };
 import ui from '../content/text/ui.json' with { type: 'json' };
 import { footBlocked } from './room-geometry.ts';
 import { inside, type Rect } from '../core/world-geometry.ts';
@@ -17,15 +18,25 @@ export interface StationRoom {
   doors: Door[]; objects: WorldObject[]; decorations: Prop[]; panels: Rect[]; inspections: WorldObject[];
   ground?: { rect: Rect; columns: number; tiles: string[] };
 }
+const { rooms: roomLabels, doors: doorLabels, objects: objectLabels, decorations: decorationLabels }: {
+  rooms: Record<string, string>; doors: Record<string, Record<string, string>>;
+  objects: Record<string, string>; decorations: Partial<Record<string, string>>;
+} = labels;
+
+// Geometry and text join on stable IDs; the renderer receives the same room shape.
 export const STATION_ROOMS: StationRoom[] = data.rooms.map(room => {
-  const decorations: Prop[] = room.decorations;
+  const decorations: Prop[] = room.decorations.map(prop => ({
+    ...prop, label: 'id' in prop && prop.id ? decorationLabels[prop.id] : undefined,
+  }));
   const inspections: WorldObject[] = decorations.flatMap(prop => prop.id && prop.label && prop.textId
     ? [{ ...prop, id: prop.id, label: prop.label, room: room.id, inspectionId: prop.textId }] : []);
   // 已批准只替换安定区原休息点外观，锚点/ID/功能与原脚碰撞不变。
   const objects = room.objects.map(object => ({
-    ...object, room: room.id, ...(object.id === 'rest' ? { frame: 'garden-sofa', footprint: footprint(object) } : {}),
+    ...object, label: objectLabels[object.id], room: room.id,
+    ...(object.id === 'rest' ? { frame: 'garden-sofa', footprint: footprint(object) } : {}),
   }));
-  return { ...room, objects, decorations, inspections };
+  const doors = room.doors.map(door => ({ ...door, label: doorLabels[room.id][door.to] }));
+  return { ...room, label: roomLabels[room.id], doors, objects, decorations, inspections };
 });
 export function getRoom(id: string): StationRoom {
   const room = STATION_ROOMS.find(item => item.id === id);

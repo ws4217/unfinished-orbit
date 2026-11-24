@@ -9,7 +9,7 @@ const keys: Record<string, Direction> = {
   ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
   w: 'up', s: 'down', a: 'left', d: 'right',
 };
-const glyph = { up: '↑', down: '↓', left: '←', right: '→' };
+const glyph = data.arrows;
 const make = <K extends keyof HTMLElementTagNameMap>(tag: K, cls: string) => {
   const element = document.createElement(tag); element.className = cls; return element;
 };
@@ -69,7 +69,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
     const ratio = ms / model.limit;
     meter.dataset.tone = ratio > 0.55 ? 'green' : ratio > 0.25 ? 'yellow' : 'red';
     fill.style.transform = `scaleX(${ratio})`;
-    clock.textContent = pausedAt !== undefined ? data.paused : `${(Math.ceil(ms / 100) / 10).toFixed(1)}s`;
+    clock.textContent = pausedAt !== undefined ? data.paused : data.clock.replace('{seconds}', (Math.ceil(ms / 100) / 10).toFixed(1));
   };
   const apply = (result: RouteEvent | undefined) => {
     if (!result) return;

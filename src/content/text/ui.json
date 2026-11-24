@@ -2,7 +2,9 @@
   "app": {
     "title": "UNFINISHED ORBIT",
     "subtitle": "未完成的轨道",
-    "stage": "1.0.0-ln2 · 游戏开发者：ws4217",
+    "stage": "1.0.2 · By. ws4217",
+    "stageReunion": "1.0.兄 · By. ws4217",
+    "pageTitle": "{title}／{subtitle}",
     "status": "初始化中……",
     "ready": "自动存档",
     "error": "初始化失败，请刷新重试。",
@@ -19,6 +21,7 @@
     "back": "返回标题"
   },
   "mobile": {
+    "keys": { "z": "Z", "x": "X" },
     "rotate": "请将手机转为横屏游玩",
     "enter": "点按 Z 开始",
     "stick": "四向移动",
@@ -41,11 +44,11 @@
     "game": "未完成的轨道",
     "card": "校准卡",
     "minimize": "最小化",
-    "maximize": "缩放",
+    "maximize": "最大化",
+    "systemMenu": "窗口菜单",
+    "marks": { "menu": "-", "minimize": "—", "maximize": "□", "close": "×", "diamond": "◇" },
     "close": "关闭",
     "reset": "复位",
-    "closeExplanation": "窗口已隐藏，可从任务栏重新打开。",
-    "okay": "知道了",
     "path": "进入维护路径",
     "shortcut": "进入安定区",
     "tool": "校准工具",
@@ -126,11 +129,22 @@
     }
   },
   "audio": {
+    "credits": {
+      "intro": { "author": "Scarfaith", "title": "Intro (Fly into the Sky)" },
+      "exploration": { "author": "Spacey", "title": "Sienna II" },
+      "techno": { "author": "Spacey", "title": "Good Old-Fashioned Techno" },
+      "alternate": { "author": "Spacey", "title": "Good Old-Fashioned Techno (Alternate Version)" },
+      "valley": { "author": "Spacey", "title": "The Valley" },
+      "fleeting": { "author": "Spacey", "title": "Fleeting Colors" },
+      "ending": { "author": "Scarfaith", "title": "End of a Journey" }
+    },
     "bgmToast": "BGM：{author} - {title}",
     "failed": "部分音频加载失败",
     "retry": "重试音频"
   },
   "maintenanceRoute": {
+    "arrows": { "up": "↑", "down": "↓", "left": "←", "right": "→" },
+    "clock": "{seconds}s",
     "title": "启动维护路径",
     "aligned": "定位完成。",
     "help": "方向键 / WASD 输入",

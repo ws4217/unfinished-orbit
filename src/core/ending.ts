@@ -6,3 +6,6 @@ export function collect(state: GameState, item: Collection): boolean {
   return true;
 }
 export function tokenReady(state: GameState): boolean { return state.collections.length === 3; }
+export function hasWokenInNextCycle(state: GameState): boolean {
+  return state.registered && (state.phase === 'reunion' || state.phase === 'revisit');
+}

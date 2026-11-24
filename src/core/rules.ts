@@ -1,7 +1,9 @@
 import { ELEMENTS, EXPERIMENT_COMPARISONS, type Element, type GameState, type Experiment, type ExperimentConclusion, type HintStage } from './state.ts';
 
+import ending from '../content/text/ending.json' with { type: 'json' };
+
 export function validToken(input: string): boolean {
-  return input.trim().toUpperCase() === 'AX-20-233';
+  return input.trim().toUpperCase() === ending.ui.tokenValue;
 }
 export function canDivide(state: GameState): boolean {
   return state.evidence.includes('p01') && state.evidence.includes('old-note');

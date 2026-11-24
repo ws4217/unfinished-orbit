@@ -8,7 +8,7 @@ import { type Evidence, type HintStage } from '../core/state.ts';
 import { StationScene, type WorldObject } from './world.ts';
 import { Audio } from '../audio/game-audio.ts';
 import { musicStage, type Track } from '../audio/audio-policy.ts';
-import audioConfig from '../content/assets/audio-playback.json' with { type: 'json' };
+import { hasWokenInNextCycle } from '../core/ending.ts';
 import { dialogueSpeaker, type DialogueLine } from '../content/text/line.ts';
 import { casualCallIndex, hasNewCasualCall, finishCasualCall, rollGoatCall } from '../core/casual-calls.ts';
 import { playWorldEntry, type WorldEntryMode } from '../ui/world-entry.ts';
@@ -62,7 +62,7 @@ export class App {
   resumeHandler?: () => boolean;
   extraLogs: Record<string, string> = {};
   constructor() {
-    for (const id of ['title', 'subtitle', 'stage', 'status'] as const) document.getElementById(id)!.textContent = ui.app[id];
+    for (const id of ['title', 'subtitle', 'status'] as const) document.getElementById(id)!.textContent = ui.app[id];
     this.settings = loadSettings(this.storage);
     this.audio = new Audio(() => this.settings, {
       music: track => this.showMusic(track), status: () => this.updateAudioStatus(),
@@ -72,6 +72,7 @@ export class App {
       warning.textContent = ui.app.saveFailure;
       warning.hidden = false;
     });
+    this.syncTitleStage();
     this.scene = new StationScene({
       state: () => this.session.state,
       active: () => this.view === 'world',
@@ -134,7 +135,7 @@ export class App {
   }
   private showMusic(track: Track): void {
     const toast = document.getElementById('bgm-toast')!;
-    const music = audioConfig.tracks[track];
+    const music = ui.audio.credits[track];
     toast.textContent = ui.audio.bgmToast.replace('{author}', music.author).replace('{title}', music.title);
     if (this.bgmToastTimer !== undefined) clearTimeout(this.bgmToastTimer);
     toast.hidden = false; toast.classList.remove('leaving');
@@ -253,7 +254,11 @@ export class App {
     this.world();
     if (this.resumeHandler?.()) return;
   }
+  private syncTitleStage(): void {
+    document.getElementById('stage')!.textContent = hasWokenInNextCycle(this.state) ? ui.app.stageReunion : ui.app.stage;
+  }
   showTitle(message?: string): void {
+    this.syncTitleStage();
     this.cycle.prepareTitle();
     this.activate({
       view: 'title',
@@ -316,6 +321,7 @@ export class App {
       { label: ui.app.cancel, action: () => this.showTitle() },
       { label: ui.app.confirm, action: () => {
         this.leaveDesktop?.(); this.session.restart(true); this.explorationStarted = false;
+        this.syncTitleStage();
         this.audio.setStage('intro', true); this.play();
       } },
     ], () => this.showTitle());
