@@ -30,6 +30,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   const progress = make('p', 'route-progress');
   const feedback = make('p', 'route-feedback'); feedback.setAttribute('role', 'status');
   const phone = isPhone();
+  const pad = phone ? make('div', 'route-pad') : undefined;
   const portrait = matchMedia('(orientation: portrait)');
   const help = make('p', 'route-help'); help.textContent = phone ? ui.mobile.route : data.help;
   const exit = app.actionButton(data.leave, () => { close(); back(); }, overlay);
@@ -47,7 +48,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   };
   const time = () => (pausedAt ?? performance.now()) - pausedTime;
   const close = () => {
-    events.abort(); cancelAnimationFrame(frame); overlay.remove(); desktop.inert = false;
+    events.abort(); cancelAnimationFrame(frame); overlay.remove(); pad?.remove(); desktop.inert = false;
   };
   const paintRows = () => {
     progress.textContent = data.progress.replace('{done}', String(model.row));
@@ -83,9 +84,10 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   window.addEventListener('blur', () => { focused = false; syncPause(); paintClock(); }, options);
   window.addEventListener('focus', () => { focused = true; syncPause(); paintClock(); }, options);
   document.addEventListener('visibilitychange', () => { syncPause(); paintClock(); }, options);
-  if (phone) {
+  if (pad) {
     portrait.addEventListener('change', () => { syncPause(); paintClock(); }, options);
-    const pad = make('div', 'route-pad');
+    pad.setAttribute('role', 'group');
+    pad.setAttribute('aria-label', ui.mobile.route);
     for (const direction of ['up', 'left', 'down', 'right'] as const) {
       const button = make('button', 'route-key');
       button.textContent = glyph[direction]; button.dataset.direction = direction;
@@ -95,7 +97,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
       });
       pad.append(button);
     }
-    overlay.append(pad);
+    document.body.append(pad);
   }
   window.addEventListener('keydown', event => {
     // 保留浏览器快捷键；其余输入不穿透到标题、日志或原桌面。

@@ -10,7 +10,7 @@
     "elements": {
       "dark": "暗星",
       "moon": "弯月",
-      "tomorrow": "明日",
+      "delta": "明日",
       "comet": "彗星"
     },
     "symbols": [

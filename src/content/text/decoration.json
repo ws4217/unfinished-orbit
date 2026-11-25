@@ -319,7 +319,7 @@
       },
       {
         "speaker": "pruto",
-        "text": "（拜其所赐，旁边很空旷，给操作的地方留出了空间。）"
+        "text": "（多亏这样，旁边留出了挺宽敞的操作空间。）"
       }
     ],
     "objects-unit": [
@@ -335,7 +335,7 @@
     "objects-vent": [
       {
         "speaker": "pruto",
-        "text": "（这里也装了通风设施。）"
+        "text": "（这里也装了通风口。）"
       },
       {
         "speaker": "pruto",
@@ -375,11 +375,15 @@
     "stable-bookcase": [
       {
         "speaker": "pruto",
-        "text": "（书架上已经放了些书。）"
+        "text": "（书架上放着一本厚厚的音乐剧剧本……）"
       },
       {
         "speaker": "pruto",
-        "text": "（以后可以慢慢看。）"
+        "text": "（“决斗十诫。第一！挑战：要求得到满足……”）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（哇，只是吵个架，居然还要记这么多规矩呀。）"
       }
     ],
     "stable-lamp": [
@@ -412,14 +416,18 @@
         "text": "（搬起来应该不费劲。）"
       }
     ],
-    "stable-coffee": [
+"stable-coffee": [
       {
         "speaker": "pruto",
         "text": "（咖啡机和研磨机摆在了一起。）"
       },
       {
         "speaker": "pruto",
-        "text": "（连慢慢喝点东西的地方都有了。）"
+        "text": "（以后可以和Karo坐在这里，为自由干杯了。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（……用咖啡干杯好像有点怪怪的。）"
       }
     ],
     "stable-woods": [

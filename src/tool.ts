@@ -2,7 +2,7 @@ import ui from './content/text/ui.json' with { type: 'json' };
 import './ui/styles/base.css';
 import './ui/styles/pixel.css';
 import { validToken } from './core/rules.ts';
-import { formatText } from './content/text/line.ts';
+import { formatText } from './core/line.ts';
 
 document.title = formatText(ui.app.pageTitle, { title: ui.tool.title, subtitle: ui.app.subtitle });
 document.querySelector('.calibration-mark')!.textContent = ui.desktop.marks.diamond;

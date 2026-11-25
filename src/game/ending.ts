@@ -1,5 +1,5 @@
 import type { App } from './app.ts';
-import data from '../content/text/ending.json';
+import data from '../content/text/ending.json' with { type: 'json' };
 import { collect, tokenReady } from '../core/ending.ts';
 import { type Collection } from '../core/state.ts';
 import { openTool } from '../ui/desktop.ts';

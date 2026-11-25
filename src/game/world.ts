@@ -50,9 +50,9 @@ export class StationScene extends Phaser.Scene {
   constructor(host: WorldHost) { super('station'); this.host = host; }
   preload(): void {
     this.failure = false;
-    this.load.image('steel-objects', '/assets/tilesets/steel-soldier/floor-objects.png');
-    this.load.image('steel-walls', '/assets/tilesets/steel-soldier/walls-roofs.png');
-    this.load.image('garden-furniture', '/assets/tilesets/sierrassets/garden-furniture.png');
+    this.load.image('steel-objects', './assets/tilesets/steel-soldier/floor-objects.png');
+    this.load.image('steel-walls', './assets/tilesets/steel-soldier/walls-roofs.png');
+    this.load.image('garden-furniture', './assets/tilesets/sierrassets/garden-furniture.png');
     loadCharacters(this);
     this.load.on('loaderror', () => { this.failure = true; this.host.failed(); });
   }

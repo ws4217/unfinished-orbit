@@ -15,12 +15,24 @@ export type LoadResult =
   | { status: 'invalid' }
   | { status: 'unavailable' };
 
+function migrateLegacyElements(value: unknown): void {
+  if (!value || typeof value !== 'object' || !('puzzles' in value)) return;
+  const puzzles = value.puzzles;
+  if (!puzzles || typeof puzzles !== 'object') return;
+  const slots = puzzles as Record<string, unknown>;
+  for (const key of ['symbols', 'objects']) {
+    const order = slots[key];
+    if (Array.isArray(order)) slots[key] = order.map(id => id === 'tomorrow' ? 'delta' : id);
+  }
+}
+
 export function loadGame(storage: StorageLike): LoadResult {
   try {
     const raw = storage.getItem(SAVE_KEY);
     if (raw === null) return { status: 'empty' };
     try {
       const value: unknown = JSON.parse(raw);
+      migrateLegacyElements(value);
       return isGameState(value) ? { status: 'ok', state: value } : { status: 'invalid' };
     } catch { return { status: 'invalid' }; }
   } catch { return { status: 'unavailable' }; }

@@ -1,4 +1,4 @@
-import ui from './ui.json' with { type: 'json' };
+import ui from '../content/text/ui.json' with { type: 'json' };
 
 export interface TextLine {
   speaker: string;

@@ -15,20 +15,20 @@
   "characters": {
     "pruto": {
       "sourceColor": "Blue",
-      "idle": "/assets/characters/snoblin-prototype/pruto-idle.png",
-      "walk": "/assets/characters/snoblin-prototype/pruto-walk.png",
-      "portrait": "/assets/characters/snoblin-prototype/pruto-portrait.png"
+      "idle": "./assets/characters/snoblin-prototype/pruto-idle.png",
+      "walk": "./assets/characters/snoblin-prototype/pruto-walk.png",
+      "portrait": "./assets/characters/snoblin-prototype/pruto-portrait.png"
     },
     "karo": {
       "sourceColor": "Red",
-      "idle": "/assets/characters/snoblin-prototype/karo-idle.png",
-      "walk": "/assets/characters/snoblin-prototype/karo-walk.png",
-      "portrait": "/assets/characters/snoblin-prototype/karo-portrait.png"
+      "idle": "./assets/characters/snoblin-prototype/karo-idle.png",
+      "walk": "./assets/characters/snoblin-prototype/karo-walk.png",
+      "portrait": "./assets/characters/snoblin-prototype/karo-portrait.png"
     },
     "merin": {
       "sourceColor": "Default",
-      "idle": "/assets/characters/snoblin-prototype/merin-idle.png",
-      "portrait": "/assets/characters/snoblin-prototype/merin-portrait.png"
+      "idle": "./assets/characters/snoblin-prototype/merin-idle.png",
+      "portrait": "./assets/characters/snoblin-prototype/merin-portrait.png"
     }
   }
 }

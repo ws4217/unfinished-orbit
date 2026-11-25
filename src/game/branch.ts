@@ -1,5 +1,5 @@
 import type { App } from './app.ts';
-import { fillText } from '../content/text/line.ts';
+import { fillText } from '../core/line.ts';
 import data from '../content/text/branch.json';
 import ui from '../content/text/ui.json' with { type: 'json' };
 import { ELEMENTS, type Evidence } from '../core/state.ts';

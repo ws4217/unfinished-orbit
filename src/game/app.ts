@@ -9,7 +9,7 @@ import { StationScene, type WorldObject } from './world.ts';
 import { Audio } from '../audio/game-audio.ts';
 import { musicStage, type Track } from '../audio/audio-policy.ts';
 import { hasWokenInNextCycle } from '../core/ending.ts';
-import { dialogueSpeaker, type DialogueLine } from '../content/text/line.ts';
+import { dialogueSpeaker, type DialogueLine } from '../core/line.ts';
 import { casualCallIndex, hasNewCasualCall, finishCasualCall, rollGoatCall } from '../core/casual-calls.ts';
 import { playWorldEntry, type WorldEntryMode } from '../ui/world-entry.ts';
 import { CycleVisit } from './cycle-visit.ts';

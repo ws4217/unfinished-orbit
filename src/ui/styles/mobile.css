@@ -1,3 +1,8 @@
+.phone {
+  --touch-direction-size: clamp(175.5px, 40.5vh, 252px);
+  --touch-direction-left: max(8px, env(safe-area-inset-left));
+  --touch-direction-bottom: max(42px, env(safe-area-inset-bottom));
+}
 .touch-controls { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
 .touch-stick, .touch-key {
   position: absolute; pointer-events: auto; touch-action: none; user-select: none;
@@ -5,10 +10,11 @@
   color: #e4f3f3; border: 2px solid #bed9dbbd; box-shadow: 0 0 2px #081727;
   background: transparent; bottom: max(42px, env(safe-area-inset-bottom));
 }
-.touch-stick {
-  left: max(8px, env(safe-area-inset-left)); width: clamp(117px, 27vh, 168px);
-  aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+.touch-stick, .phone .route-pad {
+  left: var(--touch-direction-left); bottom: var(--touch-direction-bottom);
+  width: var(--touch-direction-size); height: var(--touch-direction-size);
 }
+.touch-stick { border-radius: 50%; display: grid; place-items: center; }
 .touch-stick span { width: 43%; aspect-ratio: 1; border: 2px solid #cde9e9cf; border-radius: 50%; }
 .touch-key {
   width: 69px; height: 69px; padding: 0; border-radius: 0;
@@ -29,14 +35,16 @@
 .phone .chat-history { padding-right: 204px; }
 .phone .route-row { height: 32px; }
 .phone .route-pad {
-  position: absolute; bottom: 8px; right: 34px; display: grid;
-  grid-template: repeat(2, max(50px, calc(44px / var(--scale)))) / repeat(3, max(50px, calc(44px / var(--scale))));
-  gap: 3px;
+  position: fixed; z-index: 30; display: grid; pointer-events: none;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  grid-template-areas: ". up ." "left . right" ". down .";
 }
-.route-pad button { padding: 0; touch-action: none; }
-.route-pad [data-direction="up"] { grid-column: 2; }
-.route-pad [data-direction="left"] { grid-row: 2; }
+.phone .route-pad button { padding: 0; touch-action: none; pointer-events: auto; }
+.route-pad [data-direction="up"] { grid-area: up; }
+.route-pad [data-direction="left"] { grid-area: left; }
+.route-pad [data-direction="right"] { grid-area: right; }
+.route-pad [data-direction="down"] { grid-area: down; }
 @media (orientation: portrait) {
-  .phone .touch-controls { display: none; }
+  .phone .touch-controls, .phone .route-pad { display: none; }
   .phone .touch-rotate { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: #071d30; }
 }

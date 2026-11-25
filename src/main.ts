@@ -8,7 +8,7 @@ import { installExperiment } from './game/experiment.ts';
 import { installDesktop } from './ui/desktop.ts';
 import { installEnding } from './game/ending.ts';
 import ui from './content/text/ui.json' with { type: 'json' };
-import { formatText } from './content/text/line.ts';
+import { formatText } from './core/line.ts';
 
 document.title = formatText(ui.app.pageTitle, ui.app);
 document.getElementById('app')!.setAttribute('aria-label', ui.app.subtitle);

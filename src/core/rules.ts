@@ -24,8 +24,8 @@ export function orderingError(items: Element[]): number | null {
   if (items.length !== 4 || new Set(items).size !== 4 || items.some(id => !ELEMENTS.includes(id))) return 0;
   const at = (id: Element) => items.indexOf(id);
   const conditions = [
-    at('dark') !== 1, at('moon') !== 2, at('dark') < at('tomorrow'),
-    at('moon') < at('comet'), at('tomorrow') < at('comet'),
+    at('dark') !== 1, at('moon') !== 2, at('dark') < at('delta'),
+    at('moon') < at('comet'), at('delta') < at('comet'),
   ];
   const failed = conditions.indexOf(false);
   return failed < 0 ? null : failed + 1;

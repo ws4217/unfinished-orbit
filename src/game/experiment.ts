@@ -1,5 +1,5 @@
 import type { App } from './app.ts';
-import { fillText, formatText, type DialogueLine } from '../content/text/line.ts';
+import { fillText, formatText, type DialogueLine } from '../core/line.ts';
 import { EXPERIMENTS } from '../core/state.ts';
 import data from '../content/text/experiment.json';
 import { experimentResult, discoverExperiment, canFindEntrance } from '../core/rules.ts';

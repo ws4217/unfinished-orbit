@@ -2,8 +2,8 @@
   "app": {
     "title": "UNFINISHED ORBIT",
     "subtitle": "未完成的轨道",
-    "stage": "1.0.2 · By. ws4217",
-    "stageReunion": "1.0.兄 · By. ws4217",
+    "stage": "1.0.4 · By. ws4217",
+    "stageReunion": "1.0.Δ · By. ws4217",
     "pageTitle": "{title}／{subtitle}",
     "status": "初始化中……",
     "ready": "自动存档",
@@ -111,17 +111,17 @@
     "pruto": {
       "name": "Pruto",
       "color": "#ddeaf5",
-      "portrait": "/assets/characters/snoblin-prototype/pruto-portrait.png"
+      "portrait": "./assets/characters/snoblin-prototype/pruto-portrait.png"
     },
     "karo": {
       "name": "Karo",
       "color": "#77d6dc",
-      "portrait": "/assets/characters/snoblin-prototype/karo-portrait.png"
+      "portrait": "./assets/characters/snoblin-prototype/karo-portrait.png"
     },
     "merin": {
       "name": "Merin",
       "color": "#eacb84",
-      "portrait": "/assets/characters/snoblin-prototype/merin-portrait.png"
+      "portrait": "./assets/characters/snoblin-prototype/merin-portrait.png"
     },
     "unknown": {
       "name": "???",

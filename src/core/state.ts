@@ -1,5 +1,5 @@
 import { validCycle, type Cycle } from './cycle.ts';
-export const ELEMENTS = ['dark', 'moon', 'tomorrow', 'comet'] as const;
+export const ELEMENTS = ['dark', 'moon', 'delta', 'comet'] as const;
 export type Element = typeof ELEMENTS[number];
 export type Branch = 'symbols' | 'objects';
 export const PHASES = ['arrival', 'branch', 'report', 'phone3', 'maintenance', 'entrance', 'stable-intro', 'stable', 'registration', 'reunion', 'revisit', 'cycle'] as const;
@@ -46,8 +46,8 @@ export function createState(): GameState {
     version: 1, phase: 'arrival', branch: null, evidence: [],
     phones: { first: false, second: false, third: false },
     puzzles: {
-      symbols: ['moon', 'dark', 'comet', 'tomorrow'],
-      objects: ['tomorrow', 'dark', 'comet', 'moon'],
+      symbols: ['moon', 'dark', 'comet', 'delta'],
+      objects: ['delta', 'dark', 'comet', 'moon'],
       mappingDone: false, orderingDone: false,
     },
     experiment: { held: false, outside: false, discovered: [], conclusions: [] },

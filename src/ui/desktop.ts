@@ -1,7 +1,7 @@
 import type { App } from '../game/app.ts';
 import ui from '../content/text/ui.json' with { type: 'json' };
 import { aligned, draggedWindow, toLogical, type Point } from '../core/geometry.ts';
-import ending from '../content/text/ending.json';
+import ending from '../content/text/ending.json' with { type: 'json' };
 import { tokenReady } from '../core/ending.ts';
 import { portalOpen } from '../core/cycle.ts';
 import cycleText from '../content/text/cycle.json';

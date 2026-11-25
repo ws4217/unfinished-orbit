@@ -1,5 +1,5 @@
 import data from '../content/text/world-entry.json';
-import { fillText, type BootLine } from '../content/text/line.ts';
+import { fillText, type BootLine } from '../core/line.ts';
 import { FIRST_CYCLE, NEXT_CYCLE, futureCycles } from '../core/cycle.ts';
 
 export type WorldEntryMode = 'init' | 'success' | 'fail' | 'montage';
