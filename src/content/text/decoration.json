@@ -345,11 +345,19 @@
     "stable-entry": [
       {
         "speaker": "pruto",
-        "text": "（这是刚才进来时的入口。）"
+        "text": "（刚才进来时的入口。）"
       },
       {
         "speaker": "pruto",
         "text": "（从这边看，只是一块安静的终端屏幕。）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（站里的重置从不管谁好谁坏，只会一遍遍拿走一切……）"
+      },
+      {
+        "speaker": "pruto",
+        "text": "（……但我们却依然活着。）"
       }
     ],
     "stable-table": [
@@ -416,7 +424,7 @@
         "text": "（搬起来应该不费劲。）"
       }
     ],
-"stable-coffee": [
+    "stable-coffee": [
       {
         "speaker": "pruto",
         "text": "（咖啡机和研磨机摆在了一起。）"
@@ -427,7 +435,7 @@
       },
       {
         "speaker": "pruto",
-        "text": "（……用咖啡干杯好像有点怪怪的。）"
+        "text": "（……不过，用咖啡干杯好像有点怪怪的。）"
       }
     ],
     "stable-woods": [
