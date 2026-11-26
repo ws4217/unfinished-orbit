@@ -2,8 +2,8 @@
   "app": {
     "title": "UNFINISHED ORBIT",
     "subtitle": "未完成的轨道",
-    "stage": "1.0.4 · By. ws4217",
-    "stageReunion": "1.0.Δ · By. ws4217",
+    "stage": "{version} · By. ws4217",
+    "reunionVersion": "{series}.Δ",
     "pageTitle": "{title}／{subtitle}",
     "status": "初始化中……",
     "ready": "自动存档",
@@ -22,7 +22,6 @@
   },
   "mobile": {
     "keys": { "z": "Z", "x": "X" },
-    "rotate": "请将手机转为横屏游玩",
     "enter": "点按 Z 开始",
     "stick": "四向移动",
     "actions": "Z 交互 · X 补全或返回 · 长按 X 挂断",

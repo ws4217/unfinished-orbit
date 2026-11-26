@@ -1,0 +1,128 @@
+name: Build packages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: packages-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TAURI_CLI: '@tauri-apps/cli@2.12.6'
+
+jobs:
+  node:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - id: version
+        run: node -p '"version=" + require("./package.json").version' >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unfinished-orbit-${{ steps.version.outputs.version }}-node
+          path: dist/
+          if-no-files-found: error
+
+  windows:
+    needs: node
+    runs-on: windows-2025
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          name: unfinished-orbit-${{ needs.node.outputs.version }}-node
+          path: dist
+      - run: rustup update stable --no-self-update
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: windows-tauri-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - name: Build x64 portable EXE (system WebView2)
+        env:
+          GAME_VERSION: ${{ needs.node.outputs.version }}
+        shell: pwsh
+        run: |
+          npm exec --yes --package $env:TAURI_CLI -- tauri icon public/assets/orbit-icon.svg --output src-tauri/icons
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          npm exec --yes --package $env:TAURI_CLI -- tauri build --no-bundle -- --locked
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $exe = Get-Item src-tauri/target/release/unfinished-orbit.exe
+          if ($exe.VersionInfo.ProductVersion -ne $env:GAME_VERSION) { throw 'Windows product version mismatch' }
+          New-Item -ItemType Directory -Path artifacts | Out-Null
+          Copy-Item $exe.FullName "artifacts/unfinished-orbit-$env:GAME_VERSION-windows-x64.exe"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unfinished-orbit-${{ needs.node.outputs.version }}-windows-x64
+          path: artifacts/*.exe
+          if-no-files-found: error
+          compression-level: 0
+
+  android:
+    needs: node
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.14.3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: unfinished-orbit-${{ needs.node.outputs.version }}-node
+          path: dist
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Rasterize launcher icon
+        run: |
+          out=native/android/app/build/generated/orbitIcons/mipmap-xxxhdpi
+          npm exec --yes --package "$TAURI_CLI" -- tauri icon public/assets/orbit-icon.svg --png 192 --output "$out"
+          mv "$out/192x192.png" "$out/ic_launcher.png"
+      - name: Build debug-signed APK
+        run: gradle -p native/android --no-daemon :app:assembleDebug
+      - name: Collect debug APK
+        env:
+          GAME_VERSION: ${{ needs.node.outputs.version }}
+        run: |
+          mkdir -p artifacts
+          cp native/android/app/build/outputs/apk/debug/app-debug.apk "artifacts/unfinished-orbit-$GAME_VERSION-android-debug.apk"
+      - name: Verify APK signature and version
+        env:
+          GAME_VERSION: ${{ needs.node.outputs.version }}
+        run: |
+          tools="$ANDROID_HOME/build-tools/36.0.0"
+          "$tools/apksigner" verify artifacts/*.apk
+          badging=$("$tools/aapt" dump badging artifacts/*.apk)
+          grep -F "versionName='$GAME_VERSION'" <<< "$badging"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unfinished-orbit-${{ needs.node.outputs.version }}-android-debug
+          path: artifacts/*.apk
+          if-no-files-found: error
+          compression-level: 0

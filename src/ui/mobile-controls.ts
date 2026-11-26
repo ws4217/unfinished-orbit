@@ -1,7 +1,12 @@
 import ui from '../content/text/ui.json' with { type: 'json' };
 import type { App } from '../game/app.ts';
 
-export const isPhone = () => /iPhone|iPod|Android.+Mobile|Windows Phone|Mobile.+Firefox/i.test(navigator.userAgent);
+export const isPhone = () => {
+  const ua = navigator.userAgent;
+  if (/iPhone|iPod|iPad|Android|Windows Phone|Mobile.+Firefox|HarmonyOS/i.test(ua)) return true;
+  if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) return true;
+  return matchMedia('(pointer: coarse) and (hover: none)').matches;
+};
 
 /** A held stick is one held direction. Changing sector releases the previous key first. */
 export function installMobileControls(app: App): void {
@@ -16,13 +21,11 @@ export function installMobileControls(app: App): void {
   controls.append(stick);
   const button = (key: keyof typeof ui.mobile.keys) => {
     const el = document.createElement('button');
-    el.type = 'button'; el.className = `touch-key touch-${key}`;
+    el.type = 'button'; el.className = `touch-button touch-key touch-${key}`;
     el.textContent = ui.mobile.keys[key]; controls.append(el); return el;
   };
   const z = button('z'), x = button('x');
-  const rotate = document.createElement('div');
-  rotate.className = 'touch-rotate'; rotate.textContent = ui.mobile.rotate;
-  document.body.append(controls, rotate);
+  document.body.append(controls);
   let stickId: number | undefined, held = '';
   let zId: number | undefined;
   let xId: number | undefined, timer: number | undefined, long = false;
@@ -82,9 +85,7 @@ export function installMobileControls(app: App): void {
     x.addEventListener(type, e => { if (xId === e.pointerId) dropX(); });
   controls.addEventListener('contextmenu', event => event.preventDefault());
   const reset = () => { dropStick(); dropX(); zId = undefined; };
-  const portrait = matchMedia('(orientation: portrait)');
-  const orient = () => { reset(); stage.inert = portrait.matches; controls.inert = portrait.matches; };
-  portrait.addEventListener('change', orient); orient();
+  matchMedia('(orientation: portrait)').addEventListener('change', reset);
   window.addEventListener('blur', reset);
   document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
 }

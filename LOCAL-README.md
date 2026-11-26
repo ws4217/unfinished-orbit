@@ -12,3 +12,11 @@
 
 - **静态站点**：将运行包中的文件（或从源码构建的 `dist/` 内容）放在站点根目录，使 `/index.html`、`/tool.html`、`/assets/` 可直接访问。
 - **Node 服务**：启动命令为 `node serve.mjs`。默认仅监听 `127.0.0.1`；容器部署或局域网手机试玩时，设置环境变量 `ORBIT_HOST=0.0.0.0`。端口优先取 `ORBIT_PORT`，其次取平台的 `PORT`，都未设置时使用 `4217`。
+
+## 下载构建包
+
+推送到 `main` 后，在 GitHub 的 **Actions → Build packages → Artifacts** 下载。流水线不会自动发布 Release。
+
+- **Node**：解压后运行 `node serve.mjs`。
+- **Windows x64**：解压并双击 EXE，不需安装本游戏或 Node.js。系统需有 Microsoft Edge WebView2 Runtime。
+- **Android**：解压并侧载 APK。应用默认横屏全屏。Actions 只生成带 `debug` 的测试包，不能覆盖正式签名的旧版；不同构建的调试签名也可能不同。

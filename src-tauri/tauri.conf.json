@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Unfinished Orbit",
+  "version": "../package.json",
+  "identifier": "com.ws4217.unfinishedorbit",
+  "build": { "frontendDist": "../dist" },
+  "app": {
+    "windows": [{
+      "title": "未完成的轨道 / Unfinished Orbit",
+      "width": 1280,
+      "height": 760,
+      "minWidth": 960,
+      "minHeight": 540,
+      "center": true
+    }]
+  },
+  "bundle": { "active": false, "icon": ["icons/icon.ico", "icons/icon.png"] }
+}

@@ -31,7 +31,6 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   const feedback = make('p', 'route-feedback'); feedback.setAttribute('role', 'status');
   const phone = isPhone();
   const pad = phone ? make('div', 'route-pad') : undefined;
-  const portrait = matchMedia('(orientation: portrait)');
   const help = make('p', 'route-help'); help.textContent = phone ? ui.mobile.route : data.help;
   const exit = app.actionButton(data.leave, () => { close(); back(); }, overlay);
   overlay.prepend(title, meter, progress, rows, feedback, help);
@@ -43,7 +42,7 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   let pausedTime = 0;
   const syncPause = () => {
     const now = performance.now();
-    if (!focused || document.hidden || (phone && portrait.matches)) pausedAt ??= now;
+    if (!focused || document.hidden) pausedAt ??= now;
     else if (pausedAt !== undefined) { pausedTime += now - pausedAt; pausedAt = undefined; }
   };
   const time = () => (pausedAt ?? performance.now()) - pausedTime;
@@ -85,11 +84,11 @@ export function playMaintenanceRoute(app: App, stage: HTMLElement, desktop: HTML
   window.addEventListener('focus', () => { focused = true; syncPause(); paintClock(); }, options);
   document.addEventListener('visibilitychange', () => { syncPause(); paintClock(); }, options);
   if (pad) {
-    portrait.addEventListener('change', () => { syncPause(); paintClock(); }, options);
     pad.setAttribute('role', 'group');
     pad.setAttribute('aria-label', ui.mobile.route);
     for (const direction of ['up', 'left', 'down', 'right'] as const) {
-      const button = make('button', 'route-key');
+      const button = make('button', 'touch-button route-key');
+      button.type = 'button';
       button.textContent = glyph[direction]; button.dataset.direction = direction;
       button.addEventListener('pointerdown', event => {
         event.preventDefault();

@@ -9,6 +9,7 @@ import { StationScene, type WorldObject } from './world.ts';
 import { Audio } from '../audio/game-audio.ts';
 import { musicStage, type Track } from '../audio/audio-policy.ts';
 import { hasWokenInNextCycle } from '../core/ending.ts';
+import { titleStage } from '../core/version.ts';
 import { dialogueSpeaker, type DialogueLine } from '../core/line.ts';
 import { casualCallIndex, hasNewCasualCall, finishCasualCall, rollGoatCall } from '../core/casual-calls.ts';
 import { playWorldEntry, type WorldEntryMode } from '../ui/world-entry.ts';
@@ -161,10 +162,11 @@ export class App {
   private normalize(key: string): string { return key.length === 1 ? key.toLowerCase() : key; }
   private resize(): void {
     const app = document.getElementById('app')!;
-    const available = Math.min(innerWidth / 960, innerHeight / 540);
+    const { clientWidth, clientHeight } = document.documentElement;
+    const available = Math.min(clientWidth / 960, clientHeight / 540);
     app.style.setProperty('--scale', String(available));
     document.getElementById('small-window')!.textContent = explorationUi.small;
-    document.getElementById('small-window')!.hidden = innerWidth >= 960 && innerHeight >= 540;
+    document.getElementById('small-window')!.hidden = clientWidth >= 960 && clientHeight >= 540;
   }
   private keyDown(event: KeyboardEvent): void {
     if ((event.target instanceof HTMLInputElement && !['range', 'checkbox'].includes(event.target.type)) || event.target instanceof HTMLTextAreaElement
@@ -255,7 +257,7 @@ export class App {
     if (this.resumeHandler?.()) return;
   }
   private syncTitleStage(): void {
-    document.getElementById('stage')!.textContent = hasWokenInNextCycle(this.state) ? ui.app.stageReunion : ui.app.stage;
+    document.getElementById('stage')!.textContent = titleStage(hasWokenInNextCycle(this.state));
   }
   showTitle(message?: string): void {
     this.syncTitleStage();
