@@ -91,6 +91,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'platforms;android-36 build-tools;36.0.0'
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.14.3'
@@ -98,7 +102,6 @@ jobs:
         with:
           name: unfinished-orbit-${{ needs.node.outputs.version }}-node
           path: dist
-      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - name: Rasterize launcher icon
         run: |
           out=native/android/app/build/generated/orbitIcons/mipmap-xxxhdpi
